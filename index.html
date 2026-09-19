@@ -3,1006 +3,925 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MathVault — Interactive Q&amp;A &amp; Problem Solving</title>
-
-  <!-- Google Fonts & KaTeX CDN for LaTeX rendering -->
+  <title>MathVault — Multi-Page Mathematics Hub</title>
+  
+  <!-- Tailwind CSS & Inter Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX for beautiful Mathematical typesetting -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    :root {
-      --bg-primary: #f8fafc;
-      --bg-secondary: #ffffff;
-      --bg-card: #ffffff;
-      --border-color: #e2e8f0;
-      --border-hover: #cbd5e1;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-light: #eff6ff;
-      --accent: #8b5cf6;
-      --success: #10b981;
-      --success-light: #ecfdf5;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    [data-theme="dark"] {
-      --bg-primary: #0b0f19;
-      --bg-secondary: #111827;
-      --bg-card: #151e32;
-      --border-color: #1f293d;
-      --border-hover: #374151;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --primary: #3b82f6;
-      --primary-hover: #60a5fa;
-      --primary-light: rgba(59, 130, 246, 0.12);
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
-      --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.7);
-    }
-
+    /* Smooth transitions and scrollbars */
     * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
     }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      line-height: 1.6;
-      transition: background-color 0.25s ease, color 0.25s ease;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(8px);
-    }
-
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.85rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-main);
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-icon {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: white;
-      width: 34px;
-      height: 34px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.5rem 0.9rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: var(--transition);
-      background: none;
-      color: var(--text-main);
-    }
-
-    .btn-outline {
-      border-color: var(--border-color);
-      background-color: var(--bg-secondary);
-    }
-
-    .btn-outline:hover {
-      background-color: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-primary {
-      background-color: var(--primary);
-      color: #ffffff;
-    }
-
-    .btn-primary:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .hero {
-      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-      padding: 2.5rem 1.5rem 2rem 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      text-align: center;
-    }
-
-    .hero-title {
-      font-size: 2.25rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero-subtitle {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      max-width: 650px;
-      margin: 0 auto 1.5rem auto;
-    }
-
-    .search-box-wrapper {
-      max-width: 550px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 0.8rem 1rem 0.8rem 2.8rem;
-      border-radius: 9999px;
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-card);
-      color: var(--text-main);
-      font-size: 0.95rem;
-      outline: none;
-      transition: var(--transition);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-light);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 1.1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      pointer-events: none;
-      display: flex;
-    }
-
-    .main-container {
-      max-width: 1100px;
-      width: 100%;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
-      flex: 1;
-    }
-
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.75rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .category-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .category-btn {
-      padding: 0.35rem 0.85rem;
-      border-radius: 9999px;
-      font-size: 0.825rem;
-      font-weight: 500;
-      border: 1px solid var(--border-color);
-      background: var(--bg-secondary);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .category-btn:hover {
-      border-color: var(--border-hover);
-      color: var(--text-main);
-    }
-
-    .category-btn.active {
-      background-color: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-    }
-
-    .stats-info {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .questions-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1.6rem;
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition);
-      position: relative;
-    }
-
-    .card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-hover);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.2rem 0.55rem;
-      border-radius: 9999px;
-      font-size: 0.725rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .badge-algebra { background: #fef3c7; color: #92400e; }
-    .badge-calculus { background: #e0f2fe; color: #0369a1; }
-    .badge-statistics { background: #ede9fe; color: #6d28d9; }
-    .badge-linear-algebra { background: #dcfce7; color: #15803d; }
-
-    [data-theme="dark"] .badge-algebra { background: #78350f44; color: #fde68a; }
-    [data-theme="dark"] .badge-calculus { background: #0c4a6e44; color: #bae6fd; }
-    [data-theme="dark"] .badge-statistics { background: #4c1d9544; color: #ddd6fe; }
-    [data-theme="dark"] .badge-linear-algebra { background: #14532d44; color: #bbf7d0; }
-
-    .diff-beginner { color: #10b981; }
-    .diff-intermediate { color: #f59e0b; }
-    .diff-advanced { color: #ef4444; }
-
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-top: 0.4rem;
-      line-height: 1.4;
-    }
-
-    .bookmark-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text-muted);
-      padding: 0.25rem;
-      border-radius: 50%;
-      display: flex;
-      transition: var(--transition);
-    }
-
-    .bookmark-btn:hover {
-      color: var(--warning);
-      background: var(--primary-light);
-    }
-
-    .bookmark-btn.bookmarked {
-      color: var(--warning);
-    }
-
-    .question-body {
-      font-size: 0.98rem;
-      color: var(--text-main);
-      margin: 1rem 0;
+    .katex-display {
       overflow-x: auto;
-      padding-bottom: 0.2rem;
+      overflow-y: hidden;
+      padding: 0.5rem 0;
+      margin: 0.5rem 0;
     }
-
-    .practice-area {
-      background-color: var(--bg-primary);
-      border-radius: var(--radius-md);
-      padding: 1rem;
-      margin: 1.2rem 0;
-      border: 1px dashed var(--border-color);
-    }
-
-    .practice-header {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .practice-form {
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-    }
-
-    .practice-input {
-      flex: 1;
-      min-width: 180px;
-      padding: 0.5rem 0.8rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-color);
-      background: var(--bg-card);
-      color: var(--text-main);
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .feedback-msg {
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      font-weight: 500;
-      display: none;
-    }
-
-    .feedback-msg.correct {
-      display: block;
-      color: var(--success);
-    }
-
-    .feedback-msg.wrong {
-      display: block;
-      color: var(--danger);
-    }
-
-    .solution-toggle-btn {
-      width: 100%;
-      padding: 0.65rem;
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-secondary);
-      border-radius: var(--radius-md);
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: var(--transition);
-    }
-
-    .solution-toggle-btn:hover {
-      background-color: var(--primary-light);
-      border-color: var(--primary);
-    }
-
-    .solution-panel {
-      display: none;
-      margin-top: 1.2rem;
-      padding-top: 1.2rem;
-      border-top: 1px solid var(--border-color);
-      animation: fadeIn 0.25s ease forwards;
-    }
-
-    .solution-panel.open {
-      display: block;
-    }
-
-    .solution-step {
-      margin-bottom: 1.2rem;
-      padding-left: 1rem;
-      border-left: 3px solid var(--primary);
-    }
-
-    .solution-step-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: var(--primary);
-      margin-bottom: 0.3rem;
-    }
-
-    .solution-step-desc {
-      font-size: 0.95rem;
-      color: var(--text-main);
-      overflow-x: auto;
-    }
-
-    .solution-final-box {
-      background-color: var(--success-light);
-      border: 1px solid #6ee7b7;
-      padding: 0.9rem 1.2rem;
-      border-radius: var(--radius-md);
-      margin-top: 1rem;
-      color: #065f46;
-      font-weight: 600;
-      overflow-x: auto;
-    }
-
-    [data-theme="dark"] .solution-final-box {
-      background-color: rgba(16, 185, 129, 0.15);
-      border-color: #059669;
-      color: #6ee7b7;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-      padding: 1rem;
-    }
-
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      background: var(--bg-secondary);
-      width: 100%;
-      max-width: 750px;
-      max-height: 85vh;
-      overflow-y: auto;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-lg);
-      padding: 1.75rem;
-      transform: translateY(15px);
-      transition: transform 0.25s ease;
-    }
-
-    .modal-overlay.open .modal-content {
-      transform: translateY(0);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.2rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.8rem;
-    }
-
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .formula-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
-      font-size: 0.92rem;
-    }
-
-    .formula-table th, .formula-table td {
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      text-align: left;
-    }
-
-    .formula-table th {
-      background: var(--bg-primary);
-      font-weight: 600;
-    }
-
-    footer {
-      border-top: 1px solid var(--border-color);
-      background: var(--bg-secondary);
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 3rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 640px) {
-      .hero-title { font-size: 1.75rem; }
-      .nav-container { padding: 0.75rem 1rem; }
-      .card { padding: 1.2rem; }
-      .filter-bar { flex-direction: column; align-items: stretch; }
+    .code-editor-area {
+      font-family: 'Fira Code', monospace;
+      tab-size: 2;
     }
   </style>
 </head>
-<body>
 
-  <header>
-    <div class="nav-container">
-      <a href="#" class="brand">
-        <div class="brand-icon">&int;</div>
-        <span>MathVault</span>
-      </a>
-      <div class="nav-actions">
-        <button class="btn btn-outline" id="formulaBtn" title="View Formula Sheet">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-          <span>Formula Sheet</span>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+
+  <aside class="bg-gradient-to-r from-brand-900 via-indigo-950 to-slate-900 text-white text-xs px-4 py-2 border-b border-brand-800/40">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span><strong>Multi-Page GitHub Pages Ready:</strong> Switch between live simulated pages below or export standalone files!</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="openExportModal()" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded text-xs transition shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+          Get Standalone Files (.html)
         </button>
-        <button class="btn btn-outline" id="themeToggle" title="Toggle Dark/Light Mode">
-          <svg id="themeIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
-        </button>
+      </div>
+    </div>
+  </aside>
+
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <a href="#page=home" onclick="navigate('home'); return false;" class="flex items-center gap-2.5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-brand-500/20 group-hover:scale-105 transition">
+              &sum;
+            </div>
+            <div>
+              <span class="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+                MathVault <span class="text-xs bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 font-semibold px-1.5 py-0.5 rounded">Pages</span>
+              </span>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 -mt-1 font-medium">Verified Solutions &amp; Proofs</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Desktop Navigation Links (Link buttons) -->
+        <nav class="hidden md:flex items-center gap-1">
+          <button onclick="navigate('home')" id="nav-home" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30">Home</button>
+          <button onclick="navigate('algebra')" id="nav-algebra" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Algebra</button>
+          <button onclick="navigate('calculus')" id="nav-calculus" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Calculus</button>
+          <button onclick="navigate('statistics')" id="nav-statistics" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Statistics</button>
+          <button onclick="navigate('formulas')" id="nav-formulas" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Formulas</button>
+          <button onclick="navigate('submit')" id="nav-submit" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Ask Question</button>
+        </nav>
+
+        <!-- Right Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <!-- Theme Toggle Button -->
+          <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <svg id="themeSun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="themeMoon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+
+          <button onclick="navigate('submit')" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg text-sm shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+            <span>Post Problem</span>
+          </button>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Dropdown -->
+      <div id="mobileMenu" class="hidden md:hidden py-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1">
+        <button onclick="navigate('home'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Home</button>
+        <button onclick="navigate('algebra'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Algebra</button>
+        <button onclick="navigate('calculus'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Calculus</button>
+        <button onclick="navigate('statistics'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Statistics</button>
+        <button onclick="navigate('formulas'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Formulas Reference</button>
+        <button onclick="navigate('submit'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-800">Submit a Question</button>
       </div>
     </div>
   </header>
 
-  <section class="hero">
-    <h1 class="hero-title">Master Core Mathematical Concepts</h1>
-    <p class="hero-subtitle">Interactive problem sets, verified LaTeX solutions, and step-by-step rigorous walkthroughs.</p>
-    <div class="search-box-wrapper">
-      <div class="search-icon">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+  <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2.5 text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-1.5">
+        <a href="#page=home" onclick="navigate('home'); return false;" class="hover:underline flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Home
+        </a>
+        <span>/</span>
+        <span id="breadcrumbCurrent" class="font-semibold text-slate-800 dark:text-slate-200 capitalize">Home</span>
       </div>
-      <input type="text" id="searchInput" class="search-input" placeholder="Search by concept (e.g. eigenvalue, integral, Bayes, limit)..." />
-    </div>
-  </section>
-
-  <main class="main-container">
-    <div class="filter-bar">
-      <div class="category-pills">
-        <button class="category-btn active" data-category="all">All Topics</button>
-        <button class="category-btn" data-category="calculus">Calculus</button>
-        <button class="category-btn" data-category="algebra">Algebra &amp; Optimization</button>
-        <button class="category-btn" data-category="linear-algebra">Linear Algebra</button>
-        <button class="category-btn" data-category="statistics">Probability &amp; Stats</button>
-      </div>
-      <div class="stats-info" id="statsCount">Showing 6 problems</div>
-    </div>
-
-    <div class="questions-grid" id="questionsContainer">
-
-      <!-- Question 1: Calculus (Integration by Parts) -->
-      <article class="card" data-category="calculus" data-id="q1">
-        <div class="card-header">
-          <div class="card-meta">
-            <span class="badge badge-calculus">Calculus</span>
-            <span class="badge diff-intermediate">&bull; Intermediate</span>
-          </div>
-          <button class="bookmark-btn" onclick="toggleBookmark('q1')" title="Bookmark Question">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-        </div>
-        <h2 class="card-title">Definite Integration by Parts</h2>
-        <div class="question-body">
-          Evaluate the following definite integral using integration by parts:
-          $$\int_{1}^{e} x \ln(x) \, dx$$
-        </div>
-        <div class="practice-area">
-          <div class="practice-header">Quick Check (Value of the integral):</div>
-          <div class="practice-form">
-            <input type="text" class="practice-input" placeholder="e.g. (e^2+1)/4 or decimal 2.097" id="input-q1">
-            <button class="btn btn-primary" onclick="verifyAnswer('q1', '2.097', ['(e^2+1)/4', '(e^2 + 1)/4', '2.097', '2.10'])">Check</button>
-          </div>
-          <div class="feedback-msg" id="feedback-q1"></div>
-        </div>
-        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q1')">
-          <span>Show Full Step-by-Step Solution</span>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="solution-panel" id="sol-q1">
-          <div class="solution-step">
-            <div class="solution-step-title">Step 1: Choose Parts via LIATE Rule</div>
-            <div class="solution-step-desc">
-              Let $u = \ln(x)$ (Logarithmic) and $dv = x \, dx$ (Algebraic).<br>
-              Differentiating $u$: $$du = \frac{1}{x} \, dx$$
-              Integrating $dv$: $$v = \frac{x^2}{2}$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 2: Apply the Integration by Parts Formula</div>
-            <div class="solution-step-desc">
-              $$\int u \, dv = uv - \int v \, du$$
-              $$\int_{1}^{e} x \ln(x) \, dx = \left[ \frac{x^2}{2} \ln(x) \right]_{1}^{e} - \int_{1}^{e} \frac{x^2}{2} \cdot \frac{1}{x} \, dx$$
-              $$= \left( \frac{e^2}{2} \ln(e) - \frac{1^2}{2} \ln(1) \right) - \frac{1}{2} \int_{1}^{e} x \, dx$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 3: Evaluate Remaining Integral &amp; Limits</div>
-            <div class="solution-step-desc">
-              Since $\ln(e) = 1$ and $\ln(1) = 0$:
-              $$= \frac{e^2}{2} - \frac{1}{2} \left[ \frac{x^2}{2} \right]_{1}^{e} = \frac{e^2}{2} - \frac{1}{4}(e^2 - 1) = \frac{2e^2 - e^2 + 1}{4} = \frac{e^2 + 1}{4}$$
-            </div>
-          </div>
-          <div class="solution-final-box">
-            Final Answer: $$\frac{e^2 + 1}{4} \approx 2.09726$$
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-category="linear-algebra" data-id="q2">
-        <div class="card-header">
-          <div class="card-meta">
-            <span class="badge badge-linear-algebra">Linear Algebra</span>
-            <span class="badge diff-intermediate">&bull; Intermediate</span>
-          </div>
-          <button class="bookmark-btn" onclick="toggleBookmark('q2')" title="Bookmark Question">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-        </div>
-        <h2 class="card-title">Eigenvalues of a $2 \times 2$ Real Matrix</h2>
-        <div class="question-body">
-          Find the two real eigenvalues $\lambda_1, \lambda_2$ (with $\lambda_1 \le \lambda_2$) of the matrix:
-          $$A = \begin{pmatrix} 4 & 2 \\ 1 & 3 \end{pmatrix}$$
-        </div>
-        <div class="practice-area">
-          <div class="practice-header">Quick Check (Enter comma-separated values &lambda;<sub>1</sub>, &lambda;<sub>2</sub>):</div>
-          <div class="practice-form">
-            <input type="text" class="practice-input" placeholder="e.g. 2, 5" id="input-q2">
-            <button class="btn btn-primary" onclick="verifyAnswer('q2', '2, 5', ['2,5', '2, 5'])">Check</button>
-          </div>
-          <div class="feedback-msg" id="feedback-q2"></div>
-        </div>
-        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q2')">
-          <span>Show Full Step-by-Step Solution</span>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="solution-panel" id="sol-q2">
-          <div class="solution-step">
-            <div class="solution-step-title">Step 1: Set up the Characteristic Equation</div>
-            <div class="solution-step-desc">
-              The eigenvalues satisfy $\det(A - \lambda I) = 0$:
-              $$\det \begin{pmatrix} 4 - \lambda & 2 \\ 1 & 3 - \lambda \end{pmatrix} = 0$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 2: Expand the Determinant Polynomial</div>
-            <div class="solution-step-desc">
-              $$(4 - \lambda)(3 - \lambda) - (2 \times 1) = 0$$
-              $$\lambda^2 - 7\lambda + 12 - 2 = 0 \implies \lambda^2 - 7\lambda + 10 = 0$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 3: Factor the Characteristic Polynomial</div>
-            <div class="solution-step-desc">
-              $$(\lambda - 2)(\lambda - 5) = 0 \implies \lambda_1 = 2, \quad \lambda_2 = 5$$
-              Notice that $\text{Tr}(A) = 4 + 3 = 7 = \lambda_1 + \lambda_2$ and $\det(A) = 12 - 2 = 10 = \lambda_1 \lambda_2$.
-            </div>
-          </div>
-          <div class="solution-final-box">
-            Final Answer: $$\lambda_1 = 2, \quad \lambda_2 = 5$$
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-category="algebra" data-id="q3">
-        <div class="card-header">
-          <div class="card-meta">
-            <span class="badge badge-algebra">Algebra &amp; Optimization</span>
-            <span class="badge diff-beginner">&bull; Beginner</span>
-          </div>
-          <button class="bookmark-btn" onclick="toggleBookmark('q3')" title="Bookmark Question">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-        </div>
-        <h2 class="card-title">Global Extreme Value of a Quadratic Function</h2>
-        <div class="question-body">
-          Find the global maximum value $M$ of the parabolic objective function:
-          $$f(x) = -2x^2 + 12x - 7$$
-        </div>
-        <div class="practice-area">
-          <div class="practice-header">Quick Check (Maximum value of f(x)):</div>
-          <div class="practice-form">
-            <input type="text" class="practice-input" placeholder="e.g. 11" id="input-q3">
-            <button class="btn btn-primary" onclick="verifyAnswer('q3', '11', ['11'])">Check</button>
-          </div>
-          <div class="feedback-msg" id="feedback-q3"></div>
-        </div>
-        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q3')">
-          <span>Show Full Step-by-Step Solution</span>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="solution-panel" id="sol-q3">
-          <div class="solution-step">
-            <div class="solution-step-title">Method 1: First Derivative Test (Calculus)</div>
-            <div class="solution-step-desc">
-              Compute the critical point by setting $f'(x) = 0$:
-              $$f'(x) = -4x + 12 = 0 \implies 4x = 12 \implies x^* = 3$$
-              Since $f''(x) = -4 < 0$, $x^* = 3$ is a strict global maximum.
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Method 2: Completing the Square (Algebraic)</div>
-            <div class="solution-step-desc">
-              $$f(x) = -2(x^2 - 6x) - 7 = -2\left((x - 3)^2 - 9\right) - 7$$
-              $$= -2(x - 3)^2 + 18 - 7 = -2(x - 3)^2 + 11$$
-              Because $(x - 3)^2 \ge 0$, the maximum occurs when $(x - 3) = 0$.
-            </div>
-          </div>
-          <div class="solution-final-box">
-            Final Answer: $$f_{\max} = f(3) = 11$$
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-category="statistics" data-id="q4">
-        <div class="card-header">
-          <div class="card-meta">
-            <span class="badge badge-statistics">Probability</span>
-            <span class="badge diff-intermediate">&bull; Intermediate</span>
-          </div>
-          <button class="bookmark-btn" onclick="toggleBookmark('q4')" title="Bookmark Question">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-        </div>
-        <h2 class="card-title">Bayesian Diagnostic Testing</h2>
-        <div class="question-body">
-          A rare medical condition has a prevalence of $0.5\%$ in a population ($P(D) = 0.005$). 
-          A diagnostic test has a true positive rate (sensitivity) of $98\%$ and a false positive rate of $2\%$. 
-          If a randomly selected patient tests positive, calculate the posterior probability $P(D \mid +)$ that the patient actually has the disease.
-        </div>
-        <div class="practice-area">
-          <div class="practice-header">Quick Check (Answer as decimal or %):</div>
-          <div class="practice-form">
-            <input type="text" class="practice-input" placeholder="e.g. 0.1976 or 19.8%" id="input-q4">
-            <button class="btn btn-primary" onclick="verifyAnswer('q4', '0.1976', ['0.198', '0.1976', '19.8%', '19.76%'])">Check</button>
-          </div>
-          <div class="feedback-msg" id="feedback-q4"></div>
-        </div>
-        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q4')">
-          <span>Show Full Step-by-Step Solution</span>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="solution-panel" id="sol-q4">
-          <div class="solution-step">
-            <div class="solution-step-title">Step 1: Identify Given Priors &amp; Conditionals</div>
-            <div class="solution-step-desc">
-              $$P(D) = 0.005, \quad P(D^c) = 1 - 0.005 = 0.995$$
-              $$P(+ \mid D) = 0.98, \quad P(+ \mid D^c) = 0.02$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 2: Total Probability Law for Denominator $P(+)$</div>
-            <div class="solution-step-desc">
-              $$P(+) = P(+ \mid D)P(D) + P(+ \mid D^c)P(D^c)$$
-              $$P(+) = (0.98 \times 0.005) + (0.02 \times 0.995) = 0.0049 + 0.0199 = 0.0248$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 3: Apply Bayes' Theorem</div>
-            <div class="solution-step-desc">
-              $$P(D \mid +) = \frac{P(+ \mid D)P(D)}{P(+)} = \frac{0.0049}{0.0248} = \frac{49}{248} \approx 0.19758$$
-            </div>
-          </div>
-          <div class="solution-final-box">
-            Final Answer: $$P(D \mid +) = \frac{49}{248} \approx 19.76\%$$
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-category="calculus" data-id="q5">
-        <div class="card-header">
-          <div class="card-meta">
-            <span class="badge badge-calculus">Calculus</span>
-            <span class="badge diff-intermediate">&bull; Intermediate</span>
-          </div>
-          <button class="bookmark-btn" onclick="toggleBookmark('q5')" title="Bookmark Question">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-        </div>
-        <h2 class="card-title">Indeterminate Form Limit Evaluation</h2>
-        <div class="question-body">
-          Evaluate the following trigonometric limit without a calculator:
-          $$\lim_{x \to 0} \frac{1 - \cos(3x)}{x^2}$$
-        </div>
-        <div class="practice-area">
-          <div class="practice-header">Quick Check (Value of the limit):</div>
-          <div class="practice-form">
-            <input type="text" class="practice-input" placeholder="e.g. 9/2 or 4.5" id="input-q5">
-            <button class="btn btn-primary" onclick="verifyAnswer('q5', '4.5', ['9/2', '4.5'])">Check</button>
-          </div>
-          <div class="feedback-msg" id="feedback-q5"></div>
-        </div>
-        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q5')">
-          <span>Show Full Step-by-Step Solution</span>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="solution-panel" id="sol-q5">
-          <div class="solution-step">
-            <div class="solution-step-title">Method 1: L'H&ocirc;pital's Rule</div>
-            <div class="solution-step-desc">
-              Direct substitution yields $\frac{1 - 1}{0} = \frac{0}{0}$. Differentiating top and bottom:
-              $$\lim_{x \to 0} \frac{3\sin(3x)}{2x}$$
-              Since this is still $\frac{0}{0}$, apply L'H&ocirc;pital's rule a second time:
-              $$\lim_{x \to 0} \frac{9\cos(3x)}{2} = \frac{9(1)}{2} = \frac{9}{2}$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Method 2: Maclaurin Taylor Series Expansion</div>
-            <div class="solution-step-desc">
-              Recall $\cos(\theta) = 1 - \frac{\theta^2}{2!} + \mathcal{O}(\theta^4)$. Setting $\theta = 3x$:
-              $$\cos(3x) = 1 - \frac{(3x)^2}{2} + \dots = 1 - \frac{9x^2}{2} + \dots$$
-              $$\lim_{x \to 0} \frac{1 - \left(1 - \frac{9x^2}{2}\right)}{x^2} = \frac{\frac{9x^2}{2}}{x^2} = \frac{9}{2}$$
-            </div>
-          </div>
-          <div class="solution-final-box">
-            Final Answer: $$\frac{9}{2} = 4.5$$
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-category="linear-algebra" data-id="q6">
-        <div class="card-header">
-          <div class="card-meta">
-            <span class="badge badge-linear-algebra">Linear Algebra</span>
-            <span class="badge diff-advanced">&bull; Advanced</span>
-          </div>
-          <button class="bookmark-btn" onclick="toggleBookmark('q6')" title="Bookmark Question">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-        </div>
-        <h2 class="card-title">Invertibility and Determinant of a $3 \times 3$ Matrix</h2>
-        <div class="question-body">
-          Determine the determinant $\det(B)$ of the matrix:
-          $$B = \begin{pmatrix} 1 & 0 & 2 \\ 2 & -1 & 3 \\ 4 & 1 & 8 \end{pmatrix}$$
-        </div>
-        <div class="practice-area">
-          <div class="practice-header">Quick Check (Value of det(B)):</div>
-          <div class="practice-form">
-            <input type="text" class="practice-input" placeholder="e.g. -1" id="input-q6">
-            <button class="btn btn-primary" onclick="verifyAnswer('q6', '-1', ['-1'])">Check</button>
-          </div>
-          <div class="feedback-msg" id="feedback-q6"></div>
-        </div>
-        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q6')">
-          <span>Show Full Step-by-Step Solution</span>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="solution-panel" id="sol-q6">
-          <div class="solution-step">
-            <div class="solution-step-title">Step 1: Expand Along the First Row</div>
-            <div class="solution-step-desc">
-              Notice Row 1 contains a zero entry, making Laplace expansion efficient:
-              $$\det(B) = 1 \cdot \begin{vmatrix} -1 & 3 \\ 1 & 8 \end{vmatrix} - 0 \cdot \begin{vmatrix} 2 & 3 \\ 4 & 8 \end{vmatrix} + 2 \cdot \begin{vmatrix} 2 & -1 \\ 4 & 1 \end{vmatrix}$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 2: Evaluate $2 \times 2$ Minors</div>
-            <div class="solution-step-desc">
-              $$\begin{vmatrix} -1 & 3 \\ 1 & 8 \end{vmatrix} = (-1)(8) - (3)(1) = -8 - 3 = -11$$
-              $$\begin{vmatrix} 2 & -1 \\ 4 & 1 \end{vmatrix} = (2)(1) - (-1)(4) = 2 + 4 = 6$$
-            </div>
-          </div>
-          <div class="solution-step">
-            <div class="solution-step-title">Step 3: Combine Terms</div>
-            <div class="solution-step-desc">
-              $$\det(B) = 1(-11) + 2(6) = -11 + 12 = 1$$
-            </div>
-          </div>
-          <div class="solution-final-box">
-            Final Answer: $$\det(B) = 1 \quad (\text{Matrix is non-singular and invertible})$$
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </main>
-
-  <div class="modal-overlay" id="formulaModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Essential Formula Reference</h3>
-        <button class="btn btn-outline" id="closeModalBtn">&times;</button>
-      </div>
-      <div>
-        <h4>Calculus</h4>
-        <table class="formula-table">
-          <thead>
-            <tr><th>Rule</th><th>Formula</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Integration by Parts</td><td>$$\int u \, dv = uv - \int v \, du$$</td></tr>
-            <tr><td>Derivative of $\ln(x)$</td><td>$$\frac{d}{dx}\ln(x) = \frac{1}{x}$$</td></tr>
-            <tr><td>L'H&ocirc;pital's Rule</td><td>$$\lim_{x\to c} \frac{f(x)}{g(x)} = \lim_{x\to c} \frac{f'(x)}{g'(x)}$$</td></tr>
-          </tbody>
-        </table>
-
-        <h4>Linear Algebra &amp; Matrices</h4>
-        <table class="formula-table">
-          <thead>
-            <tr><th>Concept</th><th>Definition</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Eigenvalues</td><td>$$\det(A - \lambda I) = 0$$</td></tr>
-            <tr><td>$2 \times 2$ Determinant</td><td>$$\det \begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc$$</td></tr>
-          </tbody>
-        </table>
-
-        <h4>Probability</h4>
-        <table class="formula-table">
-          <thead>
-            <tr><th>Theorem</th><th>Formula</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Bayes' Theorem</td><td>$$P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B)}$$</td></tr>
-          </tbody>
-        </table>
+      <div class="text-[11px] font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-400">
+        File: <span id="currentFilename" class="text-brand-600 dark:text-brand-400 font-bold">index.html</span>
       </div>
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2026 MathVault &bull; Free and Open Source Mathematics Learning Hub &bull; Hosted on GitHub Pages</p>
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 1: HOME PAGE (index.html) -->
+    <!-- ========================================================================= -->
+    <section id="view-home" class="page-view space-y-10">
+      
+      <!-- Hero Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-8 sm:p-12 border border-slate-800 shadow-xl">
+        <div class="relative z-10 max-w-3xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold uppercase tracking-wider">
+            <span>✨ Pure Mathematical Rigor</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Ask, Solve &amp; Understand <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Complex Mathematics.</span>
+          </h1>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+            A fast, multi-page question &amp; answer library designed for college and high school students. Powered by native LaTeX mathematical typesetting and step-by-step verified proofs.
+          </p>
+          
+          <!-- Direct Jump Button Group -->
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="navigate('algebra')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-slate-900 hover:bg-slate-100 font-semibold rounded-xl text-sm transition shadow">
+              <span>Algebra Problems</span>
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            <button onclick="navigate('calculus')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-xl text-sm transition shadow">
+              <span>Calculus Problems</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            <button onclick="navigate('statistics')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-white font-medium rounded-xl text-sm border border-slate-700 transition">
+              <span>Probability &amp; Stats</span>
+            </button>
+            <button onclick="navigate('formulas')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-white font-medium rounded-xl text-sm border border-slate-700 transition">
+              <span>Cheat Sheet</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Decorative background formula sketch -->
+        <div class="absolute -right-8 -bottom-10 opacity-10 text-9xl font-mono select-none pointer-events-none hidden lg:block">
+          $$\oint_C \vec{F}\cdot d\vec{r}$$
+        </div>
+      </div>
+
+      <!-- Quick Subject Category Grid (Link Cards) -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-bold tracking-tight">Explore Categories</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Click any subject button to enter the dedicated page.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Card 1: Algebra -->
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-brand-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl mb-4">
+                x&sup2;
+              </div>
+              <h3 class="text-lg font-bold mb-1.5">Algebra &amp; Matrices</h3>
+              <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
+                Quadratic equations, polynomials, matrix determinants, eigenvalues, and system optimization.
+              </p>
+              <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 mb-6 font-mono">
+                <li class="flex items-center gap-2">&bull; Eigenvalue Decompositions</li>
+                <li class="flex items-center gap-2">&bull; Completing the Square</li>
+                <li class="flex items-center gap-2">&bull; Gaussian Elimination</li>
+              </ul>
+            </div>
+            <button onclick="navigate('algebra')" class="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-amber-500/30">
+              <span>Go to Algebra Page (algebra.html)</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+          </div>
+
+          <!-- Card 2: Calculus -->
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-brand-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-xl mb-4">
+                &int;
+              </div>
+              <h3 class="text-lg font-bold mb-1.5">Calculus &amp; Analysis</h3>
+              <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
+                Differential limits, L'H&ocirc;pital's rule, integration by parts, Taylor series, and multivariable integrals.
+              </p>
+              <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 mb-6 font-mono">
+                <li class="flex items-center gap-2">&bull; Integration by Parts (LIATE)</li>
+                <li class="flex items-center gap-2">&bull; L'H&ocirc;pital Indeterminate Forms</li>
+                <li class="flex items-center gap-2">&bull; Partial Derivatives</li>
+              </ul>
+            </div>
+            <button onclick="navigate('calculus')" class="w-full py-2.5 px-4 rounded-xl bg-brand-500/10 hover:bg-brand-500/20 text-brand-700 dark:text-brand-300 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-brand-500/30">
+              <span>Go to Calculus Page (calculus.html)</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+          </div>
+
+          <!-- Card 3: Statistics -->
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-brand-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-xl mb-4">
+                &sigma;
+              </div>
+              <h3 class="text-lg font-bold mb-1.5">Statistics &amp; Probability</h3>
+              <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
+                Conditional probability, Bayes' Theorem, Poisson &amp; Gaussian distributions, and hypothesis tests.
+              </p>
+              <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 mb-6 font-mono">
+                <li class="flex items-center gap-2">&bull; Bayes' Posterior Probabilities</li>
+                <li class="flex items-center gap-2">&bull; Expected Values &amp; Variance</li>
+                <li class="flex items-center gap-2">&bull; Normal Z-Scores</li>
+              </ul>
+            </div>
+            <button onclick="navigate('statistics')" class="w-full py-2.5 px-4 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-purple-500/30">
+              <span>Go to Statistics Page (statistics.html)</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Featured Daily Problem Card -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Featured Daily Problem</span>
+            <span class="text-xs text-slate-400">&bull; Calculus</span>
+          </div>
+          <span class="text-xs font-medium text-slate-500">ID: #DP-101</span>
+        </div>
+
+        <h3 class="text-lg sm:text-xl font-bold mb-2">Evaluate the Trigonometric Limit</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+          Compute the following limit without using numerical approximation tables:
+        </p>
+
+        <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center font-mono my-4">
+          $$\lim_{x \to 0} \frac{1 - \cos(4x)}{x^2}$$
+        </div>
+
+        <!-- Interactive Answer Submission -->
+        <div class="bg-brand-50/50 dark:bg-slate-800/40 p-4 rounded-xl border border-brand-100 dark:border-slate-800 mb-4">
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+            Test Your Answer:
+          </label>
+          <div class="flex flex-wrap gap-2">
+            <input type="text" id="daily-input" placeholder="e.g. 8" class="flex-1 min-w-[140px] px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:border-brand-500">
+            <button onclick="checkDailyAnswer()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-lg transition shadow-sm">Check</button>
+          </div>
+          <div id="daily-feedback" class="text-xs font-semibold mt-2 hidden"></div>
+        </div>
+
+        <!-- Collapsible Solution Accordion -->
+        <button onclick="toggleAccordion('daily-solution')" class="w-full py-2 px-4 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center justify-between transition">
+          <span>View Verified Step-by-Step Proof</span>
+          <svg id="daily-solution-icon" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <div id="daily-solution" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3 text-sm text-slate-700 dark:text-slate-300">
+          <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-lg border-l-4 border-brand-500 text-xs">
+            <strong>Method 1: Using L'H&ocirc;pital's Rule (Form 0/0)</strong>
+            <p class="mt-1">Differentiating the numerator and denominator with respect to $x$:</p>
+            $$\lim_{x \to 0} \frac{4\sin(4x)}{2x} = \lim_{x \to 0} \frac{2\sin(4x)}{x}$$
+            <p class="mt-1">Applying L'H&ocirc;pital a second time:</p>
+            $$\lim_{x \to 0} \frac{8\cos(4x)}{1} = 8\cos(0) = 8$$
+          </div>
+          <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-lg border-l-4 border-indigo-500 text-xs">
+            <strong>Method 2: Using Taylor Series Expansion</strong>
+            <p class="mt-1">Recall $\cos(\theta) = 1 - \frac{\theta^2}{2} + \mathcal{O}(\theta^4)$. Substitute $\theta = 4x$:</p>
+            $$\cos(4x) = 1 - \frac{16x^2}{2} + \dots = 1 - 8x^2 + \dots$$
+            $$\lim_{x \to 0} \frac{1 - (1 - 8x^2)}{x^2} = \lim_{x \to 0} \frac{8x^2}{x^2} = 8$$
+          </div>
+          <div class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-bold text-xs">
+            Final Answer: 8
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 2: ALGEBRA PAGE (algebra.html) -->
+    <!-- ========================================================================= -->
+    <section id="view-algebra" class="page-view hidden space-y-6">
+      
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1">
+            <span>Subject Library</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Algebra &amp; Linear Algebra</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Determinants, Eigenvalues, Quadratics, and Polynomial Theory.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="navigate('home')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">&larr; Back Home</button>
+          <button onclick="navigate('calculus')" class="px-3 py-1.5 bg-brand-50 text-brand-600 dark:bg-brand-900/30 text-xs font-medium rounded-lg hover:bg-brand-100 transition">Go to Calculus &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Problem List -->
+      <div class="space-y-6">
+        
+        <!-- Algebra Q1 -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Linear Algebra</span>
+            <span class="text-xs text-slate-400">Difficulty: Medium</span>
+          </div>
+          <h3 class="text-lg font-bold">Eigenvalues of a $2 \times 2$ Matrix</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
+            Find the eigenvalues $\lambda_1, \lambda_2$ (with $\lambda_1 < \lambda_2$) of the square matrix:
+            $$A = \begin{pmatrix} 5 & 4 \\ 1 & 2 \end{pmatrix}$$
+          </p>
+          
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
+            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Answer ($\lambda_1, \lambda_2$):</span>
+            <input type="text" id="ans-alg-1" placeholder="e.g. 1, 6" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+            <button onclick="checkAnswer('ans-alg-1', ['1,6', '1, 6'], 'feed-alg-1')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded">Check</button>
+            <span id="feed-alg-1" class="text-xs font-bold"></span>
+          </div>
+
+          <button onclick="toggleAccordion('alg-sol-1')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            Toggle Full Matrix Solution &darr;
+          </button>
+          
+          <div id="alg-sol-1" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
+            <p><strong>Step 1:</strong> Characteristic equation $\det(A - \lambda I) = 0$:</p>
+            $$\det \begin{pmatrix} 5-\lambda & 4 \\ 1 & 2-\lambda \end{pmatrix} = 0$$
+            <p><strong>Step 2:</strong> Expand determinant:</p>
+            $$(5-\lambda)(2-\lambda) - (4)(1) = \lambda^2 - 7\lambda + 10 - 4 = \lambda^2 - 7\lambda + 6 = 0$$
+            <p><strong>Step 3:</strong> Factor:</p>
+            $$(\lambda - 1)(\lambda - 6) = 0 \implies \lambda_1 = 1, \quad \lambda_2 = 6$$
+          </div>
+        </article>
+
+        <!-- Algebra Q2 -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Optimization</span>
+            <span class="text-xs text-slate-400">Difficulty: Easy</span>
+          </div>
+          <h3 class="text-lg font-bold">Vertex and Maximum of a Quadratic Function</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
+            Find the maximum value of $f(x) = -3x^2 + 18x - 12$.
+          </p>
+
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
+            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Maximum Value $f_{\max}$:</span>
+            <input type="text" id="ans-alg-2" placeholder="e.g. 15" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+            <button onclick="checkAnswer('ans-alg-2', ['15'], 'feed-alg-2')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded">Check</button>
+            <span id="feed-alg-2" class="text-xs font-bold"></span>
+          </div>
+
+          <button onclick="toggleAccordion('alg-sol-2')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            Toggle Full Quadratic Solution &darr;
+          </button>
+          
+          <div id="alg-sol-2" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
+            <p><strong>Method 1: Completing the square:</strong></p>
+            $$f(x) = -3(x^2 - 6x) - 12 = -3\left((x - 3)^2 - 9\right) - 12 = -3(x - 3)^2 + 27 - 12 = -3(x - 3)^2 + 15$$
+            <p>The vertex is at $(3, 15)$, so the maximum value is $15$.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 3: CALCULUS PAGE (calculus.html) -->
+    <!-- ========================================================================= -->
+    <section id="view-calculus" class="page-view hidden space-y-6">
+      
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-1">
+            <span>Subject Library</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Calculus &amp; Analysis</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Differentiation, Definite Integrals, Series Convergence &amp; Differential Equations.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="navigate('home')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">&larr; Back Home</button>
+          <button onclick="navigate('statistics')" class="px-3 py-1.5 bg-purple-50 text-purple-600 dark:bg-purple-900/30 text-xs font-medium rounded-lg hover:bg-purple-100 transition">Go to Statistics &rarr;</button>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+
+        <!-- Calculus Q1 -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-brand-800 dark:bg-blue-950 dark:text-brand-300">Integration</span>
+            <span class="text-xs text-slate-400">Difficulty: Medium</span>
+          </div>
+          <h3 class="text-lg font-bold">Integration by Parts with Trigonometric Function</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
+            Evaluate the definite integral:
+            $$\int_{0}^{\pi} x \sin(x) \, dx$$
+          </p>
+
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
+            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Value (Exact or &pi;):</span>
+            <input type="text" id="ans-calc-1" placeholder="e.g. pi or 3.14" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+            <button onclick="checkAnswer('ans-calc-1', ['pi', '3.14', '3.1415'], 'feed-calc-1')" class="px-3 py-1 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded">Check</button>
+            <span id="feed-calc-1" class="text-xs font-bold"></span>
+          </div>
+
+          <button onclick="toggleAccordion('calc-sol-1')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            Toggle Integration Steps &darr;
+          </button>
+
+          <div id="calc-sol-1" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
+            <p><strong>Step 1:</strong> By parts, let $u = x \implies du = dx$ and $dv = \sin(x)dx \implies v = -\cos(x)$.</p>
+            $$\int_{0}^{\pi} x \sin(x)dx = \left[ -x \cos(x) \right]_{0}^{\pi} - \int_{0}^{\pi} (-\cos(x))dx$$
+            <p><strong>Step 2:</strong> Evaluate the boundary terms:</p>
+            $$= \left( -\pi \cos(\pi) - (-0 \cos(0)) \right) + \int_{0}^{\pi} \cos(x)dx$$
+            $$= -\pi(-1) + \left[ \sin(x) \right]_{0}^{\pi} = \pi + (0 - 0) = \pi$$
+          </div>
+        </article>
+
+        <!-- Calculus Q2 -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-brand-800 dark:bg-blue-950 dark:text-brand-300">Derivatives</span>
+            <span class="text-xs text-slate-400">Difficulty: Hard</span>
+          </div>
+          <h3 class="text-lg font-bold">Logarithmic Differentiation</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
+            Find the slope of the tangent line to the curve $y = x^x$ at $x = 1$.
+          </p>
+
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
+            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Slope $y'(1)$:</span>
+            <input type="text" id="ans-calc-2" placeholder="e.g. 1" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+            <button onclick="checkAnswer('ans-calc-2', ['1'], 'feed-calc-2')" class="px-3 py-1 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded">Check</button>
+            <span id="feed-calc-2" class="text-xs font-bold"></span>
+          </div>
+
+          <button onclick="toggleAccordion('calc-sol-2')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            Toggle Derivative Steps &darr;
+          </button>
+
+          <div id="calc-sol-2" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
+            <p><strong>Step 1:</strong> Take the natural log of both sides: $\ln(y) = \ln(x^x) = x \ln(x)$.</p>
+            <p><strong>Step 2:</strong> Differentiate implicitly with respect to $x$:</p>
+            $$\frac{1}{y} \frac{dy}{dx} = 1 \cdot \ln(x) + x \cdot \frac{1}{x} = \ln(x) + 1$$
+            $$\frac{dy}{dx} = y (\ln(x) + 1) = x^x (\ln(x) + 1)$$
+            <p><strong>Step 3:</strong> Evaluate at $x = 1$:</p>
+            $$y'(1) = 1^1 (\ln(1) + 1) = 1(0 + 1) = 1$$
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 4: STATISTICS PAGE (statistics.html) -->
+    <!-- ========================================================================= -->
+    <section id="view-statistics" class="page-view hidden space-y-6">
+      
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1">
+            <span>Subject Library</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Statistics &amp; Probability</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Bayes' Theorem, Conditional Expectation, Normal Distributions &amp; Sampling.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="navigate('home')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">&larr; Back Home</button>
+          <button onclick="navigate('formulas')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">Formula Sheet &rarr;</button>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        
+        <!-- Stats Q1 -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">Bayesian Inference</span>
+            <span class="text-xs text-slate-400">Difficulty: Medium</span>
+          </div>
+          <h3 class="text-lg font-bold">False Positive Paradox</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
+            A disease has a prevalence of $1\%$ ($P(D) = 0.01$). A laboratory test has a sensitivity of $95\%$ ($P(+|D) = 0.95$) and a false positive rate of $5\%$ ($P(+|D^c) = 0.05$).
+            If a person tests positive, what is the probability they actually have the disease $P(D|+)$?
+          </p>
+
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
+            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Posterior Probability (approx % or decimal):</span>
+            <input type="text" id="ans-stat-1" placeholder="e.g. 0.161 or 16.1%" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
+            <button onclick="checkAnswer('ans-stat-1', ['0.161', '16.1%', '0.16', '16%'], 'feed-stat-1')" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded">Check</button>
+            <span id="feed-stat-1" class="text-xs font-bold"></span>
+          </div>
+
+          <button onclick="toggleAccordion('stat-sol-1')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            Toggle Bayes Calculation &darr;
+          </button>
+
+          <div id="stat-sol-1" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
+            <p><strong>Step 1:</strong> Total probability of testing positive $P(+)$:</p>
+            $$P(+) = P(+|D)P(D) + P(+|D^c)P(D^c) = (0.95)(0.01) + (0.05)(0.99) = 0.0095 + 0.0495 = 0.059$$
+            <p><strong>Step 2:</strong> Apply Bayes' Rule:</p>
+            $$P(D|+) = \frac{P(+|D)P(D)}{P(+)} = \frac{0.0095}{0.059} = \frac{95}{590} \approx 0.161 \quad (16.1\%)$$
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 5: FORMULAS CHEATSHEET PAGE (formulas.html) -->
+    <!-- ========================================================================= -->
+    <section id="view-formulas" class="page-view hidden space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
+            <span>Reference Library</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Formula Cheatsheet</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">High-yield identities, derivative rules, matrix laws &amp; probability distributions.</p>
+        </div>
+        <button onclick="window.print()" class="self-start sm:self-auto px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4-1v8H8v-8"></path></svg>
+          <span>Print Cheatsheet</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Table 1: Calculus Integrals -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-bold text-sm text-brand-600 dark:text-brand-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+            <span>&int;</span> Calculus Rules
+          </h3>
+          <div class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+            <div class="py-2.5 flex justify-between items-center">
+              <span class="font-medium text-slate-600 dark:text-slate-400">Integration by Parts</span>
+              <span class="font-mono">$$\int u \, dv = uv - \int v \, du$$</span>
+            </div>
+            <div class="py-2.5 flex justify-between items-center">
+              <span class="font-medium text-slate-600 dark:text-slate-400">Product Rule</span>
+              <span class="font-mono">$$(uv)' = u'v + uv'$$</span>
+            </div>
+            <div class="py-2.5 flex justify-between items-center">
+              <span class="font-medium text-slate-600 dark:text-slate-400">Quotient Rule</span>
+              <span class="font-mono">$$\left(\frac{u}{v}\right)' = \frac{u'v - uv'}{v^2}$$</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table 2: Linear Algebra -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+          <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+            <span>A</span> Matrices &amp; Vectors
+          </h3>
+          <div class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+            <div class="py-2.5 flex justify-between items-center">
+              <span class="font-medium text-slate-600 dark:text-slate-400">Characteristic Equation</span>
+              <span class="font-mono">$$\det(A - \lambda I) = 0$$</span>
+            </div>
+            <div class="py-2.5 flex justify-between items-center">
+              <span class="font-medium text-slate-600 dark:text-slate-400">$2 \times 2$ Inverse</span>
+              <span class="font-mono">$$A^{-1} = \frac{1}{ad-bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$$</span>
+            </div>
+            <div class="py-2.5 flex justify-between items-center">
+              <span class="font-medium text-slate-600 dark:text-slate-400">Trace Identity</span>
+              <span class="font-mono">$$\text{Tr}(A) = \sum \lambda_i$$</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table 3: Probability -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm md:col-span-2">
+          <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+            <span>P</span> Probability Identities
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+              <span class="font-semibold block mb-1">Bayes' Theorem</span>
+              $$P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B)}$$
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+              <span class="font-semibold block mb-1">Variance Definition</span>
+              $$\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$$
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 6: SUBMIT / ASK A QUESTION PAGE (submit.html) -->
+    <!-- ========================================================================= -->
+    <section id="view-submit" class="page-view hidden space-y-6">
+      
+      <div class="max-w-3xl mx-auto">
+        <div class="pb-4 mb-6 border-b border-slate-200 dark:border-slate-800">
+          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-1">
+            <span>Community Contributions</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Submit a Problem</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Post a mathematical question or proof with live KaTeX LaTeX preview.</p>
+        </div>
+
+        <form id="questionForm" onsubmit="handleQuestionSubmit(event)" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
+          
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">Subject Category</label>
+            <select id="q-category" class="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500">
+              <option value="Algebra">Algebra &amp; Matrices</option>
+              <option value="Calculus">Calculus &amp; Real Analysis</option>
+              <option value="Statistics">Probability &amp; Statistics</option>
+              <option value="Discrete">Discrete Mathematics</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">Problem Title</label>
+            <input type="text" id="q-title" required placeholder="e.g. Evaluating Definite Integral of x*exp(-x^2)" class="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+              Problem Statement (Supports LaTeX syntax, e.g. $\int_0^1 x \, dx$)
+            </label>
+            <textarea id="q-body" rows="4" oninput="updateLivePreview()" placeholder="Type here. For LaTeX equations, wrap in $$ for block or $ for inline." class="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 font-mono text-xs"></textarea>
+          </div>
+
+          <!-- Live LaTeX Preview Container -->
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Live LaTeX Render Preview</label>
+            <div id="livePreviewBox" class="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 min-h-[60px] text-sm text-slate-600 dark:text-slate-400">
+              <em>LaTeX equation preview will appear here as you type...</em>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-end gap-3">
+            <button type="reset" class="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Clear</button>
+            <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow transition">Submit to Hub</button>
+          </div>
+        </form>
+
+        <div id="submitNotice" class="hidden mt-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
+          🎉 Problem submitted successfully to local session storage!
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="mt-auto bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-slate-500 text-xs py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-6 h-6 rounded bg-brand-600 text-white font-bold flex items-center justify-center text-xs">&sum;</span>
+        <span class="font-semibold text-slate-700 dark:text-slate-300">MathVault Knowledge Base</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <button onclick="navigate('home')" class="hover:underline">Home</button>
+        <button onclick="navigate('algebra')" class="hover:underline">Algebra</button>
+        <button onclick="navigate('calculus')" class="hover:underline">Calculus</button>
+        <button onclick="navigate('statistics')" class="hover:underline">Statistics</button>
+        <button onclick="navigate('formulas')" class="hover:underline">Formulas</button>
+        <button onclick="openExportModal()" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">Download GitHub Pages Files</button>
+      </div>
+      <div class="text-[11px] text-slate-400">
+        100% Free &bull; Hosted on GitHub Pages &bull; KaTeX Integrated
+      </div>
+    </div>
   </footer>
 
+  <!-- ========================================================================= -->
+  <!-- MODAL: GITHUB MULTI-FILE EXPORTER / CODE VIEWER -->
+  <!-- ========================================================================= -->
+  <div id="exportModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base sm:text-lg flex items-center gap-2">
+            <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            Export Standalone Files for GitHub Pages
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Copy each file below and create them in your GitHub repo so standard browser links (<code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">algebra.html</code>, etc.) load directly!
+          </p>
+        </div>
+        <button onclick="closeExportModal()" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- File Tab Switcher -->
+      <div class="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 gap-1 overflow-x-auto text-xs font-mono">
+        <button onclick="switchExportTab('index.html')" id="tab-index" class="export-tab py-2.5 px-3 border-b-2 border-brand-600 text-brand-600 font-bold">index.html</button>
+        <button onclick="switchExportTab('algebra.html')" id="tab-algebra" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">algebra.html</button>
+        <button onclick="switchExportTab('calculus.html')" id="tab-calculus" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">calculus.html</button>
+        <button onclick="switchExportTab('statistics.html')" id="tab-statistics" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">statistics.html</button>
+        <button onclick="switchExportTab('formulas.html')" id="tab-formulas" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">formulas.html</button>
+      </div>
+
+      <!-- File Content Preview with Copy Button -->
+      <div class="p-4 flex-1 overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between mb-2">
+          <span id="exportFilenameLabel" class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">index.html</span>
+          <button onclick="copyExportedCode()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-lg transition shadow-sm">
+            <svg id="copyIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span id="copyBtnText">Copy File Code</span>
+          </button>
+        </div>
+        <textarea id="exportCodeArea" readonly class="w-full flex-1 p-3 bg-slate-950 text-slate-200 font-mono text-xs rounded-xl border border-slate-800 code-editor-area resize-none focus:outline-none overflow-auto"></textarea>
+      </div>
+
+      <div class="p-3 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 px-5 flex items-center justify-between">
+        <span>💡 In your GitHub repo, click <strong>Add file &rarr; Create new file</strong>, paste the copied code, and name it identically.</span>
+        <button onclick="closeExportModal()" class="text-xs font-medium text-slate-700 dark:text-slate-300 hover:underline">Done</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Initialize KaTeX auto-render on document load
-    document.addEventListener("DOMContentLoaded", function() {
+    // State management for Multi-Page simulation
+    const pages = {
+      home: { file: 'index.html', title: 'Home' },
+      algebra: { file: 'algebra.html', title: 'Algebra & Matrices' },
+      calculus: { file: 'calculus.html', title: 'Calculus & Analysis' },
+      statistics: { file: 'statistics.html', title: 'Probability & Statistics' },
+      formulas: { file: 'formulas.html', title: 'Formula Cheatsheet' },
+      submit: { file: 'submit.html', title: 'Submit Question' }
+    };
+
+    let currentPage = 'home';
+
+    // Router and Navigation Controller
+    function navigate(pageId) {
+      if (!pages[pageId]) pageId = 'home';
+      currentPage = pageId;
+
+      // Update visibility of subpages
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.add('hidden');
+      });
+      const targetView = document.getElementById('view-' + pageId);
+      if (targetView) targetView.classList.remove('hidden');
+
+      // Update Navigation Active State
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-brand-600', 'dark:text-brand-400', 'bg-brand-50', 'dark:bg-brand-900/30');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      });
+      const activeNav = document.getElementById('nav-' + pageId);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-600', 'dark:text-slate-300');
+        activeNav.classList.add('text-brand-600', 'dark:text-brand-400', 'bg-brand-50', 'dark:bg-brand-900/30');
+      }
+
+      // Update Breadcrumbs
+      document.getElementById('breadcrumbCurrent').textContent = pages[pageId].title;
+      document.getElementById('currentFilename').textContent = pages[pageId].file;
+
+      // Update URL hash without reload
+      window.location.hash = 'page=' + pageId;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Re-trigger KaTeX typeset in case formulas loaded
+      triggerKaTeX();
+    }
+
+    // Toggle Mobile Navigation Menu
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Accordion expand/collapse
+    function toggleAccordion(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('hidden');
+      const icon = document.getElementById(id + '-icon');
+      if (icon) {
+        icon.classList.toggle('rotate-180');
+      }
+    }
+
+    // Answer Verification for Featured Daily Problem
+    function checkDailyAnswer() {
+      const input = document.getElementById('daily-input').value.trim();
+      const feedback = document.getElementById('daily-feedback');
+      feedback.classList.remove('hidden', 'text-emerald-500', 'text-rose-500');
+
+      if (input === '8') {
+        feedback.textContent = '✓ Correct! The limit value is 8.';
+        feedback.classList.add('text-emerald-500');
+      } else {
+        feedback.textContent = '✗ Incorrect. Try applying L\'Hôpital\'s rule or expand cos(4x) with Taylor series.';
+        feedback.classList.add('text-rose-500');
+      }
+    }
+
+    // Generic Answer Checker
+    function checkAnswer(inputId, validList, feedbackId) {
+      const val = document.getElementById(inputId).value.trim().toLowerCase().replace(/\s+/g, '');
+      const fb = document.getElementById(feedbackId);
+      const isMatch = validList.some(item => val === item.toLowerCase().replace(/\s+/g, ''));
+
+      if (isMatch) {
+        fb.textContent = '✓ Correct';
+        fb.className = 'text-xs font-bold text-emerald-600 dark:text-emerald-400';
+      } else {
+        fb.textContent = '✗ Try again';
+        fb.className = 'text-xs font-bold text-rose-500';
+      }
+    }
+
+    // Live LaTeX Preview on Problem Submission
+    function updateLivePreview() {
+      const text = document.getElementById('q-body').value;
+      const previewBox = document.getElementById('livePreviewBox');
+      if (!text.trim()) {
+        previewBox.innerHTML = '<em>LaTeX equation preview will appear here as you type...</em>';
+        return;
+      }
+      previewBox.textContent = text;
+      triggerKaTeX(previewBox);
+    }
+
+    function handleQuestionSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('q-title').value;
+      const category = document.getElementById('q-category').value;
+      const body = document.getElementById('q-body').value;
+
+      const notice = document.getElementById('submitNotice');
+      notice.classList.remove('hidden');
+      document.getElementById('questionForm').reset();
+      document.getElementById('livePreviewBox').innerHTML = '<em>Question added to database!</em>';
+      setTimeout(() => notice.classList.add('hidden'), 5000);
+    }
+
+    // Dark/Light Theme Switcher with localStorage persistence
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcons(isDark);
+    }
+
+    function updateThemeIcons(isDark) {
+      document.getElementById('themeSun').classList.toggle('hidden', !isDark);
+      document.getElementById('themeMoon').classList.toggle('hidden', isDark);
+    }
+
+    // KaTeX Autorender Trigger
+    function triggerKaTeX(container) {
       if (typeof renderMathInElement === 'function') {
-        renderMathInElement(document.body, {
+        renderMathInElement(container || document.body, {
           delimiters: [
             {left: '$$', right: '$$', display: true},
             {left: '$', right: '$', display: false}
@@ -1010,143 +929,275 @@
           throwOnError: false
         });
       }
-      initTheme();
-      loadBookmarks();
-    });
+    }
 
-    // Theme Management
-    const themeToggleBtn = document.getElementById('themeToggle');
-    function initTheme() {
+    // Initializer on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check saved theme
       const savedTheme = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    }
-    themeToggleBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', current);
-      localStorage.setItem('theme', current);
-    });
-
-    // Toggle Solution Visibility
-    function toggleSolution(id) {
-      const panel = document.getElementById(id);
-      if (panel) {
-        panel.classList.toggle('open');
-      }
-    }
-
-    // Interactive Answer Checker
-    function verifyAnswer(questionId, canonicalAnswer, acceptableList) {
-      const input = document.getElementById('input-' + questionId);
-      const feedback = document.getElementById('feedback-' + questionId);
-      if (!input || !feedback) return;
-
-      const userVal = input.value.trim().toLowerCase().replace(/\s+/g, '');
-      const matched = acceptableList.some(ans => userVal === ans.toLowerCase().replace(/\s+/g, ''));
-
-      if (matched) {
-        feedback.className = 'feedback-msg correct';
-        feedback.textContent = '✓ Correct! Well done.';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        updateThemeIcons(true);
       } else {
-        feedback.className = 'feedback-msg wrong';
-        feedback.textContent = '✗ Not quite. Double-check your calculation or inspect the solution below.';
+        document.documentElement.classList.remove('dark');
+        updateThemeIcons(false);
       }
-    }
 
-    // Category Filter Logic
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    const cards = document.querySelectorAll('.card');
-    const statsCount = document.getElementById('statsCount');
-
-    categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        categoryBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        applyFilters();
-      });
-    });
-
-    // Real-Time Search Logic
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', applyFilters);
-
-    function applyFilters() {
-      const activeCategory = document.querySelector('.category-btn.active').dataset.category;
-      const searchQuery = searchInput.value.toLowerCase().trim();
-      let visibleCount = 0;
-
-      cards.forEach(card => {
-        const cardCategory = card.dataset.category;
-        const textContent = card.innerText.toLowerCase();
-
-        const matchesCategory = (activeCategory === 'all' || cardCategory === activeCategory);
-        const matchesSearch = (!searchQuery || textContent.includes(searchQuery));
-
-        if (matchesCategory && matchesSearch) {
-          card.style.display = 'block';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      statsCount.textContent = `Showing ${visibleCount} problem${visibleCount === 1 ? '' : 's'}`;
-    }
-
-    // Bookmarks state handling
-    function toggleBookmark(id) {
-      let bookmarks = JSON.parse(localStorage.getItem('math_bookmarks') || '[]');
-      const idx = bookmarks.indexOf(id);
-      if (idx > -1) {
-        bookmarks.splice(idx, 1);
+      // Read hash URL for direct page jump (e.g. #page=calculus)
+      const hash = window.location.hash;
+      if (hash.startsWith('#page=')) {
+        const page = hash.replace('#page=', '');
+        navigate(page);
       } else {
-        bookmarks.push(id);
+        triggerKaTeX();
       }
-      localStorage.setItem('math_bookmarks', JSON.stringify(bookmarks));
-      loadBookmarks();
-    }
 
-    function loadBookmarks() {
-      const bookmarks = JSON.parse(localStorage.getItem('math_bookmarks') || '[]');
-      document.querySelectorAll('.card').forEach(card => {
-        const qId = card.dataset.id;
-        const btn = card.querySelector('.bookmark-btn');
-        if (btn) {
-          if (bookmarks.includes(qId)) {
-            btn.classList.add('bookmarked');
-          } else {
-            btn.classList.remove('bookmarked');
-          }
+      // Initialize export preview
+      switchExportTab('index.html');
+    });
+
+    // Handle browser forward/back buttons
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#page=')) {
+        const page = hash.replace('#page=', '');
+        if (page !== currentPage) {
+          navigate(page);
         }
-      });
+      }
+    });
+
+    // =========================================================================
+    // EXPORT MODAL LOGIC (Generates Clean Code for Separate Files)
+    // =========================================================================
+    const exportSnippets = {
+      "index.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathVault — Mathematics Home</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
+    <div class="flex gap-4 text-sm font-medium">
+      <a href="index.html" class="text-blue-600 font-bold">Home</a>
+      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
+      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
+      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
+      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
+    </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-12 flex-1">
+    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl p-10 mb-8">
+      <h1 class="text-4xl font-extrabold mb-3">Math Problem Solving Hub</h1>
+      <p class="text-blue-100 mb-6">Interactive step-by-step mathematical questions with verified LaTeX proofs.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="algebra.html" class="px-4 py-2 bg-white text-slate-900 font-bold rounded-lg text-sm">Algebra</a>
+        <a href="calculus.html" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg text-sm">Calculus</a>
+        <a href="statistics.html" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-lg text-sm">Statistics</a>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    &copy; 2026 MathVault &bull; Hosted on GitHub Pages
+  </footer>
+</body>
+</html>`,
+
+      "algebra.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra & Matrices — MathVault</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
+    <div class="flex gap-4 text-sm font-medium">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="algebra.html" class="text-blue-600 font-bold">Algebra</a>
+      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
+      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
+      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
+    </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
+    <h1 class="text-3xl font-extrabold mb-4">Algebra & Matrix Problems</h1>
+    <article class="bg-white border rounded-2xl p-6 shadow-sm mb-6">
+      <h2 class="text-xl font-bold mb-2">Eigenvalues of a Matrix</h2>
+      <p class="mb-4">Compute the eigenvalues of $A = \\begin{pmatrix} 5 & 4 \\\\ 1 & 2 \\end{pmatrix}$.</p>
+      <div class="p-4 bg-slate-50 rounded-xl border text-sm">
+        <strong>Solution:</strong> The eigenvalues are $\\lambda_1 = 1$ and $\\lambda_2 = 6$.
+      </div>
+    </article>
+  </main>
+</body>
+</html>`,
+
+      "calculus.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculus & Analysis — MathVault</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
+    <div class="flex gap-4 text-sm font-medium">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
+      <a href="calculus.html" class="text-blue-600 font-bold">Calculus</a>
+      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
+      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
+    </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
+    <h1 class="text-3xl font-extrabold mb-4">Calculus & Analysis Problems</h1>
+    <article class="bg-white border rounded-2xl p-6 shadow-sm mb-6">
+      <h2 class="text-xl font-bold mb-2">Definite Integration by Parts</h2>
+      <p class="mb-4">Evaluate: $\\int_{0}^{\\pi} x \\sin(x) \\, dx$.</p>
+      <div class="p-4 bg-slate-50 rounded-xl border text-sm">
+        <strong>Solution:</strong> The exact value is $\\pi$.
+      </div>
+    </article>
+  </main>
+</body>
+</html>`,
+
+      "statistics.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probability & Statistics — MathVault</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
+    <div class="flex gap-4 text-sm font-medium">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
+      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
+      <a href="statistics.html" class="text-blue-600 font-bold">Statistics</a>
+      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
+    </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
+    <h1 class="text-3xl font-extrabold mb-4">Probability & Statistics</h1>
+    <article class="bg-white border rounded-2xl p-6 shadow-sm mb-6">
+      <h2 class="text-xl font-bold mb-2">Bayes' Theorem Diagnostics</h2>
+      <p class="mb-4">Given $P(D)=0.01$, sensitivity $95\\%$, and false positive $5\\%$, find $P(D|+)$.</p>
+      <div class="p-4 bg-slate-50 rounded-xl border text-sm">
+        <strong>Solution:</strong> $P(D|+) = \\frac{0.0095}{0.059} \\approx 16.1\\%$.
+      </div>
+    </article>
+  </main>
+</body>
+</html>`,
+
+      "formulas.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formula Reference — MathVault</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
+    <div class="flex gap-4 text-sm font-medium">
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
+      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
+      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
+      <a href="formulas.html" class="text-blue-600 font-bold">Formulas</a>
+    </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
+    <h1 class="text-3xl font-extrabold mb-4">Formula Sheet</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white p-4 border rounded-xl">
+        <h2 class="font-bold text-sm mb-2">Integration by Parts</h2>
+        $$\\int u \\, dv = uv - \\int v \\, du$$
+      </div>
+      <div class="bg-white p-4 border rounded-xl">
+        <h2 class="font-bold text-sm mb-2">Bayes' Theorem</h2>
+        $$P(A \\mid B) = \\frac{P(B \\mid A)P(A)}{P(B)}$$
+      </div>
+    </div>
+  </main>
+</body>
+</html>`
+    };
+
+    let activeExportTab = 'index.html';
+
+    function openExportModal() {
+      document.getElementById('exportModal').classList.remove('hidden');
+      document.getElementById('exportModal').classList.add('flex');
     }
 
-    // Formula Modal Event Handlers
-    const formulaBtn = document.getElementById('formulaBtn');
-    const formulaModal = document.getElementById('formulaModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
+    function closeExportModal() {
+      document.getElementById('exportModal').classList.add('hidden');
+      document.getElementById('exportModal').classList.remove('flex');
+    }
 
-    formulaBtn.addEventListener('click', () => {
-      formulaModal.classList.add('open');
-      if (typeof renderMathInElement === 'function') {
-        renderMathInElement(formulaModal, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false}
-          ],
-          throwOnError: false
-        });
+    function switchExportTab(fileName) {
+      activeExportTab = fileName;
+      document.getElementById('exportFilenameLabel').textContent = fileName;
+      document.getElementById('exportCodeArea').value = exportSnippets[fileName];
+
+      document.querySelectorAll('.export-tab').forEach(tab => {
+        tab.classList.remove('border-brand-600', 'text-brand-600', 'font-bold');
+        tab.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      const tabId = 'tab-' + fileName.replace('.html', '');
+      const currentTab = document.getElementById(tabId);
+      if (currentTab) {
+        currentTab.classList.remove('border-transparent', 'text-slate-500');
+        currentTab.classList.add('border-brand-600', 'text-brand-600', 'font-bold');
       }
-    });
+    }
 
-    closeModalBtn.addEventListener('click', () => {
-      formulaModal.classList.remove('open');
-    });
-
-    formulaModal.addEventListener('click', (e) => {
-      if (e.target === formulaModal) {
-        formulaModal.classList.remove('open');
+    function copyExportedCode() {
+      const codeArea = document.getElementById('exportCodeArea');
+      codeArea.select();
+      try {
+        document.execCommand('copy');
+        const btnText = document.getElementById('copyBtnText');
+        btnText.textContent = 'Copied to Clipboard!';
+        setTimeout(() => {
+          btnText.textContent = 'Copy File Code';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy', err);
       }
-    });
+    }
   </script>
 </body>
 </html>
