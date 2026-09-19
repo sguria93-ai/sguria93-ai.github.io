@@ -3,23 +3,1150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Website</title>
+  <title>MathVault — Interactive Q&amp;A &amp; Problem Solving</title>
+
+  <!-- Google Fonts & KaTeX CDN for LaTeX rendering -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 50px auto;
-      padding: 0 20px;
-      line-height: 1.6;
-      color: #333;
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    h1 {
-      color: #0969da;
+
+    [data-theme="dark"] {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #151e32;
+      --border-color: #1f293d;
+      --border-hover: #374151;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-light: rgba(59, 130, 246, 0.12);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.6;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: var(--transition);
+      background: none;
+      color: var(--text-main);
+    }
+
+    .btn-outline {
+      border-color: var(--border-color);
+      background-color: var(--bg-secondary);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .hero {
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 650px;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    .search-box-wrapper {
+      max-width: 550px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.8rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+    }
+
+    .main-container {
+      max-width: 1100px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .category-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .category-btn {
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.825rem;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .category-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-main);
+    }
+
+    .category-btn.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .stats-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .questions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-hover);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.725rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-algebra { background: #fef3c7; color: #92400e; }
+    .badge-calculus { background: #e0f2fe; color: #0369a1; }
+    .badge-statistics { background: #ede9fe; color: #6d28d9; }
+    .badge-linear-algebra { background: #dcfce7; color: #15803d; }
+
+    [data-theme="dark"] .badge-algebra { background: #78350f44; color: #fde68a; }
+    [data-theme="dark"] .badge-calculus { background: #0c4a6e44; color: #bae6fd; }
+    [data-theme="dark"] .badge-statistics { background: #4c1d9544; color: #ddd6fe; }
+    [data-theme="dark"] .badge-linear-algebra { background: #14532d44; color: #bbf7d0; }
+
+    .diff-beginner { color: #10b981; }
+    .diff-intermediate { color: #f59e0b; }
+    .diff-advanced { color: #ef4444; }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .bookmark-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0.25rem;
+      border-radius: 50%;
+      display: flex;
+      transition: var(--transition);
+    }
+
+    .bookmark-btn:hover {
+      color: var(--warning);
+      background: var(--primary-light);
+    }
+
+    .bookmark-btn.bookmarked {
+      color: var(--warning);
+    }
+
+    .question-body {
+      font-size: 0.98rem;
+      color: var(--text-main);
+      margin: 1rem 0;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+
+    .practice-area {
+      background-color: var(--bg-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin: 1.2rem 0;
+      border: 1px dashed var(--border-color);
+    }
+
+    .practice-header {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .practice-form {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .practice-input {
+      flex: 1;
+      min-width: 180px;
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .feedback-msg {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-msg.correct {
+      display: block;
+      color: var(--success);
+    }
+
+    .feedback-msg.wrong {
+      display: block;
+      color: var(--danger);
+    }
+
+    .solution-toggle-btn {
+      width: 100%;
+      padding: 0.65rem;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .solution-toggle-btn:hover {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .solution-panel {
+      display: none;
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border-color);
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .solution-panel.open {
+      display: block;
+    }
+
+    .solution-step {
+      margin-bottom: 1.2rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--primary);
+    }
+
+    .solution-step-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .solution-step-desc {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      overflow-x: auto;
+    }
+
+    .solution-final-box {
+      background-color: var(--success-light);
+      border: 1px solid #6ee7b7;
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+      color: #065f46;
+      font-weight: 600;
+      overflow-x: auto;
+    }
+
+    [data-theme="dark"] .solution-final-box {
+      background-color: rgba(16, 185, 129, 0.15);
+      border-color: #059669;
+      color: #6ee7b7;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      width: 100%;
+      max-width: 750px;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      padding: 1.75rem;
+      transform: translateY(15px);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.open .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.8rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .formula-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+
+    .formula-table th, .formula-table td {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      text-align: left;
+    }
+
+    .formula-table th {
+      background: var(--bg-primary);
+      font-weight: 600;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .hero-title { font-size: 1.75rem; }
+      .nav-container { padding: 0.75rem 1rem; }
+      .card { padding: 1.2rem; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
-  <h1>My Website is Live!</h1>
-  <p>Created with custom HTML and hosted on GitHub Pages.</p>
+
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">&int;</div>
+        <span>MathVault</span>
+      </a>
+      <div class="nav-actions">
+        <button class="btn btn-outline" id="formulaBtn" title="View Formula Sheet">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Formula Sheet</span>
+        </button>
+        <button class="btn btn-outline" id="themeToggle" title="Toggle Dark/Light Mode">
+          <svg id="themeIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1 class="hero-title">Master Core Mathematical Concepts</h1>
+    <p class="hero-subtitle">Interactive problem sets, verified LaTeX solutions, and step-by-step rigorous walkthroughs.</p>
+    <div class="search-box-wrapper">
+      <div class="search-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by concept (e.g. eigenvalue, integral, Bayes, limit)..." />
+    </div>
+  </section>
+
+  <main class="main-container">
+    <div class="filter-bar">
+      <div class="category-pills">
+        <button class="category-btn active" data-category="all">All Topics</button>
+        <button class="category-btn" data-category="calculus">Calculus</button>
+        <button class="category-btn" data-category="algebra">Algebra &amp; Optimization</button>
+        <button class="category-btn" data-category="linear-algebra">Linear Algebra</button>
+        <button class="category-btn" data-category="statistics">Probability &amp; Stats</button>
+      </div>
+      <div class="stats-info" id="statsCount">Showing 6 problems</div>
+    </div>
+
+    <div class="questions-grid" id="questionsContainer">
+
+      <!-- Question 1: Calculus (Integration by Parts) -->
+      <article class="card" data-category="calculus" data-id="q1">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="badge badge-calculus">Calculus</span>
+            <span class="badge diff-intermediate">&bull; Intermediate</span>
+          </div>
+          <button class="bookmark-btn" onclick="toggleBookmark('q1')" title="Bookmark Question">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <h2 class="card-title">Definite Integration by Parts</h2>
+        <div class="question-body">
+          Evaluate the following definite integral using integration by parts:
+          $$\int_{1}^{e} x \ln(x) \, dx$$
+        </div>
+        <div class="practice-area">
+          <div class="practice-header">Quick Check (Value of the integral):</div>
+          <div class="practice-form">
+            <input type="text" class="practice-input" placeholder="e.g. (e^2+1)/4 or decimal 2.097" id="input-q1">
+            <button class="btn btn-primary" onclick="verifyAnswer('q1', '2.097', ['(e^2+1)/4', '(e^2 + 1)/4', '2.097', '2.10'])">Check</button>
+          </div>
+          <div class="feedback-msg" id="feedback-q1"></div>
+        </div>
+        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q1')">
+          <span>Show Full Step-by-Step Solution</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="solution-panel" id="sol-q1">
+          <div class="solution-step">
+            <div class="solution-step-title">Step 1: Choose Parts via LIATE Rule</div>
+            <div class="solution-step-desc">
+              Let $u = \ln(x)$ (Logarithmic) and $dv = x \, dx$ (Algebraic).<br>
+              Differentiating $u$: $$du = \frac{1}{x} \, dx$$
+              Integrating $dv$: $$v = \frac{x^2}{2}$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 2: Apply the Integration by Parts Formula</div>
+            <div class="solution-step-desc">
+              $$\int u \, dv = uv - \int v \, du$$
+              $$\int_{1}^{e} x \ln(x) \, dx = \left[ \frac{x^2}{2} \ln(x) \right]_{1}^{e} - \int_{1}^{e} \frac{x^2}{2} \cdot \frac{1}{x} \, dx$$
+              $$= \left( \frac{e^2}{2} \ln(e) - \frac{1^2}{2} \ln(1) \right) - \frac{1}{2} \int_{1}^{e} x \, dx$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 3: Evaluate Remaining Integral &amp; Limits</div>
+            <div class="solution-step-desc">
+              Since $\ln(e) = 1$ and $\ln(1) = 0$:
+              $$= \frac{e^2}{2} - \frac{1}{2} \left[ \frac{x^2}{2} \right]_{1}^{e} = \frac{e^2}{2} - \frac{1}{4}(e^2 - 1) = \frac{2e^2 - e^2 + 1}{4} = \frac{e^2 + 1}{4}$$
+            </div>
+          </div>
+          <div class="solution-final-box">
+            Final Answer: $$\frac{e^2 + 1}{4} \approx 2.09726$$
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="linear-algebra" data-id="q2">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="badge badge-linear-algebra">Linear Algebra</span>
+            <span class="badge diff-intermediate">&bull; Intermediate</span>
+          </div>
+          <button class="bookmark-btn" onclick="toggleBookmark('q2')" title="Bookmark Question">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <h2 class="card-title">Eigenvalues of a $2 \times 2$ Real Matrix</h2>
+        <div class="question-body">
+          Find the two real eigenvalues $\lambda_1, \lambda_2$ (with $\lambda_1 \le \lambda_2$) of the matrix:
+          $$A = \begin{pmatrix} 4 & 2 \\ 1 & 3 \end{pmatrix}$$
+        </div>
+        <div class="practice-area">
+          <div class="practice-header">Quick Check (Enter comma-separated values &lambda;<sub>1</sub>, &lambda;<sub>2</sub>):</div>
+          <div class="practice-form">
+            <input type="text" class="practice-input" placeholder="e.g. 2, 5" id="input-q2">
+            <button class="btn btn-primary" onclick="verifyAnswer('q2', '2, 5', ['2,5', '2, 5'])">Check</button>
+          </div>
+          <div class="feedback-msg" id="feedback-q2"></div>
+        </div>
+        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q2')">
+          <span>Show Full Step-by-Step Solution</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="solution-panel" id="sol-q2">
+          <div class="solution-step">
+            <div class="solution-step-title">Step 1: Set up the Characteristic Equation</div>
+            <div class="solution-step-desc">
+              The eigenvalues satisfy $\det(A - \lambda I) = 0$:
+              $$\det \begin{pmatrix} 4 - \lambda & 2 \\ 1 & 3 - \lambda \end{pmatrix} = 0$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 2: Expand the Determinant Polynomial</div>
+            <div class="solution-step-desc">
+              $$(4 - \lambda)(3 - \lambda) - (2 \times 1) = 0$$
+              $$\lambda^2 - 7\lambda + 12 - 2 = 0 \implies \lambda^2 - 7\lambda + 10 = 0$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 3: Factor the Characteristic Polynomial</div>
+            <div class="solution-step-desc">
+              $$(\lambda - 2)(\lambda - 5) = 0 \implies \lambda_1 = 2, \quad \lambda_2 = 5$$
+              Notice that $\text{Tr}(A) = 4 + 3 = 7 = \lambda_1 + \lambda_2$ and $\det(A) = 12 - 2 = 10 = \lambda_1 \lambda_2$.
+            </div>
+          </div>
+          <div class="solution-final-box">
+            Final Answer: $$\lambda_1 = 2, \quad \lambda_2 = 5$$
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="algebra" data-id="q3">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="badge badge-algebra">Algebra &amp; Optimization</span>
+            <span class="badge diff-beginner">&bull; Beginner</span>
+          </div>
+          <button class="bookmark-btn" onclick="toggleBookmark('q3')" title="Bookmark Question">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <h2 class="card-title">Global Extreme Value of a Quadratic Function</h2>
+        <div class="question-body">
+          Find the global maximum value $M$ of the parabolic objective function:
+          $$f(x) = -2x^2 + 12x - 7$$
+        </div>
+        <div class="practice-area">
+          <div class="practice-header">Quick Check (Maximum value of f(x)):</div>
+          <div class="practice-form">
+            <input type="text" class="practice-input" placeholder="e.g. 11" id="input-q3">
+            <button class="btn btn-primary" onclick="verifyAnswer('q3', '11', ['11'])">Check</button>
+          </div>
+          <div class="feedback-msg" id="feedback-q3"></div>
+        </div>
+        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q3')">
+          <span>Show Full Step-by-Step Solution</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="solution-panel" id="sol-q3">
+          <div class="solution-step">
+            <div class="solution-step-title">Method 1: First Derivative Test (Calculus)</div>
+            <div class="solution-step-desc">
+              Compute the critical point by setting $f'(x) = 0$:
+              $$f'(x) = -4x + 12 = 0 \implies 4x = 12 \implies x^* = 3$$
+              Since $f''(x) = -4 < 0$, $x^* = 3$ is a strict global maximum.
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Method 2: Completing the Square (Algebraic)</div>
+            <div class="solution-step-desc">
+              $$f(x) = -2(x^2 - 6x) - 7 = -2\left((x - 3)^2 - 9\right) - 7$$
+              $$= -2(x - 3)^2 + 18 - 7 = -2(x - 3)^2 + 11$$
+              Because $(x - 3)^2 \ge 0$, the maximum occurs when $(x - 3) = 0$.
+            </div>
+          </div>
+          <div class="solution-final-box">
+            Final Answer: $$f_{\max} = f(3) = 11$$
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="statistics" data-id="q4">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="badge badge-statistics">Probability</span>
+            <span class="badge diff-intermediate">&bull; Intermediate</span>
+          </div>
+          <button class="bookmark-btn" onclick="toggleBookmark('q4')" title="Bookmark Question">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <h2 class="card-title">Bayesian Diagnostic Testing</h2>
+        <div class="question-body">
+          A rare medical condition has a prevalence of $0.5\%$ in a population ($P(D) = 0.005$). 
+          A diagnostic test has a true positive rate (sensitivity) of $98\%$ and a false positive rate of $2\%$. 
+          If a randomly selected patient tests positive, calculate the posterior probability $P(D \mid +)$ that the patient actually has the disease.
+        </div>
+        <div class="practice-area">
+          <div class="practice-header">Quick Check (Answer as decimal or %):</div>
+          <div class="practice-form">
+            <input type="text" class="practice-input" placeholder="e.g. 0.1976 or 19.8%" id="input-q4">
+            <button class="btn btn-primary" onclick="verifyAnswer('q4', '0.1976', ['0.198', '0.1976', '19.8%', '19.76%'])">Check</button>
+          </div>
+          <div class="feedback-msg" id="feedback-q4"></div>
+        </div>
+        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q4')">
+          <span>Show Full Step-by-Step Solution</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="solution-panel" id="sol-q4">
+          <div class="solution-step">
+            <div class="solution-step-title">Step 1: Identify Given Priors &amp; Conditionals</div>
+            <div class="solution-step-desc">
+              $$P(D) = 0.005, \quad P(D^c) = 1 - 0.005 = 0.995$$
+              $$P(+ \mid D) = 0.98, \quad P(+ \mid D^c) = 0.02$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 2: Total Probability Law for Denominator $P(+)$</div>
+            <div class="solution-step-desc">
+              $$P(+) = P(+ \mid D)P(D) + P(+ \mid D^c)P(D^c)$$
+              $$P(+) = (0.98 \times 0.005) + (0.02 \times 0.995) = 0.0049 + 0.0199 = 0.0248$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 3: Apply Bayes' Theorem</div>
+            <div class="solution-step-desc">
+              $$P(D \mid +) = \frac{P(+ \mid D)P(D)}{P(+)} = \frac{0.0049}{0.0248} = \frac{49}{248} \approx 0.19758$$
+            </div>
+          </div>
+          <div class="solution-final-box">
+            Final Answer: $$P(D \mid +) = \frac{49}{248} \approx 19.76\%$$
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="calculus" data-id="q5">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="badge badge-calculus">Calculus</span>
+            <span class="badge diff-intermediate">&bull; Intermediate</span>
+          </div>
+          <button class="bookmark-btn" onclick="toggleBookmark('q5')" title="Bookmark Question">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <h2 class="card-title">Indeterminate Form Limit Evaluation</h2>
+        <div class="question-body">
+          Evaluate the following trigonometric limit without a calculator:
+          $$\lim_{x \to 0} \frac{1 - \cos(3x)}{x^2}$$
+        </div>
+        <div class="practice-area">
+          <div class="practice-header">Quick Check (Value of the limit):</div>
+          <div class="practice-form">
+            <input type="text" class="practice-input" placeholder="e.g. 9/2 or 4.5" id="input-q5">
+            <button class="btn btn-primary" onclick="verifyAnswer('q5', '4.5', ['9/2', '4.5'])">Check</button>
+          </div>
+          <div class="feedback-msg" id="feedback-q5"></div>
+        </div>
+        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q5')">
+          <span>Show Full Step-by-Step Solution</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="solution-panel" id="sol-q5">
+          <div class="solution-step">
+            <div class="solution-step-title">Method 1: L'H&ocirc;pital's Rule</div>
+            <div class="solution-step-desc">
+              Direct substitution yields $\frac{1 - 1}{0} = \frac{0}{0}$. Differentiating top and bottom:
+              $$\lim_{x \to 0} \frac{3\sin(3x)}{2x}$$
+              Since this is still $\frac{0}{0}$, apply L'H&ocirc;pital's rule a second time:
+              $$\lim_{x \to 0} \frac{9\cos(3x)}{2} = \frac{9(1)}{2} = \frac{9}{2}$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Method 2: Maclaurin Taylor Series Expansion</div>
+            <div class="solution-step-desc">
+              Recall $\cos(\theta) = 1 - \frac{\theta^2}{2!} + \mathcal{O}(\theta^4)$. Setting $\theta = 3x$:
+              $$\cos(3x) = 1 - \frac{(3x)^2}{2} + \dots = 1 - \frac{9x^2}{2} + \dots$$
+              $$\lim_{x \to 0} \frac{1 - \left(1 - \frac{9x^2}{2}\right)}{x^2} = \frac{\frac{9x^2}{2}}{x^2} = \frac{9}{2}$$
+            </div>
+          </div>
+          <div class="solution-final-box">
+            Final Answer: $$\frac{9}{2} = 4.5$$
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-category="linear-algebra" data-id="q6">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="badge badge-linear-algebra">Linear Algebra</span>
+            <span class="badge diff-advanced">&bull; Advanced</span>
+          </div>
+          <button class="bookmark-btn" onclick="toggleBookmark('q6')" title="Bookmark Question">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <h2 class="card-title">Invertibility and Determinant of a $3 \times 3$ Matrix</h2>
+        <div class="question-body">
+          Determine the determinant $\det(B)$ of the matrix:
+          $$B = \begin{pmatrix} 1 & 0 & 2 \\ 2 & -1 & 3 \\ 4 & 1 & 8 \end{pmatrix}$$
+        </div>
+        <div class="practice-area">
+          <div class="practice-header">Quick Check (Value of det(B)):</div>
+          <div class="practice-form">
+            <input type="text" class="practice-input" placeholder="e.g. -1" id="input-q6">
+            <button class="btn btn-primary" onclick="verifyAnswer('q6', '-1', ['-1'])">Check</button>
+          </div>
+          <div class="feedback-msg" id="feedback-q6"></div>
+        </div>
+        <button class="solution-toggle-btn" onclick="toggleSolution('sol-q6')">
+          <span>Show Full Step-by-Step Solution</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="solution-panel" id="sol-q6">
+          <div class="solution-step">
+            <div class="solution-step-title">Step 1: Expand Along the First Row</div>
+            <div class="solution-step-desc">
+              Notice Row 1 contains a zero entry, making Laplace expansion efficient:
+              $$\det(B) = 1 \cdot \begin{vmatrix} -1 & 3 \\ 1 & 8 \end{vmatrix} - 0 \cdot \begin{vmatrix} 2 & 3 \\ 4 & 8 \end{vmatrix} + 2 \cdot \begin{vmatrix} 2 & -1 \\ 4 & 1 \end{vmatrix}$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 2: Evaluate $2 \times 2$ Minors</div>
+            <div class="solution-step-desc">
+              $$\begin{vmatrix} -1 & 3 \\ 1 & 8 \end{vmatrix} = (-1)(8) - (3)(1) = -8 - 3 = -11$$
+              $$\begin{vmatrix} 2 & -1 \\ 4 & 1 \end{vmatrix} = (2)(1) - (-1)(4) = 2 + 4 = 6$$
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="solution-step-title">Step 3: Combine Terms</div>
+            <div class="solution-step-desc">
+              $$\det(B) = 1(-11) + 2(6) = -11 + 12 = 1$$
+            </div>
+          </div>
+          <div class="solution-final-box">
+            Final Answer: $$\det(B) = 1 \quad (\text{Matrix is non-singular and invertible})$$
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="formulaModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Essential Formula Reference</h3>
+        <button class="btn btn-outline" id="closeModalBtn">&times;</button>
+      </div>
+      <div>
+        <h4>Calculus</h4>
+        <table class="formula-table">
+          <thead>
+            <tr><th>Rule</th><th>Formula</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Integration by Parts</td><td>$$\int u \, dv = uv - \int v \, du$$</td></tr>
+            <tr><td>Derivative of $\ln(x)$</td><td>$$\frac{d}{dx}\ln(x) = \frac{1}{x}$$</td></tr>
+            <tr><td>L'H&ocirc;pital's Rule</td><td>$$\lim_{x\to c} \frac{f(x)}{g(x)} = \lim_{x\to c} \frac{f'(x)}{g'(x)}$$</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Linear Algebra &amp; Matrices</h4>
+        <table class="formula-table">
+          <thead>
+            <tr><th>Concept</th><th>Definition</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Eigenvalues</td><td>$$\det(A - \lambda I) = 0$$</td></tr>
+            <tr><td>$2 \times 2$ Determinant</td><td>$$\det \begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc$$</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Probability</h4>
+        <table class="formula-table">
+          <thead>
+            <tr><th>Theorem</th><th>Formula</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Bayes' Theorem</td><td>$$P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B)}$$</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 MathVault &bull; Free and Open Source Mathematics Learning Hub &bull; Hosted on GitHub Pages</p>
+  </footer>
+
+  <script>
+    // Initialize KaTeX auto-render on document load
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+      initTheme();
+      loadBookmarks();
+    });
+
+    // Theme Management
+    const themeToggleBtn = document.getElementById('themeToggle');
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', current);
+      localStorage.setItem('theme', current);
+    });
+
+    // Toggle Solution Visibility
+    function toggleSolution(id) {
+      const panel = document.getElementById(id);
+      if (panel) {
+        panel.classList.toggle('open');
+      }
+    }
+
+    // Interactive Answer Checker
+    function verifyAnswer(questionId, canonicalAnswer, acceptableList) {
+      const input = document.getElementById('input-' + questionId);
+      const feedback = document.getElementById('feedback-' + questionId);
+      if (!input || !feedback) return;
+
+      const userVal = input.value.trim().toLowerCase().replace(/\s+/g, '');
+      const matched = acceptableList.some(ans => userVal === ans.toLowerCase().replace(/\s+/g, ''));
+
+      if (matched) {
+        feedback.className = 'feedback-msg correct';
+        feedback.textContent = '✓ Correct! Well done.';
+      } else {
+        feedback.className = 'feedback-msg wrong';
+        feedback.textContent = '✗ Not quite. Double-check your calculation or inspect the solution below.';
+      }
+    }
+
+    // Category Filter Logic
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const cards = document.querySelectorAll('.card');
+    const statsCount = document.getElementById('statsCount');
+
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // Real-Time Search Logic
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', applyFilters);
+
+    function applyFilters() {
+      const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+      const searchQuery = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardCategory = card.dataset.category;
+        const textContent = card.innerText.toLowerCase();
+
+        const matchesCategory = (activeCategory === 'all' || cardCategory === activeCategory);
+        const matchesSearch = (!searchQuery || textContent.includes(searchQuery));
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      statsCount.textContent = `Showing ${visibleCount} problem${visibleCount === 1 ? '' : 's'}`;
+    }
+
+    // Bookmarks state handling
+    function toggleBookmark(id) {
+      let bookmarks = JSON.parse(localStorage.getItem('math_bookmarks') || '[]');
+      const idx = bookmarks.indexOf(id);
+      if (idx > -1) {
+        bookmarks.splice(idx, 1);
+      } else {
+        bookmarks.push(id);
+      }
+      localStorage.setItem('math_bookmarks', JSON.stringify(bookmarks));
+      loadBookmarks();
+    }
+
+    function loadBookmarks() {
+      const bookmarks = JSON.parse(localStorage.getItem('math_bookmarks') || '[]');
+      document.querySelectorAll('.card').forEach(card => {
+        const qId = card.dataset.id;
+        const btn = card.querySelector('.bookmark-btn');
+        if (btn) {
+          if (bookmarks.includes(qId)) {
+            btn.classList.add('bookmarked');
+          } else {
+            btn.classList.remove('bookmarked');
+          }
+        }
+      });
+    }
+
+    // Formula Modal Event Handlers
+    const formulaBtn = document.getElementById('formulaBtn');
+    const formulaModal = document.getElementById('formulaModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    formulaBtn.addEventListener('click', () => {
+      formulaModal.classList.add('open');
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(formulaModal, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      formulaModal.classList.remove('open');
+    });
+
+    formulaModal.addEventListener('click', (e) => {
+      if (e.target === formulaModal) {
+        formulaModal.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
