@@ -1,1191 +1,1681 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MathVault — Multi-Page Mathematics Hub</title>
-  
-  <!-- Tailwind CSS & Inter Font -->
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- KaTeX for beautiful Mathematical typesetting -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- MathJax Configuration -->
   <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['Fira Code', 'monospace'],
-          },
-          colors: {
-            brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a',
-            }
-          }
-        }
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      chtml: {
+        scale: 0.88
       }
-    }
+    };
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 
   <style>
-    /* Smooth transitions and scrollbars */
     * {
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      box-sizing: border-box;
     }
-    .katex-display {
+
+    /* Edge-to-edge layout with zero margin waste */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background-color: #f1f5f9;
+      font-family: 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1e293b;
+      line-height: 1.8;
+      font-size: 13.5px;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 100% !important; /* Full width edge-to-edge */
+      margin: 0;
+      padding: 4px 2px; /* Minimal padding for maximum printable area */
+    }
+
+    /* =========================================
+       PAGE 1: FRONT COVER DESIGN
+       ========================================= */
+    .front-cover {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0369a1 100%);
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 30px 14px 24px 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+    }
+
+    .front-cover::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #38bdf8;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .cover-title {
+      font-family: 'Outfit', 'Noto Sans Bengali', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin: 0 0 8px 0;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .cover-subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin: 0 auto 18px auto;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .cover-card-meta {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 0 auto 18px auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      text-align: left;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #64748b;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+
+    .meta-value {
+      font-size: 12.5px;
+      color: #f8fafc;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .jump-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .jump-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* =========================================
+       PAGE 2: EXERCISES & SOLUTIONS
+       ========================================= */
+    .page-break-divider {
+      height: 1px;
+      border: none;
+      margin: 14px 0;
+    }
+
+    .chapter-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 6px; /* Edge-to-edge internal padding */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+      width: 100%;
+    }
+
+    .chapter-header {
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    h1 {
+      color: #0369a1;
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .tag-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* Tight horizontal list indentation */
+    ol {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 20px;
+      padding-bottom: 4px;
+      overflow-wrap: break-word;
+    }
+
+    .question-text {
+      color: #1e40af;
+      font-weight: 600;
+      display: inline;
+      line-height: 1.8;
+    }
+
+    .question-text mjx-container {
+      white-space: normal !important;
+      display: inline !important;
+    }
+
+    /* Full-width interactive solution box */
+    details.solution-box {
+      margin-top: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #ffffff;
+      width: 100%;
+    }
+
+    details.solution-box[open] {
+      border-color: #0d9488;
+      box-shadow: 0 2px 4px rgba(13, 148, 136, 0.06);
+    }
+
+    summary.sol-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #f0fdfa;
+      color: #0d9488;
+      font-weight: 700;
+      font-size: 12.5px;
+      padding: 6px 10px;
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      width: 100%;
+      border-bottom: 1px solid transparent;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    summary.sol-btn::-webkit-details-marker {
+      display: none;
+    }
+
+    summary.sol-btn:hover {
+      background-color: #ccfbf1;
+    }
+
+    details[open] summary.sol-btn {
+      border-bottom: 1px solid #99f6e4;
+      background-color: #e6fffa;
+    }
+
+    summary.sol-btn .icon {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      font-size: 10px;
+    }
+
+    details[open] summary.sol-btn .icon {
+      transform: rotate(90deg);
+    }
+
+    .solution-content {
+      padding: 10px 6px; /* Edge-to-edge solution text */
+      color: #374151;
+      background: #fafafa;
+      line-height: 1.8;
+      width: 100%;
+    }
+
+    .sub-list {
+      list-style-type: lower-roman;
+      padding-left: 14px;
+      margin-top: 10px;
+    }
+
+    .sub-list > li {
+      margin-bottom: 16px;
+    }
+
+    .sub-alpha-list {
+      list-style-type: lower-alpha;
+      padding-left: 14px;
+      margin-top: 6px;
+    }
+
+    .condition-note {
+      text-align: right;
+      margin: 4px 0 8px 0;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Edge-to-edge smooth math slider */
+    .math-scroll {
+      width: 100%;
       overflow-x: auto;
       overflow-y: hidden;
-      padding: 0.5rem 0;
-      margin: 0.5rem 0;
+      margin: 6px 0;
+      padding: 2px 0;
+      -webkit-overflow-scrolling: touch;
     }
-    .code-editor-area {
-      font-family: 'Fira Code', monospace;
-      tab-size: 2;
+
+    mjx-container[jax="CHTML"][display="true"] {
+      margin: 4px 0 !important;
     }
-    html, body {
-  touch-action: pan-x pan-y;
-}
   </style>
 </head>
+<body>
 
+  <div class="container">
 
+    <!-- PAGE 1: FRONT COVER -->
+    <header class="front-cover">
+      <div class="brand-badge">Prime Math • Workbook</div>
+      <h1 class="cover-title">গাণিতিক আরোহ তত্ত্ব</h1>
+      <div class="cover-subtitle">Principle of Mathematical Induction (PMI) — Complete Questions & Comprehensive Solutions</div>
 
-  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        
-        <!-- Logo -->
-        <div class="flex items-center gap-3">
-          <a href="#page=home" onclick="navigate('home'); return false;" class="flex items-center gap-2.5 group">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-brand-500/20 group-hover:scale-105 transition">
-              &sum;
+      <div class="cover-card-meta">
+        <div class="meta-item">
+          <span class="meta-label">বিষয় (Subject)</span>
+          <span class="meta-value">উচ্চতর গণিত (Higher Math)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">শ্রেণি / বিভাগ</span>
+          <span class="meta-value">একাদশ-দ্বাদশ (XI–XII)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">মোট সমস্যা</span>
+          <span class="meta-value">২২টি সমাধানসহ প্রশ্ন</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">ফিচার</span>
+          <span class="meta-value">ফুল-উইডথ ও বাটন সলিউশন</span>
+        </div>
+      </div>
+
+      <a href="#problems-section" class="jump-btn">অনুশীলনী শুরু করুন ↓</a>
+    </header>
+
+    <hr class="page-break-divider" id="problems-section">
+
+    <!-- PAGE 2: PROBLEMS AND SOLUTIONS -->
+    <main class="chapter-card">
+      <div class="chapter-header">
+        <h1>গাণিতিক আরোহ তত্ত্ব (অনুশীলনী)</h1>
+        <span class="tag-badge">অধ্যায় - ৪</span>
+      </div>
+
+      <ol>
+        <!-- Question 1 -->
+        <li>
+          <span class="question-text">\((2^{2n} - 1)\) যদি \(3\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \([2^{2(n + 1)} - 1]\)-ও \(3\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত শর্তানুসারে, \((2^{2n} - 1)\) রাশিটি \(3\) দ্বারা বিভাজ্য।<br>
+              সুতরাং, আমরা লিখতে পারি \(2^{2n} - 1 = 3k\), যেখানে \(k \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
+              এখান থেকে পাই, \(2^{2n} = 3k + 1\)।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              2^{2(n + 1)} - 1 &= 2^{2n + 2} - 1 = (2^{2n}\cdot 2^2) - 1 = (4\cdot 2^{2n}) - 1 \\
+              &= 4(3k + 1) - 1 = 12k + 4 - 1 = 12k + 3 \\
+              &= 3(4k + 1) = 3k'
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[যেখানে \(k' = 4k + 1 \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা]</div>
+              অতএব \([2^{2(n + 1)} - 1]\) রাশিটিও \(3\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
             </div>
-            <div>
-              <span class="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
-                MathVault <span class="text-xs bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 font-semibold px-1.5 py-0.5 rounded">Pages</span>
+          </details>
+        </li>
+
+        <!-- Question 2 -->
+        <li>
+          <span class="question-text">সব \(n \in \mathbb{N}\) এর জন্য \(2n + 7 < (n + 3)^2\) হলে দেখাও যে, \(2(n + 1) + 7 < (n + 4)^2\)।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত বিবৃতিটি হল \(2n + 7 < (n + 3)^2\), যা সকল স্বাভাবিক সংখ্যা \(n \in \mathbb{N}\)-এর জন্য সত্য।<br>
+              যেহেতু অসমতাটি যেকোনো স্বাভাবিক সংখ্যার জন্যই সিদ্ধ হয়, সুতরাং \(n\)-এর পরিবর্তে পরবর্তী স্বাভাবিক সংখ্যা \((n + 1)\) বসিয়ে আমরা পাই,
+              <div class="math-scroll">
+              $$2(n + 1) + 7 < \{(n + 1) + 3\}^2 \implies 2(n + 1) + 7 < (n + 4)^2$$
+              </div>
+              অতএব নির্ণেয় অসমতাটি প্রমাণিত হল।
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 3 -->
+        <li>
+          <span class="question-text">\((2^{3n} - 1)\) যদি \(7\) দ্বারা বিভাজ্য হয়, তবে প্রমাণ করো যে, \([2^{3(n + 1)} - 1]\)-ও \(7\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত শর্তানুসারে, \((2^{3n} - 1)\) রাশিটি \(7\) দ্বারা বিভাজ্য।<br>
+              অতএব, \(2^{3n} - 1 = 7\lambda\) ধরা যাক, যেখানে \(\lambda \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
+              এখান থেকে পাই, \(2^{3n} = 7\lambda + 1\)।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              2^{3(n + 1)} - 1 &= 2^{3n + 3} - 1 = 2^{3n}\cdot 2^3 - 1 = 8\cdot 2^{3n} - 1 \\
+              &= 8(7\lambda + 1) - 1 = 56\lambda + 8 - 1 = 56\lambda + 7 \\
+              &= 7(8\lambda + 1) = 7\mu
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[যেখানে \(\mu = 8\lambda + 1 \in \mathbb{Z}\) একটি পূর্ণসংখ্যা]</div>
+              সুতরাং, \([2^{3(n + 1)} - 1]\) রাশিটিও \(7\) দ্বারা সম্পূর্ণ বিভাজ্য হবে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 4 -->
+        <li>
+          <span class="question-text">\(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n! = (n + 1)! - 1\) হলে, দেখাও যে, \(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n! + (n + 1)(n + 1)! = (n + 2)! - 1\)।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত সমীকরণটি হল \(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n! = (n + 1)! - 1\)।<br>
+              এখন বামপক্ষের প্রথম \(n\)-টি পদের সমষ্টির পরিবর্তে এই মান বসিয়ে পাই,
+              <div class="math-scroll">
+              $$\begin{align*}
+              \text{L.H.S.} &= \{1\cdot 1! + 2\cdot 2! + 3\cdot 3! + \dots + n\cdot n!\} + (n + 1)(n + 1)! \\
+              &= \{(n + 1)! - 1\} + (n + 1)(n + 1)! \\
+              &= (n + 1)! + (n + 1)(n + 1)! - 1 \\
+              &= (n + 1)![1 + (n + 1)] - 1 = (n + 2)(n + 1)! - 1 \\
+              &= (n + 2)! - 1 = \text{R.H.S.}
+              \end{align*}$$
+              </div>
+              অতএব সম্পর্কটি প্রমাণিত।
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 5 -->
+        <li>
+          <span class="question-text">\((10^{2n - 1} + 1)\) যদি \(11\) দ্বারা বিভাজ্য হয়, তবে প্রমাণ করো যে, \((10^{2n + 1} + 1)\)-ও \(11\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত শর্তানুযায়ী, \((10^{2n - 1} + 1)\) রাশিটি \(11\) দ্বারা বিভাজ্য।<br>
+              সুতরাং ধরি, \(10^{2n - 1} + 1 = 11\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি পূর্ণসংখ্যা।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              10^{2n + 1} + 1 &= 10^{(2n - 1) + 2} + 1 = 100\cdot 10^{2n - 1} + 1 \\
+              &= 99\cdot 10^{2n - 1} + (10^{2n - 1} + 1) = 11\cdot 9\cdot 10^{2n - 1} + 11\lambda \\
+              &= 11(9\cdot 10^{2n - 1} + \lambda) = 11\mu
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[যেখানে \(\mu = 9\cdot 10^{2n - 1} + \lambda \in \mathbb{Z}\)]</div>
+              যেহেতু \(\mu\) একটি পূর্ণসংখ্যা, তাই \((10^{2n + 1} + 1)\) রাশিটিও \(11\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 6 -->
+        <li>
+          <span class="question-text">\((15^{2n - 1} + 1)\) যদি \(16\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \((15^{2n + 1} + 1)\)-ও \(16\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত শর্তানুসারে, \((15^{2n - 1} + 1)\) রাশিটি \(16\) দ্বারা বিভাজ্য।<br>
+              ধরি, \(15^{2n - 1} + 1 = 16k \implies 15^{2n - 1} = 16k - 1\), যেখানে \(k \in \mathbb{Z}\) একটি পূর্ণসংখ্যা।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              15^{2n + 1} + 1 &= 15^{(2n - 1) + 2} + 1 = 15^2\cdot 15^{2n - 1} + 1 \\
+              &= 225(16k - 1) + 1 = 225\cdot 16k - 224 = 16(225k - 14) \\
+              &= 16m
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[যেখানে \(m = 225k - 14 \in \mathbb{Z}\) একটি পূর্ণসংখ্যা]</div>
+              যেহেতু \(m\) একটি অখণ্ড সংখ্যা, তাই \((15^{2n + 1} + 1)\) রাশিটিও \(16\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 7 -->
+        <li>
+          <span class="question-text">\([(12)^n + (25)^{n - 1}]\) যদি \(13\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \([(12)^{n + 1} + (25)^n]\)-ও \(13\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত আছে যে, \([(12)^n + (25)^{n - 1}]\) রাশিটি \(13\) দ্বারা বিভাজ্য।<br>
+              ধরি, \(12^n + 25^{n - 1} = 13\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি পূর্ণসংখ্যা।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              12^{n + 1} + 25^n &= 12\cdot 12^n + 25\cdot 25^{n - 1} = 12(12^n + 25^{n - 1}) + 13\cdot 25^{n - 1} \\
+              &= 12(13\lambda) + 13\cdot 25^{n - 1} = 13(12\lambda + 25^{n - 1}) \\
+              &= 13\mu
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[যেখানে \(\mu = 12\lambda + 25^{n - 1} \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা]</div>
+              অতএব, \([(12)^{n + 1} + (25)^n]\) রাশিটি সর্বদা \(13\) দ্বারা বিভাজ্য। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 8 -->
+        <li>
+          <span class="question-text">যদি \([n^3 + (n + 1)^3 + (n + 2)^3]\) সর্বদা \(9\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \((n + 1)^3 + (n + 2)^3 + (n + 3)^3\)-ও সর্বদা \(9\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত শর্তানুসারে, \(n^3 + (n + 1)^3 + (n + 2)^3 = 9\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
+              এখান থেকে পাই, \((n + 1)^3 + (n + 2)^3 = 9\lambda - n^3\)।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              (n + 1)^3 + (n + 2)^3 + (n + 3)^3 &= 9\lambda - n^3 + (n + 3)^3 \\
+              &= 9\lambda + (n + 3 - n)\{(n + 3)^2 + n(n + 3) + n^2\} \\
+              &= 9\lambda + 3(3n^2 + 9n + 9) = 9(\lambda + n^2 + 3n + 3) \\
+              &= 9\mu
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[যেখানে \(\mu = \lambda + n^2 + 3n + 3 \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা]</div>
+              সুতরাং, রাশিটি সর্বদা \(9\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 9 -->
+        <li>
+          <span class="question-text">\(n \in \mathbb{N}\), \(x > -1\) এবং \((1 + x)^n \ge 1 + nx\) হলে, প্রমাণ করো যে, \((1 + x)^{n + 1} \ge 1 + (n + 1)x\)।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত আছে \(x > -1\), যার ফলে \((1 + x) > 0\)।<br>
+              প্রদত্ত সম্পর্ক \((1 + x)^n \ge 1 + nx\)-এর উভয়পক্ষে \((1 + x)\) গুণ করে পাই,
+              <div class="math-scroll">
+              $$\begin{align*}
+              (1 + x)^{n + 1} &= (1 + x)^n(1 + x) \ge (1 + nx)(1 + x) \\
+              &= 1 + x + nx + nx^2 = 1 + (n + 1)x + nx^2
+              \end{align*}$$
+              </div>
+              যেহেতু \(n \in \mathbb{N}\) এবং বাস্তব সংখ্যার বর্গের ধর্ম অনুযায়ী \(x^2 \ge 0\), তাই \(nx^2 \ge 0\)।<br>
+              অতএব, \(1 + (n + 1)x + nx^2 \ge 1 + (n + 1)x\)।<br>
+              সুতরাং প্রমাণিত হল যে, \((1 + x)^{n + 1} \ge 1 + (n + 1)x\)।
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 10 -->
+        <li>
+          <span class="question-text">মনে করো, \(f(n) = n(n + 1)(2n + 1)\); যদি \(f(n)\) সর্বদা \(6\) দ্বারা বিভাজ্য হয়, তবে প্রমাণ করো যে, \(f(n + 1)\)-ও সর্বদা \(6\) দ্বারা বিভাজ্য হবে।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              প্রদত্ত শর্তানুযায়ী, \(f(n) = n(n + 1)(2n + 1) = 6\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              f(n + 1) &= (n + 1)(n + 2)(2n + 3) = (n + 1)(n + 2)[(2n + 1) + 2] \\
+              &= n(n + 1)(2n + 1) + 2(n + 1)(3n + 3) \\
+              &= 6\lambda + 6(n + 1)^2 = 6[\lambda + (n + 1)^2] = 6\mu
+              \end{align*}$$
+              </div>
+              যেহেতু \(\mu = \lambda + (n + 1)^2 \in \mathbb{Z}\), অতএব \(f(n + 1)\)-ও সর্বদা \(6\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 11 -->
+        <li>
+          <span class="question-text">\(n \in \mathbb{N}\) হলে গাণিতিক আরোহ নীতির প্রয়োগে নিম্নলিখিতগুলি প্রমাণ করো:</span>
+          <ol class="sub-list">
+            <!-- 11 (i) -->
+            <li>
+              <span class="question-text">\(1 + 3 + 5 + \dots + (2n - 1)\) \(=\) \(n^2\)</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n) : 1 + 3 + \dots + (2n - 1) = n^2\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1\) এবং \(\text{R.H.S.} = 1^2 = 1\)। সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এর জন্য বিবৃতিটি সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$P(m) : 1 + 3 + 5 + \dots + (2m - 1) = m^2 \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  1 + 3 + \dots + (2m - 1) + \{2(m + 1) - 1\} &= m^2 + (2m + 1) \\
+                  &= (m + 1)^2
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) বিবৃতিটি সত্য।<br>
+                  সুতরাং গাণিতিক আরোহ নীতি অনুসারে সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (ii) -->
+            <li>
+              <span class="question-text">
+                \(a + (a + d) + (a + 2d) + \dots\) 
+                ( \(n\)-সংখ্যক পদ পর্যন্ত )
+                \(=\) 
+                \(\frac{n}{2}[2a + (n - 1)d]\)
               </span>
-              <p class="text-[10px] text-slate-500 dark:text-slate-400 -mt-1 font-medium">Verified Solutions &amp; Proofs</p>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  শ্রেণিটির \(n\)-তম পদ \(T_n = a + (n - 1)d\)। মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = a\) এবং \(\text{R.H.S.} = \frac{1}{2}[2a + 0] = a\)। অতএব \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\) (\(m \in \mathbb{N}\))-এর জন্য বিবৃতিটি সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$a + (a + d) + \dots + [a + (m - 1)d] = \frac{m}{2}[2a + (m - 1)d] \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য প্রথম \((m + 1)\)-টি পদের সমষ্টি পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S_{m + 1} &= \frac{m}{2}[2a + (m - 1)d] + [a + md] \\
+                  &= (m + 1)a + md\left(\frac{m - 1}{2} + 1\right) = (m + 1)a + \frac{m(m + 1)}{2}d \\
+                  &= \frac{m + 1}{2}[2a + md] = \frac{m + 1}{2}[2a + \{(m + 1) - 1\}d]
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য হয়। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (iii) -->
+            <li>
+              <span class="question-text">
+                \(\sin x + \sin 2x + \dots + \sin nx\) 
+                \(=\) 
+                \(\frac{\sin\frac{n + 1}{2}x \sin\frac{nx}{2}}{\sin\frac{x}{2}}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, প্রদত্ত উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \sin x\) এবং \(\text{R.H.S.} = \frac{\sin x \sin(x/2)}{\sin(x/2)} = \sin x\)। সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এর জন্য উক্তিটি সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$\sin x + \sin 2x + \dots + \sin mx = \frac{\sin\frac{m + 1}{2}x \sin\frac{mx}{2}}{\sin\frac{x}{2}} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S_{m + 1} &= \frac{\sin\frac{m + 1}{2}x \sin\frac{mx}{2}}{\sin\frac{x}{2}} + \sin(m + 1)x \\
+                  &= \frac{\sin\frac{m + 1}{2}x}{\sin\frac{x}{2}}\left[\sin\frac{mx}{2} + 2\cos\frac{m + 1}{2}x \sin\frac{x}{2}\right] \\
+                  &= \frac{\sin\frac{m + 1}{2}x}{\sin\frac{x}{2}}\left[\sin\frac{mx}{2} + \sin\frac{m + 2}{2}x - \sin\frac{mx}{2}\right] = \frac{\sin\frac{m + 2}{2}x \sin\frac{m + 1}{2}x}{\sin\frac{x}{2}}
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য এটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (iv) -->
+            <li>
+              <span class="question-text">
+                \(\sin x + \sin 3x + \dots + \sin(2n - 1)x\) 
+                \(=\) 
+                \(\frac{\sin^2 nx}{\sin x}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য উভয়পক্ষ \(\sin x\)-এর সমান; সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ উক্তিটি সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$\sin x + \dots + \sin(2m - 1)x = \frac{\sin^2 mx}{\sin x} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S_{m + 1} &= \frac{\sin^2 mx}{\sin x} + \sin(2m + 1)x \\
+                  &= \frac{2\sin^2 mx + 2\sin(2m + 1)x \sin x}{2\sin x} \\
+                  &= \frac{(1 - \cos 2mx) + \{\cos 2mx - \cos 2(m + 1)x\}}{2\sin x} = \frac{\sin^2(m + 1)x}{\sin x}
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (v) -->
+            <li>
+              <span class="question-text">
+                \((\cos\theta + i\sin\theta)^n\) 
+                \(=\) 
+                \(\cos n\theta + i\sin n\theta\) 
+                \((i = \sqrt{-1})\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \((\cos\theta + i\sin\theta)^1 = \cos\theta + i\sin\theta\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ উক্তিটি সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$(\cos\theta + i\sin\theta)^m = \cos m\theta + i\sin m\theta \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য বিবেচনা করে পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  (\cos\theta + i\sin\theta)^{m + 1} &= (\cos\theta + i\sin\theta)^m(\cos\theta + i\sin\theta) \\
+                  &= (\cos m\theta + i\sin m\theta)(\cos\theta + i\sin\theta) \\
+                  &= (\cos m\theta \cos\theta - \sin m\theta \sin\theta) + i(\sin m\theta \cos\theta + \cos m\theta \sin\theta) \\
+                  &= \cos(m + 1)\theta + i\sin(m + 1)\theta
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য সম্পর্কটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (vi) -->
+            <li>
+              <span class="question-text">
+                \(\frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{2^n}\) 
+                \(=\) 
+                \(1 - \frac{1}{2^n}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{1}{2} = 1 - \frac{1}{2^1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$\frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{2^m} = 1 - \frac{1}{2^m} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = 1 - \frac{1}{2^m} + \frac{1}{2^{m + 1}} = 1 - \frac{1}{2^m}\left(1 - \frac{1}{2}\right) = 1 - \frac{1}{2^{m + 1}}$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (vii) -->
+            <li>
+              <span class="question-text">
+                \(a + ar + ar^2 + \dots\) 
+                ( \(n\)-সংখ্যক পদ পর্যন্ত )
+                \(=\) 
+                \(a\cdot\frac{r^n - 1}{r - 1}\) 
+                \([r \ne 1]\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  শ্রেণিটির \(n\)-তম পদ \(ar^{n - 1}\)। মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = a = a\frac{r^1 - 1}{r - 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$a + ar + \dots + ar^{m - 1} = a\frac{r^m - 1}{r - 1} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = a\frac{r^m - 1}{r - 1} + ar^m = \frac{ar^m - a + ar^{m + 1} - ar^m}{r - 1} = a\frac{r^{m + 1} - 1}{r - 1}$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (viii) -->
+            <li>
+              <span class="question-text">
+                \(1^2 + 3^2 + 5^2 + \dots + (2n - 1)^2\) 
+                \(=\) 
+                \(\frac{n}{3}(4n^2 - 1)\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1^2 = 1 = \frac{1}{3}(4\cdot 1^2 - 1) = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$1^2 + 3^2 + \dots + (2m - 1)^2 = \frac{m}{3}(4m^2 - 1) \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S_{m + 1} &= \frac{m}{3}(2m + 1)(2m - 1) + (2m + 1)^2 \\
+                  &= (2m + 1)\left[\frac{2m^2 - m + 6m + 3}{3}\right] = \frac{(2m + 1)(2m + 3)(m + 1)}{3} \\
+                  &= \frac{m + 1}{3}[4(m + 1)^2 - 1]
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[যেখানে \((1)\)-এর সাহায্য নেওয়া হয়েছে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (ix) -->
+            <li>
+              <span class="question-text">
+                \(1\cdot 2 + 2\cdot 3 + \dots + n(n + 1)\) 
+                \(=\) 
+                \(\frac{1}{3}n(n + 1)(n + 2)\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1\cdot 2 = 2 = \frac{1}{3}(1)(2)(3) = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$1\cdot 2 + \dots + m(m + 1) = \frac{1}{3}m(m + 1)(m + 2) \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S_{m + 1} &= \frac{1}{3}m(m + 1)(m + 2) + (m + 1)(m + 2) \\
+                  &= (m + 1)(m + 2)\left(\frac{m}{3} + 1\right) = \frac{1}{3}(m + 1)(m + 2)(m + 3)
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (x) -->
+            <li>
+              <span class="question-text">
+                \(2^2 + 5^2 + 8^2 + \dots\) 
+                ( \(n\)-সংখ্যক পদ পর্যন্ত )
+                \(=\) 
+                \(\frac{n}{2}(6n^2 + 3n - 1)\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  প্রদত্ত শ্রেণির \(n\)-তম পদ \(T_n = (3n - 1)^2\)। মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 2^2 = 4 = \frac{1}{2}(6 + 3 - 1) = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$2^2 + 5^2 + \dots + (3m - 1)^2 = \frac{m}{2}(6m^2 + 3m - 1) \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S_{m + 1} &= \frac{m}{2}(6m^2 + 3m - 1) + (3m + 2)^2 \\
+                  &= \frac{6m^3 + 21m^2 + 23m + 8}{2} = \frac{m + 1}{2}[6(m + 1)^2 + 3(m + 1) - 1]
+                  \end{align*}$$
+                  </div>
+                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xi) -->
+            <li>
+              <span class="question-text">
+                \(\frac{1}{1\cdot 2} + \frac{1}{2\cdot 3} + \dots + \frac{1}{n(n + 1)}\) 
+                \(=\) 
+                \(\frac{n}{n + 1}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{1}{1\cdot 2} = \frac{1}{2} = \frac{1}{1 + 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$\frac{1}{1\cdot 2} + \dots + \frac{1}{m(m + 1)} = \frac{m}{m + 1} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = \frac{m}{m + 1} + \frac{1}{(m + 1)(m + 2)} = \frac{m^2 + 2m + 1}{(m + 1)(m + 2)} = \frac{m + 1}{m + 2}$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xii) -->
+            <li>
+              <span class="question-text">
+                \(\frac{1}{1\cdot 4} + \frac{1}{4\cdot 7} + \dots\) 
+                ( \(n\)-সংখ্যক পদ পর্যন্ত )
+                \(=\) 
+                \(\frac{n}{3n + 1}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  শ্রেণিটির \(n\)-তম পদ \(T_n = \frac{1}{(3n - 2)(3n + 1)}\)। মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{1}{1\cdot 4} = \frac{1}{4} = \frac{1}{3(1) + 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$\frac{1}{1\cdot 4} + \dots + \frac{1}{(3m - 2)(3m + 1)} = \frac{m}{3m + 1} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = \frac{m}{3m + 1} + \frac{1}{(3m + 1)(3m + 4)} = \frac{3m^2 + 4m + 1}{(3m + 1)(3m + 4)} = \frac{m + 1}{3(m + 1) + 1}$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xiii) -->
+            <li>
+              <span class="question-text">
+                \(\left(1 - \frac{1}{2^2}\right)\left(1 - \frac{1}{3^2}\right)\dots\left(1 - \frac{1}{(n + 1)^2}\right)\) 
+                \(=\) 
+                \(\frac{n + 2}{2n + 2}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1 - \frac{1}{2} = \frac{1}{2} = \frac{1}{1 + 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$\left(1 - \frac{1}{2}\right)\dots\left(1 - \frac{1}{m + 1}\right) = \frac{1}{m + 1} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
+                  <div class="math-scroll">
+                  $$P_{m + 1} = \frac{1}{m + 1}\left(1 - \frac{1}{m + 2}\right) = \frac{1}{m + 1}\cdot\frac{m + 1}{m + 2} = \frac{1}{(m + 1) + 1}$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xiv) -->
+            <li>
+              <span class="question-text">
+                \(1 + \frac{1}{1 + 2} + \dots + \frac{1}{1 + 2 + \dots + n}\) 
+                \(=\) 
+                \(\frac{2n}{n + 1}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  আমরা জানি, \(1 + 2 + \dots + n = \frac{n(n + 1)}{2}\)। মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য উভয়পক্ষ \(1\)-এর সমান; সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$1 + \frac{1}{1 + 2} + \dots + \frac{1}{1 + 2 + \dots + m} = \frac{2m}{m + 1} \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = \frac{2m}{m + 1} + \frac{2}{(m + 1)(m + 2)} = \frac{2(m^2 + 2m + 1)}{(m + 1)(m + 2)} = \frac{2(m + 1)}{(m + 1) + 1}$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xv) -->
+            <li>
+              <span class="question-text">\(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n!\) \(=\) \((n + 1)! - 1\)</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, উক্তিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1\cdot 1! = 1 = (1 + 1)! - 1 = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
+                  <div class="math-scroll">
+                  $$1\cdot 1! + \dots + m\cdot m! = (m + 1)! - 1 \quad \dots(1)$$
+                  </div>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = (m + 1)! - 1 + (m + 1)(m + 1)! = (m + 1)!(1 + m + 1) - 1 = \{(m + 1) + 1\}! - 1$$
+                  </div>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xvi) -->
+            <li>
+              <span class="question-text">\(2^{3n} - 1\) সর্বদা \(7\) দ্বারা বিভাজ্য</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n) : 2^{3n} - 1\) সর্বদা \(7\) দ্বারা বিভাজ্য।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(2^3 - 1 = 7\), যা \(7\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(2^{3m} - 1 = 7K \implies 2^{3m} = 7K + 1\) (\(K \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য,
+                  <div class="math-scroll">
+                  $$2^{3(m + 1)} - 1 = 8\cdot 2^{3m} - 1 = 8(7K + 1) - 1 = 56K + 7 = 7(8K + 1) = 7K'$$
+                  </div>
+                  যেহেতু \(K' = 8K + 1 \in \mathbb{Z}\), তাই \(2^{3(m + 1)} - 1\) সর্বদা \(7\) দ্বারা বিভাজ্য।<br>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xvii) -->
+            <li>
+              <span class="question-text">\(4^n + 15n - 1\) সর্বদা \(9\)-এর গুণিতক</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n) : 4^n + 15n - 1\) সর্বদা \(9\)-এর গুণিতক।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(4^1 + 15(1) - 1 = 18 = 9\times 2\); সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(4^m + 15n - 1 = 9K \implies 4^m = 9K - 15m + 1\) (\(K \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  4^{m + 1} + 15(m + 1) - 1 &= 4(9K - 15m + 1) + 15m + 14 \\
+                  &= 36K - 45m + 18 = 9(4K - 5m + 2) = 9K'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু \(K' \in \mathbb{Z}\), অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xviii) -->
+            <li>
+              <span class="question-text">\(2\cdot 7^n + 3\cdot 5^n - 5\) সর্বদা \(24\) দ্বারা বিভাজ্য</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n) : 2\cdot 7^n + 3\cdot 5^n - 5\) সর্বদা \(24\) দ্বারা বিভাজ্য।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(2(7) + 3(5) - 5 = 24\), যা \(24\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(2\cdot 7^m + 3\cdot 5^m - 5 = 24K\) (\(K \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  2\cdot 7^{m + 1} + 3\cdot 5^{m + 1} - 5 &= (2\cdot 7^m + 3\cdot 5^m - 5) + 12(7^m + 5^m) \\
+                  &= 24K + 12(2K_1) = 24(K + K_1) = 24K'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু অযুগ্ম সংখ্যার ঘাতের সমষ্টি \((7^m + 5^m)\) সর্বদা একটি যুগ্ম সংখ্যা, তাই \(7^m + 5^m = 2K_1\) (\(K_1 \in \mathbb{Z}\))।<br>
+                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xix) -->
+            <li>
+              <span class="question-text">\(15^{2n - 1} + 1\) সর্বদা \(16\) দ্বারা বিভাজ্য</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n) : 15^{2n - 1} + 1\) সর্বদা \(16\) দ্বারা বিভাজ্য।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(15^1 + 1 = 16\), যা \(16\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(15^{2m - 1} + 1 = 16K \implies 15^{2m - 1} = 16K - 1\) (\(K \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$15^{2m + 1} + 1 = 225(16K - 1) + 1 = 225\cdot 16K - 224 = 16(225K - 14) = 16K'$$
+                  </div>
+                  যেহেতু \(K' \in \mathbb{Z}\), অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 11 (xx) -->
+            <li>
+              <span class="question-text">\(12^n + 25^{n - 1}\) সর্বদা \(13\) দ্বারা বিভাজ্য</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n) : 12^n + 25^{n - 1}\) সর্বদা \(13\) দ্বারা বিভাজ্য।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(12^1 + 25^0 = 13\), যা \(13\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(12^m + 25^{m - 1} = 13K\) (\(K \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  12^{m + 1} + 25^m &= 12(12^m + 25^{m - 1}) + 13\cdot 25^{m - 1} \\
+                  &= 12(13K) + 13\cdot 25^{m - 1} = 13(12K + 25^{m - 1}) = 13K'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু \(K' \in \mathbb{Z}\), অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+          </ol>
+        </li>
+
+        <!-- Question 12 -->
+        <li>
+          <span class="question-text">স্বাভাবিক সংখ্যা \(n\)-এর মানসমূহ নির্ণয় করো যাতে \(2^n > 2n + 1\) অসমতা সিদ্ধ হয়।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              \(n\)-এর প্রাথমিক স্বাভাবিক মান পরীক্ষা করে পাই:
+              <ul>
+                <li>\(n = 1\)-এর জন্য, \(2^1 = 2 \not> 2(1) + 1 = 3\) (অসত্য)</li>
+                <li>\(n = 2\)-এর জন্য, \(2^2 = 4 \not> 2(2) + 1 = 5\) (অসত্য)</li>
+                <li>\(n = 3\)-এর জন্য, \(2^3 = 8 > 2(3) + 1 = 7\) (সত্য)</li>
+              </ul>
+              মনে করো, \(2n + 1 < 2^n\) যখন \(n \ge 3\)—বিবৃতিটি \(P(n)\) দ্বারা সূচিত হয়।<br>
+              স্পষ্টতই, \(P(3)\) বিবৃতিটি সত্য।<br>
+              এখন, মনে করো \(P(m)\) বিবৃতিটি সত্য;<br>
+              অর্থাৎ,
+              <div class="math-scroll">
+              $$P(m) : 2m + 1 < 2^m, \quad m \ge 3 \quad \dots(1)$$
+              </div>
+              যেহেতু \(m \ge 3\), সুতরাং \(2 < 2^m \quad \dots(2)\)।<br>
+              এখন,
+              <div class="math-scroll">
+              $$\begin{align*}
+              2(m + 1) + 1 &= 2m + 1 + 2 \\
+              &< 2^m + 2^m \\
+              &= 2\cdot 2^m = 2^{m + 1}
+              \end{align*}$$
+              </div>
+              <div class="condition-note">[(1) ও (2)-এর সাহায্যে]</div>
+              \(\therefore P(m + 1) : 2(m + 1) + 1 < 2^{m + 1}\) বিবৃতিটি সত্য।<br>
+              যেহেতু \(P(m)\) সত্য হলে \(P(m + 1)\) সত্য হয়, সুতরাং গাণিতিক আরোহ নীতির প্রয়োগে পাওয়া যায়, \(n \ge 3\)-এর জন্য \(P(n)\) সত্য।<br>
+              অতএব, নির্ণেয় মানসমূহ: \(n \ge 3\), যেখানে \(n \in \mathbb{N}\)।
             </div>
-          </a>
-        </div>
+          </details>
+        </li>
 
-        <!-- Desktop Navigation Links (Link buttons) -->
-        <nav class="hidden md:flex items-center gap-1">
-          <button onclick="navigate('home')" id="nav-home" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30">Home</button>
-          <button onclick="navigate('algebra')" id="nav-algebra" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Algebra</button>
-          <button onclick="navigate('calculus')" id="nav-calculus" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Calculus</button>
-          <button onclick="navigate('statistics')" id="nav-statistics" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Statistics</button>
-          <button onclick="navigate('formulas')" id="nav-formulas" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Formulas</button>
-          <button onclick="navigate('submit')" id="nav-submit" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60">Ask Question</button>
-        </nav>
+        <!-- Question 13 -->
+        <li>
+          <span class="question-text">\(n \in \mathbb{N}\) হলে গাণিতিক আরোহ নীতির প্রয়োগে প্রমাণ করো:</span>
+          <ol class="sub-list">
+            <!-- 13 (i) -->
+            <li>
+              <span class="question-text">\(5^{2n + 2} - 24n - 25\) সর্বদা \(576\) দ্বারা বিভাজ্য।</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(5^{2(1) + 2} - 24(1) - 25 = 625 - 49 = 576\), যা \(576\) দ্বারা বিভাজ্য; \(\therefore P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(5^{2m + 2} = 576k + 24m + 25\) (\(k \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  5^{2(m + 1) + 2} - 24(m + 1) - 25 &= 25(576k + 24m + 25) - 24m - 49 \\
+                  &= 25\cdot 576k + 576m + 576 = 576(25k + m + 1) = 576k'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু \(k' \in \mathbb{Z}\), অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
 
-        <!-- Right Action Buttons -->
-        <div class="flex items-center gap-2.5">
-          <!-- Theme Toggle Button -->
-          <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-            <svg id="themeSun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
-            <svg id="themeMoon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
-          </button>
+            <!-- 13 (ii) -->
+            <li>
+              <span class="question-text">\(10^n + 3\cdot 4^{n + 2} + 5\) (\(n \ge 0\)) সর্বদা \(9\) দ্বারা বিভাজ্য।</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 0\)-এর জন্য, \(10^0 + 3\cdot 4^2 + 5 = 54 = 9\times 6\), যা \(9\) দ্বারা বিভাজ্য; \(\therefore P(0)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\) (\(m \ge 0\))-এ সত্য; অর্থাৎ, \(10^m = 9k - 3\cdot 4^{m + 2} - 5\) (\(k \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  10^{m + 1} + 3\cdot 4^{m + 3} + 5 &= 10(9k - 3\cdot 4^{m + 2} - 5) + 12\cdot 4^{m + 2} + 5 \\
+                  &= 90k - 18\cdot 4^{m + 2} - 45 = 9(10k - 2\cdot 4^{m + 2} - 5) = 9k'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু \(k' \in \mathbb{Z}\), অতএব সকল অখণ্ড সংখ্যা \(n \ge 0\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
 
-          <button onclick="navigate('submit')" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg text-sm shadow-sm transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-            <span>Post Problem</span>
-          </button>
+            <!-- 13 (iii) -->
+            <li>
+              <span class="question-text">\(3^{4n + 1} + 2^{2n + 2}\) (\(n \ge 0\)) সর্বদা \(7\)-এর গুণিতক।</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 0\)-এর জন্য, \(3^1 + 2^2 = 7\), যা \(7\)-এর গুণিতক; \(\therefore P(0)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\) (\(m \ge 0\))-এ সত্য; অর্থাৎ, \(3^{4m + 1} = 7k - 2^{2m + 2}\) (\(k \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  3^{4(m + 1) + 1} + 2^{2(m + 1) + 2} &= 81(7k - 2^{2m + 2}) + 4\cdot 2^{2m + 2} \\
+                  &= 81\cdot 7k - 77\cdot 2^{2m + 2} = 7(81k - 11\cdot 2^{2m + 2}) = 7k'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু \(k' \in \mathbb{Z}\), সুতরাং সকল অখণ্ড সংখ্যা \(n \ge 0\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
 
-          <!-- Mobile Hamburger Toggle -->
-          <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
-          </button>
-        </div>
-      </div>
+            <!-- 13 (iv) -->
+            <li>
+              <span class="question-text">\(3^{2n + 2} - 8n - 9\) সর্বদা \(64\) দ্বারা বিভাজ্য।</span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
+                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(3^4 - 8(1) - 9 = 64\), যা \(64\) দ্বারা বিভাজ্য; \(\therefore P(1)\) সত্য।<br>
+                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(3^{2m + 2} = 64k + 8m + 9\) (\(k \in \mathbb{Z}\))।<br>
+                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  3^{2(m + 1) + 2} - 8(m + 1) - 9 &= 9(64k + 8m + 9) - 8m - 17 \\
+                  &= 9\cdot 64k + 64m + 64 = 64(9k + m + 1) = 64k'
+                  \end{align*}$$
+                  </div>
+                  যেহেতু \(k' \in \mathbb{Z}\), অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
 
-      <!-- Mobile Menu Dropdown -->
-      <div id="mobileMenu" class="hidden md:hidden py-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1">
-        <button onclick="navigate('home'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Home</button>
-        <button onclick="navigate('algebra'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Algebra</button>
-        <button onclick="navigate('calculus'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Calculus</button>
-        <button onclick="navigate('statistics'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Statistics</button>
-        <button onclick="navigate('formulas'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Formulas Reference</button>
-        <button onclick="navigate('submit'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-md text-sm font-medium text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-800">Submit a Question</button>
-      </div>
-    </div>
-  </header>
+            <!-- 13 (v) -->
+            <li>
+              <span class="question-text">প্রমাণ করো:</span>
+              <ol class="sub-alpha-list">
+                <!-- (a) -->
+                <li>
+                  <span class="question-text">\(n < 2^n\)</span>
+                  <details class="solution-box">
+                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                    <div class="solution-content">
+                      \(n = 1\)-এর জন্য, \(1 < 2^1 = 2\) সত্য।<br>
+                      মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(m < 2^m\) (\(m \in \mathbb{N}\))।<br>
+                      যেহেতু \(m \ge 1 \implies 1 \le 2^m\), তাই \(n = m + 1\)-এর ক্ষেত্রে,
+                      <div class="math-scroll">
+                      $$m + 1 < 2^m + 2^m = 2\cdot 2^m = 2^{m + 1}$$
+                      </div>
+                      সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                    </div>
+                  </details>
+                </li>
+                <!-- (b) -->
+                <li>
+                  <span class="question-text">\(3^n > n^3\) (\(n \ge 4\))</span>
+                  <details class="solution-box">
+                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                    <div class="solution-content">
+                      \(n = 4\)-এর জন্য, \(3^4 = 81 > 4^3 = 64\) সত্য।<br>
+                      মনে করো, \(n = m\) (\(m \ge 4\))-এ সত্য; অর্থাৎ, \(3^m > m^3\)।<br>
+                      যেহেতু \(m \ge 4\), সুতরাং \(2m^3 > 3m^2 + 3m + 1 \implies 3m^3 > (m + 1)^3\)।<br>
+                      অতএব \(n = m + 1\)-এর ক্ষেত্রে,
+                      <div class="math-scroll">
+                      $$3^{m + 1} = 3\cdot 3^m > 3m^3 > (m + 1)^3$$
+                      </div>
+                      সুতরাং সকল \(n \ge 4\) (\(n \in \mathbb{N}\))-এর জন্য অসমতাটি সত্য। (প্রমাণিত)
+                    </div>
+                  </details>
+                </li>
+                <!-- (c) -->
+                <li>
+                  <span class="question-text">\(2^n < n!\) (\(n \ge 4\))</span>
+                  <details class="solution-box">
+                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                    <div class="solution-content">
+                      \(n = 4\)-এর জন্য, \(2^4 = 16 < 4! = 24\) সত্য।<br>
+                      মনে করো, \(n = m\) (\(m \ge 4\))-এ সত্য; অর্থাৎ, \(2^m < m!\)।<br>
+                      যেহেতু \(m \ge 4 \implies 2 < m + 1\), তাই \(n = m + 1\)-এর জন্য,
+                      <div class="math-scroll">
+                      $$2^{m + 1} = 2\cdot 2^m < (m + 1)\cdot m! = (m + 1)!$$
+                      </div>
+                      সুতরাং সকল \(n \ge 4\) (\(n \in \mathbb{N}\))-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                    </div>
+                  </details>
+                </li>
+                <!-- (d) -->
+                <li>
+                  <span class="question-text">\(3^n > 2^n\)</span>
+                  <details class="solution-box">
+                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                    <div class="solution-content">
+                      \(n = 1\)-এর জন্য, \(3^1 > 2^1\) সত্য। মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(3^m > 2^m\)।<br>
+                      \(n = m + 1\)-এর জন্য পাই,
+                      <div class="math-scroll">
+                      $$3^{m + 1} = 3\cdot 3^m > 3\cdot 2^m > 2\cdot 2^m = 2^{m + 1}$$
+                      </div>
+                      অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                    </div>
+                  </details>
+                </li>
+              </ol>
+            </li>
 
-  <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2.5 text-xs text-slate-500 dark:text-slate-400">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-1.5">
-        <a href="#page=home" onclick="navigate('home'); return false;" class="hover:underline flex items-center gap-1">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          Home
-        </a>
-        <span>/</span>
-        <span id="breadcrumbCurrent" class="font-semibold text-slate-800 dark:text-slate-200 capitalize">Home</span>
-      </div>
-      <div class="text-[11px] font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-400">
-        File: <span id="currentFilename" class="text-brand-600 dark:text-brand-400 font-bold">index.html</span>
-      </div>
-    </div>
+            <!-- 13 (vi) -->
+            <li>
+              <span class="question-text">
+                \(1 + 2 + \dots + n\) 
+                \(<\) 
+                \(\frac{1}{8}(2n + 1)^2\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য, \(1 < \frac{9}{8}\) সত্য। মনে করো, \(n = m\)-এ সত্য: \(S_m < \frac{1}{8}(2m + 1)^2\)।<br>
+                  \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} < \frac{(2m + 1)^2}{8} + (m + 1) = \frac{4m^2 + 12m + 9}{8} = \frac{\{2(m + 1) + 1\}^2}{8}$$
+                  </div>
+                  সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য অসমতাটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (vii) -->
+            <li>
+              <span class="question-text">
+                \(1^2 + 2^2 + \dots + n^2\) 
+                \(>\) 
+                \(\frac{n^3}{3}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য, \(1 > \frac{1}{3}\) সত্য। মনে করো, \(n = m\)-এ সত্য: \(S_m > \frac{m^3}{3}\)।<br>
+                  \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$S_{m + 1} > \frac{m^3}{3} + (m + 1)^2 = \frac{m^3 + 3m^2 + 6m + 3}{3} > \frac{(m + 1)^3}{3}$$
+                  </div>
+                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (viii) -->
+            <li>
+              <span class="question-text">
+                \(\frac{1}{5}n^5 + \frac{1}{3}n^3 + \frac{7}{15}n\) 
+                একটি অখণ্ড সংখ্যা
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য রাশিটির মান \(= \frac{1}{5} + \frac{1}{3} + \frac{7}{15} = 1 \in \mathbb{Z}\)।<br>
+                  মনে করো, \(n = m\)-এ রাশিটি একটি অখণ্ড সংখ্যা \(I\) (\(I \in \mathbb{Z}\))।<br>
+                  \(n = m + 1\)-এর জন্য দ্বিপদ উপপাদ্যের সাহায্যে পাই,
+                  <div class="math-scroll">
+                  $$f(m + 1) = f(m) + (m^4 + 2m^3 + 3m^2 + 2m + 1) = I + (m^4 + 2m^3 + 3m^2 + 2m + 1)$$
+                  </div>
+                  যেহেতু \(m \in \mathbb{N}\), তাই যোগফলটি একটি অখণ্ড সংখ্যা। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (ix) -->
+            <li>
+              <span class="question-text">
+                \(\frac{n^{11}}{11} + \frac{n^5}{5} + \frac{n^3}{3} + \frac{62n}{165}\) 
+                একটি পূর্ণসংখ্যা
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য রাশিটির মান \(= \frac{1}{11} + \frac{1}{5} + \frac{1}{3} + \frac{62}{165} = \frac{165}{165} = 1 \in \mathbb{Z}\)।<br>
+                  মনে করো, \(n = m\)-এ রাশিটি একটি পূর্ণসংখ্যা।<br>
+                  দ্বিপদ উপপাদ্য প্রয়োগ করলে দেখা যায় যে, \(g(m + 1) - g(m)\) সর্বদা একটি পূর্ণসংখ্যা হয়।<br>
+                  সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য রাশিটি সর্বদা একটি পূর্ণসংখ্যা। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (x) -->
+            <li>
+              <span class="question-text">
+                \(n\cdot 1 + (n - 1)\cdot 2 + \dots + 1\cdot n\) 
+                \(=\) 
+                \(\frac{1}{6}n(n + 1)(n + 2)\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1 = \frac{1}{6}(1)(2)(3) = \text{R.H.S.}\); সুতরাং সত্য।<br>
+                  মনে করো, \(n = m\)-এ সত্য: \(S(m) = \frac{m(m + 1)(m + 2)}{6}\)।<br>
+                  \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$\begin{align*}
+                  S(m + 1) &= S(m) + \{1 + 2 + \dots + (m + 1)\} = \frac{m(m + 1)(m + 2)}{6} + \frac{(m + 1)(m + 2)}{2} \\
+                  &= \frac{(m + 1)(m + 2)}{2}\left(\frac{m}{3} + 1\right) = \frac{(m + 1)(m + 2)(m + 3)}{6}
+                  \end{align*}$$
+                  </div>
+                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য সম্পর্কটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (xi) -->
+            <li>
+              <span class="question-text">
+                \(2 + \sqrt{2 + \sqrt{2 + \dots}}\) 
+                ( \(n\) সংখ্যক পদ ) 
+                \(< 4\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  ধরি পদটি \(x_n\), যেখানে \(x_1 = 2 < 4\) সত্য।<br>
+                  মনে করো, \(n = m\)-এ সত্য: \(x_m < 4 \implies \sqrt{x_m} < 2\)।<br>
+                  তাহলে \(n = m + 1\)-এর ক্ষেত্রে,
+                  <div class="math-scroll">
+                  $$x_{m + 1} = 2 + \sqrt{x_m} < 2 + 2 = 4$$
+                  </div>
+                  সুতরাং আরোহ নীতি দ্বারা সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (xii) -->
+            <li>
+              <span class="question-text">
+                \(\left(1 - \frac{1}{2^2}\right)\left(1 - \frac{1}{3^2}\right)\dots\left(1 - \frac{1}{(n + 1)^2}\right)\) 
+                \(=\) 
+                \(\frac{n + 2}{2n + 2}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{3}{4} = \frac{3}{4} = \text{R.H.S.}\); সুতরাং সত্য।<br>
+                  মনে করো, \(n = m\)-এ সত্য: \(P_m = \frac{m + 2}{2(m + 1)}\)।<br>
+                  \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$P_{m + 1} = \frac{m + 2}{2(m + 1)}\left[1 - \frac{1}{(m + 2)^2}\right] = \frac{m + 2}{2(m + 1)}\cdot\frac{(m + 1)(m + 3)}{(m + 2)^2} = \frac{(m + 1) + 2}{2(m + 1) + 2}$$
+                  </div>
+                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (xiii) -->
+            <li>
+              <span class="question-text">
+                \(2 + 222 + \dots + 222\dots 2\) 
+                ( \(2n - 1\) সংখ্যক ) 
+                \(=\) 
+                \(\frac{20}{891}(10^{2n} - 1) - \frac{2n}{9}\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  শ্রেণিটির \(n\)-তম পদ \(T_n = \frac{2}{9}(10^{2n - 1} - 1)\)।<br>
+                  \(n = 1\)-এর জন্য উভয়পক্ষ \(2\)-এর সমান; সুতরাং সত্য।<br>
+                  মনে করো, \(n = m\)-এ সত্য: \(S_m = \frac{20}{891}(10^{2m} - 1) - \frac{2m}{9}\)।<br>
+                  \(n = m + 1\)-এর ক্ষেত্রে \(T_{m + 1} = \frac{2}{9}(10^{2m + 1} - 1)\) যোগ করে পাই,
+                  <div class="math-scroll">
+                  $$S_{m + 1} = S_m + T_{m + 1} = \frac{20}{891}(10^{2m + 2} - 1) - \frac{2(m + 1)}{9}$$
+                  </div>
+                  সুতরাং সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+
+            <!-- 13 (xiv) -->
+            <li>
+              <span class="question-text">
+                \({}^n C_0 + {}^n C_1 + \dots + {}^n C_n\) 
+                \(=\) 
+                \(2^n\)
+              </span>
+              <details class="solution-box">
+                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+                <div class="solution-content">
+                  \(n = 1\)-এর জন্য, \({}^1 C_0 + {}^1 C_1 = 2 = 2^1\); সুতরাং সত্য।<br>
+                  মনে করো, \(n = m\)-এ সত্য: \(\sum_{r = 0}^m {}^m C_r = 2^m\)।<br>
+                  যেহেতু \({}^{m + 1} C_r = {}^m C_r + {}^m C_{r - 1}\), তাই \(n = m + 1\)-এর জন্য পাই,
+                  <div class="math-scroll">
+                  $$\sum_{r = 0}^{m + 1} {}^{m + 1} C_r = 2\sum_{r = 0}^m {}^m C_r = 2\cdot 2^m = 2^{m + 1}$$
+                  </div>
+                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য সম্পর্কটি সত্য। (প্রমাণিত)
+                </div>
+              </details>
+            </li>
+          </ol>
+        </li>
+
+        <!-- Question 14 -->
+        <li>
+          <span class="question-text">\(x\) ও \(y\) দুটি বাস্তব সংখ্যা হলে গাণিতিক আরোহ নীতির প্রয়োগে দেখাও যে, \((x^n - y^n)\) সর্বদা \((x - y)\) দ্বারা বিভাজ্য, যখন \(n \in \mathbb{N}\)।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              \(n = 1\)-এর জন্য, \(x^1 - y^1 = x - y\), যা স্পষ্টতই \((x - y)\) দ্বারা বিভাজ্য।<br>
+              মনে করো, \(n = m\)-এ সত্য: \(x^m - y^m = k(x - y) \implies x^m = k(x - y) + y^m\) (\(k \in \mathbb{Z}\))।<br>
+              \(n = m + 1\)-এর ক্ষেত্রে পাই,
+              <div class="math-scroll">
+              $$x^{m + 1} - y^{m + 1} = x[k(x - y) + y^m] - y\cdot y^m = (x - y)(kx + y^m)$$
+              </div>
+              যেহেতু \((x - y)\) একটি সাধারণ উৎপাদক, অতএব উক্তিটি সকল \(n \in \mathbb{N}\)-এর জন্য সত্য। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 15 -->
+        <li>
+          <span class="question-text">\(n\) একটি অযুগ্ম ধনাত্মক পূর্ণসংখ্যা হলে, আরোহ নীতির প্রয়োগে প্রমাণ করো যে, \((a^n + b^n)\) সর্বদা \((a + b)\) দ্বারা বিভাজ্য।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              ধরি \(n = 2k - 1\), যেখানে \(k \in \mathbb{N}\)।<br>
+              \(k = 1\)-এর জন্য, \(a^1 + b^1 = a + b\), যা \((a + b)\) দ্বারা বিভাজ্য।<br>
+              মনে করো, \(k = m\)-এ সত্য: \(a^{2m - 1} + b^{2m - 1} = r(a + b) \implies a^{2m - 1} = r(a + b) - b^{2m - 1}\)।<br>
+              \(k = m + 1\)-এর ক্ষেত্রে,
+              <div class="math-scroll">
+              $$\begin{align*}
+              a^{2m + 1} + b^{2m + 1} &= a^2[r(a + b) - b^{2m - 1}] + b^2\cdot b^{2m - 1} \\
+              &= a^2 r(a + b) - b^{2m - 1}(a^2 - b^2) = (a + b)[a^2 r - b^{2m - 1}(a - b)]
+              \end{align*}$$
+              </div>
+              সুতরাং \(n\) যেকোনো অযুগ্ম ধনাত্মক পূর্ণসংখ্যা হলে \((a^n + b^n)\) সর্বদা \((a + b)\) দ্বারা বিভাজ্য। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 16 -->
+        <li>
+          <span class="question-text">
+            যদি \(n \in \mathbb{N}\) হয় এবং 
+            \((2\cdot 1 + 1) + \dots + (2\cdot n + 1) = n^2 + 2n + 5\) 
+            বিবৃতি \(n = m\)-এ সত্য হয়, তবে প্রমাণ করো যে, বিবৃতিটি \(n = (m + 1)\)-ও সত্য। \(n \in \mathbb{N}\)-এর সব মানে বিবৃতিটি সত্য বলা যায় কি?
+          </span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              মনে করো, \(n = m\)-এ বিবৃতিটি সত্য: \(S_m = m^2 + 2m + 5\)।<br>
+              এখন \(n = m + 1\)-এর জন্য,
+              <div class="math-scroll">
+              $$S_{m + 1} = (m^2 + 2m + 5) + [2(m + 1) + 1] = m^2 + 4m + 8 = (m + 1)^2 + 2(m + 1) + 5$$
+              </div>
+              সুতরাং \(n = m\)-এ সত্য হলে \(n = m + 1\)-এর জন্যও সত্য হয়। (প্রমাণিত)<br>
+              কিন্তু \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 3 \ne 1^2 + 2(1) + 5 = 8 = \text{R.H.S.}\)।<br>
+              ভিত্তি ধাপ সিদ্ধ না হওয়ায় বিবৃতিটি \(n \in \mathbb{N}\)-এর সকল মানের জন্য সত্য বলা যায় না।
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 17 -->
+        <li>
+          <span class="question-text">\(n\) একটি ধনাত্মক অযুগ্ম পূর্ণসংখ্যা হলে আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(n(n^2 - 1)\) সর্বদা \(24\) দ্বারা বিভাজ্য।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              ধরি \(n = 2k - 1\) (\(k \in \mathbb{N}\)); তাহলে \(f(k) = 4k(k - 1)(2k - 1)\)।<br>
+              \(k = 1\)-এর জন্য, \(f(1) = 0 = 24\times 0\), যা \(24\) দ্বারা বিভাজ্য; সুতরাং সত্য।<br>
+              মনে করো, \(k = m\)-এ সত্য: \(f(m) = 24r\) (\(r \in \mathbb{Z}\))।<br>
+              \(k = m + 1\)-এর ক্ষেত্রে পাই,
+              <div class="math-scroll">
+              $$f(m + 1) - f(m) = 4m(m + 1)(2m + 1) - 4m(m - 1)(2m - 1) = 24m^2$$
+              </div>
+              <div class="math-scroll">
+              $$\implies f(m + 1) = 24r + 24m^2 = 24(r + m^2)$$
+              </div>
+              <div class="condition-note">[যা \(24\) দ্বারা বিভাজ্য]</div>
+              অতএব সকল ধনাত্মক অযুগ্ম পূর্ণসংখ্যার জন্য উক্তিটি সত্য। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 18 -->
+        <li>
+          <span class="question-text">\(2^n > n^2\) অসমতা সত্য হতে হলে \(n\)-এর ধনাত্মক অখণ্ড মান নির্ণয় করো।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              মান পরীক্ষা করে পাই: \(n = 1\) (সত্য), \(n = 2, 3, 4\) (অসত্য), \(n = 5\) (\(32 > 25\), সত্য)।<br>
+              মনে করো, \(n = m\) (\(m \ge 5\))-এ সত্য: \(2^m > m^2\)।<br>
+              \(n = m + 1\)-এর ক্ষেত্রে,
+              <div class="math-scroll">
+              $$2^{m + 1} = 2\cdot 2^m > 2m^2 = m^2 + m^2 > m^2 + 2m + 1 = (m + 1)^2$$
+              </div>
+              <div class="condition-note">[\(\because m \ge 5 \implies m^2 > 2m + 1\)]</div>
+              অতএব নির্ণেয় ধনাত্মক অখণ্ড মানসমূহ হল \(n = 1\) এবং সকল স্বাভাবিক সংখ্যা \(n \ge 5\)।
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 19 -->
+        <li>
+          <span class="question-text">গাণিতিক আরোহ নীতির প্রয়োগে প্রমাণ করো যে, \(n \in \mathbb{N}\) হলে, \(3^{2n}\) কে যখন \(8\) দ্বারা ভাগ করা হয় তখন ভাগশেষ সর্বদা \(1\) হয়।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              \(n = 1\)-এর জন্য, \(3^2 = 9 = 8(1) + 1\), অর্থাৎ ভাগশেষ \(1\) থাকে।<br>
+              মনে করো, \(n = m\)-এ সত্য: \(3^{2m} = 8k + 1\) (\(k \in \mathbb{Z}\))।<br>
+              \(n = m + 1\)-এর ক্ষেত্রে,
+              <div class="math-scroll">
+              $$3^{2(m + 1)} = 9\cdot 3^{2m} = 9(8k + 1) = 72k + 9 = 8(9k + 1) + 1 = 8k' + 1$$
+              </div>
+              যেখানে \(k' = 9k + 1 \in \mathbb{Z}\)। অতএব ভাগশেষ সর্বদা \(1\) থাকে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 20 -->
+        <li>
+          <span class="question-text">আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(5^{n + 1} + 4\cdot 6^n\)-কে \(20\) দ্বারা ভাগ করা হলে ভাগশেষ সর্বদা \(9\) হয়, যখন \(n \in \mathbb{N}\)।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              \(n = 1\)-এর জন্য, \(5^2 + 4(6) = 49 = 20(2) + 9\), অর্থাৎ ভাগশেষ \(9\) থাকে।<br>
+              মনে করো, \(n = m\)-এ সত্য: \(5^{m + 1} + 4\cdot 6^m = 20k + 9 \implies 5^{m + 1} = 20k + 9 - 4\cdot 6^m\) (\(k \in \mathbb{Z}\))।<br>
+              \(n = m + 1\)-এর ক্ষেত্রে দ্বিপদ উপপাদ্য ব্যবহার করে পাই,
+              <div class="math-scroll">
+              $$\begin{align*}
+              5^{m + 2} + 4\cdot 6^{m + 1} &= 5(20k + 9 - 4\cdot 6^m) + 24\cdot 6^m = 100k + 45 + 4(1 + 5)^m \\
+              &= 20M + 45 + 4 = 20(M + 2) + 9 = 20k' + 9
+              \end{align*}$$
+              </div>
+              যেখানে \(k' \in \mathbb{Z}\)। অতএব ভাগশেষ সর্বদা \(9\) থাকে। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 21 -->
+        <li>
+          <span class="question-text">\(n \in \mathbb{N}\) হলে আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(8\cdot 7^n + 4^{n + 2}\) সর্বদা \(24\) দ্বারা বিভাজ্য কিন্তু \(48\) দ্বারা বিভাজ্য নয়।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              <strong>প্রথম অংশ:</strong><br>
+              \(n = 1\)-এর জন্য মান \(8(7) + 4^3 = 120 = 24\times 5\), যা \(24\) দ্বারা বিভাজ্য।<br>
+              মনে করো, \(n = m\)-এ রাশিটি \(24\) দ্বারা বিভাজ্য: \(f(m) = 24k\) (\(k \in \mathbb{Z}\))।<br>
+              \(n = m + 1\)-এর ক্ষেত্রে পাই,
+              <div class="math-scroll">
+              $$f(m + 1) - 4f(m) = 8\cdot 7^{m + 1} - 32\cdot 7^m = 24\cdot 7^m \implies f(m + 1) = 24(4k + 7^m)$$
+              </div>
+              যা সর্বদা \(24\) দ্বারা বিভাজ্য।<br>
+              <strong>দ্বিতীয় অংশ:</strong><br>
+              \(n = 1\)-এর জন্য মান \(120\), যা \(48\) দ্বারা বিভাজ্য নয় (\(\frac{120}{48} = 2.5 \notin \mathbb{Z}\))।<br>
+              যেহেতু ভিত্তি ধাপে রাশিটি \(48\) দ্বারা বিভাজ্য নয়, তাই এটি সর্বদা \(48\) দ্বারা বিভাজ্য হতে পারে না। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+
+        <!-- Question 22 -->
+        <li>
+          <span class="question-text">গাণিতিক আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(n\)-এর সকল ধনাত্মক পূর্ণমানের জন্য, \(|\sin nx| \le n|\sin x|\)।</span>
+          <details class="solution-box">
+            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
+            <div class="solution-content">
+              \(n = 1\)-এর জন্য, \(|\sin(1\cdot x)| = |\sin x| \le 1\cdot|\sin x|\), যা সমতাযুক্ত হওয়ায় সত্য।<br>
+              মনে করো, \(n = m\)-এ সত্য: \(|\sin mx| \le m|\sin x|\)।<br>
+              ত্রিভুজীয় অসমতা ও \(|\cos\theta| \le 1\) প্রয়োগ করে \(n = m + 1\)-এর জন্য পাই,
+              <div class="math-scroll">
+              $$\begin{align*}
+              |\sin(m + 1)x| &= |\sin mx \cos x + \cos mx \sin x| \le |\sin mx||\cos x| + |\cos mx||\sin x| \\
+              &= |\sin mx|\cdot 1 + 1\cdot |\sin x| \le m|\sin x| + |\sin x| = (m + 1)|\sin x|
+              \end{align*}$$
+              </div>
+              সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
+            </div>
+          </details>
+        </li>
+      </ol>
+    </main>
+
   </div>
 
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-    <!-- ========================================================================= -->
-    <!-- PAGE 1: HOME PAGE (index.html) -->
-    <!-- ========================================================================= -->
-    <section id="view-home" class="page-view space-y-10">
-      
-      <!-- Hero Banner -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-8 sm:p-12 border border-slate-800 shadow-xl">
-        <div class="relative z-10 max-w-3xl space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold uppercase tracking-wider">
-            <span>✨ Pure Mathematical Rigor</span>
-          </div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-            Ask, Solve &amp; Understand <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Complex Mathematics.</span>
-          </h1>
-          <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
-            A fast, multi-page question &amp; answer library designed for college and high school students. Powered by native LaTeX mathematical typesetting and step-by-step verified proofs.
-          </p>
-          
-          <!-- Direct Jump Button Group -->
-          <div class="pt-2 flex flex-wrap gap-3">
-            <button onclick="navigate('algebra')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-slate-900 hover:bg-slate-100 font-semibold rounded-xl text-sm transition shadow">
-              <span>Algebra Problems</span>
-              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
-            </button>
-            <button onclick="navigate('calculus')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-xl text-sm transition shadow">
-              <span>Calculus Problems</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
-            </button>
-            <button onclick="navigate('statistics')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-white font-medium rounded-xl text-sm border border-slate-700 transition">
-              <span>Probability &amp; Stats</span>
-            </button>
-            <button onclick="navigate('formulas')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-white font-medium rounded-xl text-sm border border-slate-700 transition">
-              <span>Cheat Sheet</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Decorative background formula sketch -->
-        <div class="absolute -right-8 -bottom-10 opacity-10 text-9xl font-mono select-none pointer-events-none hidden lg:block">
-          $$\oint_C \vec{F}\cdot d\vec{r}$$
-        </div>
-      </div>
-
-      <!-- Quick Subject Category Grid (Link Cards) -->
-      <div>
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 class="text-xl font-bold tracking-tight">Explore Categories</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Click any subject button to enter the dedicated page.</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <!-- Card 1: Algebra -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-brand-500/50 transition flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl mb-4">
-                x&sup2;
-              </div>
-              <h3 class="text-lg font-bold mb-1.5">Algebra &amp; Matrices</h3>
-              <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
-                Quadratic equations, polynomials, matrix determinants, eigenvalues, and system optimization.
-              </p>
-              <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 mb-6 font-mono">
-                <li class="flex items-center gap-2">&bull; Eigenvalue Decompositions</li>
-                <li class="flex items-center gap-2">&bull; Completing the Square</li>
-                <li class="flex items-center gap-2">&bull; Gaussian Elimination</li>
-              </ul>
-            </div>
-            <button onclick="navigate('algebra')" class="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-amber-500/30">
-              <span>Go to Algebra Page (algebra.html)</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
-          </div>
-
-          <!-- Card 2: Calculus -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-brand-500/50 transition flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-xl mb-4">
-                &int;
-              </div>
-              <h3 class="text-lg font-bold mb-1.5">Calculus &amp; Analysis</h3>
-              <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
-                Differential limits, L'H&ocirc;pital's rule, integration by parts, Taylor series, and multivariable integrals.
-              </p>
-              <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 mb-6 font-mono">
-                <li class="flex items-center gap-2">&bull; Integration by Parts (LIATE)</li>
-                <li class="flex items-center gap-2">&bull; L'H&ocirc;pital Indeterminate Forms</li>
-                <li class="flex items-center gap-2">&bull; Partial Derivatives</li>
-              </ul>
-            </div>
-            <button onclick="navigate('calculus')" class="w-full py-2.5 px-4 rounded-xl bg-brand-500/10 hover:bg-brand-500/20 text-brand-700 dark:text-brand-300 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-brand-500/30">
-              <span>Go to Calculus Page (calculus.html)</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
-          </div>
-
-          <!-- Card 3: Statistics -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-brand-500/50 transition flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-xl mb-4">
-                &sigma;
-              </div>
-              <h3 class="text-lg font-bold mb-1.5">Statistics &amp; Probability</h3>
-              <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
-                Conditional probability, Bayes' Theorem, Poisson &amp; Gaussian distributions, and hypothesis tests.
-              </p>
-              <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 mb-6 font-mono">
-                <li class="flex items-center gap-2">&bull; Bayes' Posterior Probabilities</li>
-                <li class="flex items-center gap-2">&bull; Expected Values &amp; Variance</li>
-                <li class="flex items-center gap-2">&bull; Normal Z-Scores</li>
-              </ul>
-            </div>
-            <button onclick="navigate('statistics')" class="w-full py-2.5 px-4 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-purple-500/30">
-              <span>Go to Statistics Page (statistics.html)</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Featured Daily Problem Card -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-4">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Featured Daily Problem</span>
-            <span class="text-xs text-slate-400">&bull; Calculus</span>
-          </div>
-          <span class="text-xs font-medium text-slate-500">ID: #DP-101</span>
-        </div>
-
-        <h3 class="text-lg sm:text-xl font-bold mb-2">Evaluate the Trigonometric Limit</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
-          Compute the following limit without using numerical approximation tables:
-        </p>
-
-        <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center font-mono my-4">
-          $$\lim_{x \to 0} \frac{1 - \cos(4x)}{x^2}$$
-        </div>
-
-        <!-- Interactive Answer Submission -->
-        <div class="bg-brand-50/50 dark:bg-slate-800/40 p-4 rounded-xl border border-brand-100 dark:border-slate-800 mb-4">
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-            Test Your Answer:
-          </label>
-          <div class="flex flex-wrap gap-2">
-            <input type="text" id="daily-input" placeholder="e.g. 8" class="flex-1 min-w-[140px] px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:border-brand-500">
-            <button onclick="checkDailyAnswer()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-lg transition shadow-sm">Check</button>
-          </div>
-          <div id="daily-feedback" class="text-xs font-semibold mt-2 hidden"></div>
-        </div>
-
-        <!-- Collapsible Solution Accordion -->
-        <button onclick="toggleAccordion('daily-solution')" class="w-full py-2 px-4 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center justify-between transition">
-          <span>View Verified Step-by-Step Proof</span>
-          <svg id="daily-solution-icon" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-        </button>
-
-        <div id="daily-solution" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3 text-sm text-slate-700 dark:text-slate-300">
-          <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-lg border-l-4 border-brand-500 text-xs">
-            <strong>Method 1: Using L'H&ocirc;pital's Rule (Form 0/0)</strong>
-            <p class="mt-1">Differentiating the numerator and denominator with respect to $x$:</p>
-            $$\lim_{x \to 0} \frac{4\sin(4x)}{2x} = \lim_{x \to 0} \frac{2\sin(4x)}{x}$$
-            <p class="mt-1">Applying L'H&ocirc;pital a second time:</p>
-            $$\lim_{x \to 0} \frac{8\cos(4x)}{1} = 8\cos(0) = 8$$
-          </div>
-          <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-lg border-l-4 border-indigo-500 text-xs">
-            <strong>Method 2: Using Taylor Series Expansion</strong>
-            <p class="mt-1">Recall $\cos(\theta) = 1 - \frac{\theta^2}{2} + \mathcal{O}(\theta^4)$. Substitute $\theta = 4x$:</p>
-            $$\cos(4x) = 1 - \frac{16x^2}{2} + \dots = 1 - 8x^2 + \dots$$
-            $$\lim_{x \to 0} \frac{1 - (1 - 8x^2)}{x^2} = \lim_{x \to 0} \frac{8x^2}{x^2} = 8$$
-          </div>
-          <div class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-bold text-xs">
-            Final Answer: 8
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- PAGE 2: ALGEBRA PAGE (algebra.html) -->
-    <!-- ========================================================================= -->
-    <section id="view-algebra" class="page-view hidden space-y-6">
-      
-      <!-- Page Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1">
-            <span>Subject Library</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold">Algebra &amp; Linear Algebra</h2>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Determinants, Eigenvalues, Quadratics, and Polynomial Theory.</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="navigate('home')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">&larr; Back Home</button>
-          <button onclick="navigate('calculus')" class="px-3 py-1.5 bg-brand-50 text-brand-600 dark:bg-brand-900/30 text-xs font-medium rounded-lg hover:bg-brand-100 transition">Go to Calculus &rarr;</button>
-        </div>
-      </div>
-
-      <!-- Problem List -->
-      <div class="space-y-6">
-        
-        <!-- Algebra Q1 -->
-        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Linear Algebra</span>
-            <span class="text-xs text-slate-400">Difficulty: Medium</span>
-          </div>
-          <h3 class="text-lg font-bold">Eigenvalues of a $2 \times 2$ Matrix</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
-            Find the eigenvalues $\lambda_1, \lambda_2$ (with $\lambda_1 < \lambda_2$) of the square matrix:
-            $$A = \begin{pmatrix} 5 & 4 \\ 1 & 2 \end{pmatrix}$$
-          </p>
-          
-          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
-            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Answer ($\lambda_1, \lambda_2$):</span>
-            <input type="text" id="ans-alg-1" placeholder="e.g. 1, 6" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
-            <button onclick="checkAnswer('ans-alg-1', ['1,6', '1, 6'], 'feed-alg-1')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded">Check</button>
-            <span id="feed-alg-1" class="text-xs font-bold"></span>
-          </div>
-
-          <button onclick="toggleAccordion('alg-sol-1')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-            Toggle Full Matrix Solution &darr;
-          </button>
-          
-          <div id="alg-sol-1" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
-            <p><strong>Step 1:</strong> Characteristic equation $\det(A - \lambda I) = 0$:</p>
-            $$\det \begin{pmatrix} 5-\lambda & 4 \\ 1 & 2-\lambda \end{pmatrix} = 0$$
-            <p><strong>Step 2:</strong> Expand determinant:</p>
-            $$(5-\lambda)(2-\lambda) - (4)(1) = \lambda^2 - 7\lambda + 10 - 4 = \lambda^2 - 7\lambda + 6 = 0$$
-            <p><strong>Step 3:</strong> Factor:</p>
-            $$(\lambda - 1)(\lambda - 6) = 0 \implies \lambda_1 = 1, \quad \lambda_2 = 6$$
-          </div>
-        </article>
-
-        <!-- Algebra Q2 -->
-        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Optimization</span>
-            <span class="text-xs text-slate-400">Difficulty: Easy</span>
-          </div>
-          <h3 class="text-lg font-bold">Vertex and Maximum of a Quadratic Function</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
-            Find the maximum value of $f(x) = -3x^2 + 18x - 12$.
-          </p>
-
-          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
-            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Maximum Value $f_{\max}$:</span>
-            <input type="text" id="ans-alg-2" placeholder="e.g. 15" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
-            <button onclick="checkAnswer('ans-alg-2', ['15'], 'feed-alg-2')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded">Check</button>
-            <span id="feed-alg-2" class="text-xs font-bold"></span>
-          </div>
-
-          <button onclick="toggleAccordion('alg-sol-2')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-            Toggle Full Quadratic Solution &darr;
-          </button>
-          
-          <div id="alg-sol-2" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
-            <p><strong>Method 1: Completing the square:</strong></p>
-            $$f(x) = -3(x^2 - 6x) - 12 = -3\left((x - 3)^2 - 9\right) - 12 = -3(x - 3)^2 + 27 - 12 = -3(x - 3)^2 + 15$$
-            <p>The vertex is at $(3, 15)$, so the maximum value is $15$.</p>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- PAGE 3: CALCULUS PAGE (calculus.html) -->
-    <!-- ========================================================================= -->
-    <section id="view-calculus" class="page-view hidden space-y-6">
-      
-      <!-- Page Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-1">
-            <span>Subject Library</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold">Calculus &amp; Analysis</h2>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Differentiation, Definite Integrals, Series Convergence &amp; Differential Equations.</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="navigate('home')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">&larr; Back Home</button>
-          <button onclick="navigate('statistics')" class="px-3 py-1.5 bg-purple-50 text-purple-600 dark:bg-purple-900/30 text-xs font-medium rounded-lg hover:bg-purple-100 transition">Go to Statistics &rarr;</button>
-        </div>
-      </div>
-
-      <div class="space-y-6">
-
-        <!-- Calculus Q1 -->
-        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-brand-800 dark:bg-blue-950 dark:text-brand-300">Integration</span>
-            <span class="text-xs text-slate-400">Difficulty: Medium</span>
-          </div>
-          <h3 class="text-lg font-bold">Integration by Parts with Trigonometric Function</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
-            Evaluate the definite integral:
-            $$\int_{0}^{\pi} x \sin(x) \, dx$$
-          </p>
-
-          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
-            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Value (Exact or &pi;):</span>
-            <input type="text" id="ans-calc-1" placeholder="e.g. pi or 3.14" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
-            <button onclick="checkAnswer('ans-calc-1', ['pi', '3.14', '3.1415'], 'feed-calc-1')" class="px-3 py-1 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded">Check</button>
-            <span id="feed-calc-1" class="text-xs font-bold"></span>
-          </div>
-
-          <button onclick="toggleAccordion('calc-sol-1')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-            Toggle Integration Steps &darr;
-          </button>
-
-          <div id="calc-sol-1" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
-            <p><strong>Step 1:</strong> By parts, let $u = x \implies du = dx$ and $dv = \sin(x)dx \implies v = -\cos(x)$.</p>
-            $$\int_{0}^{\pi} x \sin(x)dx = \left[ -x \cos(x) \right]_{0}^{\pi} - \int_{0}^{\pi} (-\cos(x))dx$$
-            <p><strong>Step 2:</strong> Evaluate the boundary terms:</p>
-            $$= \left( -\pi \cos(\pi) - (-0 \cos(0)) \right) + \int_{0}^{\pi} \cos(x)dx$$
-            $$= -\pi(-1) + \left[ \sin(x) \right]_{0}^{\pi} = \pi + (0 - 0) = \pi$$
-          </div>
-        </article>
-
-        <!-- Calculus Q2 -->
-        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-brand-800 dark:bg-blue-950 dark:text-brand-300">Derivatives</span>
-            <span class="text-xs text-slate-400">Difficulty: Hard</span>
-          </div>
-          <h3 class="text-lg font-bold">Logarithmic Differentiation</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
-            Find the slope of the tangent line to the curve $y = x^x$ at $x = 1$.
-          </p>
-
-          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
-            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Slope $y'(1)$:</span>
-            <input type="text" id="ans-calc-2" placeholder="e.g. 1" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
-            <button onclick="checkAnswer('ans-calc-2', ['1'], 'feed-calc-2')" class="px-3 py-1 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded">Check</button>
-            <span id="feed-calc-2" class="text-xs font-bold"></span>
-          </div>
-
-          <button onclick="toggleAccordion('calc-sol-2')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-            Toggle Derivative Steps &darr;
-          </button>
-
-          <div id="calc-sol-2" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
-            <p><strong>Step 1:</strong> Take the natural log of both sides: $\ln(y) = \ln(x^x) = x \ln(x)$.</p>
-            <p><strong>Step 2:</strong> Differentiate implicitly with respect to $x$:</p>
-            $$\frac{1}{y} \frac{dy}{dx} = 1 \cdot \ln(x) + x \cdot \frac{1}{x} = \ln(x) + 1$$
-            $$\frac{dy}{dx} = y (\ln(x) + 1) = x^x (\ln(x) + 1)$$
-            <p><strong>Step 3:</strong> Evaluate at $x = 1$:</p>
-            $$y'(1) = 1^1 (\ln(1) + 1) = 1(0 + 1) = 1$$
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- PAGE 4: STATISTICS PAGE (statistics.html) -->
-    <!-- ========================================================================= -->
-    <section id="view-statistics" class="page-view hidden space-y-6">
-      
-      <!-- Page Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1">
-            <span>Subject Library</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold">Statistics &amp; Probability</h2>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Bayes' Theorem, Conditional Expectation, Normal Distributions &amp; Sampling.</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="navigate('home')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">&larr; Back Home</button>
-          <button onclick="navigate('formulas')" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-medium rounded-lg transition">Formula Sheet &rarr;</button>
-        </div>
-      </div>
-
-      <div class="space-y-6">
-        
-        <!-- Stats Q1 -->
-        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">Bayesian Inference</span>
-            <span class="text-xs text-slate-400">Difficulty: Medium</span>
-          </div>
-          <h3 class="text-lg font-bold">False Positive Paradox</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 my-2">
-            A disease has a prevalence of $1\%$ ($P(D) = 0.01$). A laboratory test has a sensitivity of $95\%$ ($P(+|D) = 0.95$) and a false positive rate of $5\%$ ($P(+|D^c) = 0.05$).
-            If a person tests positive, what is the probability they actually have the disease $P(D|+)$?
-          </p>
-
-          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-2 my-3">
-            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Posterior Probability (approx % or decimal):</span>
-            <input type="text" id="ans-stat-1" placeholder="e.g. 0.161 or 16.1%" class="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded">
-            <button onclick="checkAnswer('ans-stat-1', ['0.161', '16.1%', '0.16', '16%'], 'feed-stat-1')" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded">Check</button>
-            <span id="feed-stat-1" class="text-xs font-bold"></span>
-          </div>
-
-          <button onclick="toggleAccordion('stat-sol-1')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-            Toggle Bayes Calculation &darr;
-          </button>
-
-          <div id="stat-sol-1" class="hidden mt-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-slate-800">
-            <p><strong>Step 1:</strong> Total probability of testing positive $P(+)$:</p>
-            $$P(+) = P(+|D)P(D) + P(+|D^c)P(D^c) = (0.95)(0.01) + (0.05)(0.99) = 0.0095 + 0.0495 = 0.059$$
-            <p><strong>Step 2:</strong> Apply Bayes' Rule:</p>
-            $$P(D|+) = \frac{P(+|D)P(D)}{P(+)} = \frac{0.0095}{0.059} = \frac{95}{590} \approx 0.161 \quad (16.1\%)$$
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- PAGE 5: FORMULAS CHEATSHEET PAGE (formulas.html) -->
-    <!-- ========================================================================= -->
-    <section id="view-formulas" class="page-view hidden space-y-6">
-      
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
-            <span>Reference Library</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold">Formula Cheatsheet</h2>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">High-yield identities, derivative rules, matrix laws &amp; probability distributions.</p>
-        </div>
-        <button onclick="window.print()" class="self-start sm:self-auto px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4-1v8H8v-8"></path></svg>
-          <span>Print Cheatsheet</span>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- Table 1: Calculus Integrals -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
-          <h3 class="font-bold text-sm text-brand-600 dark:text-brand-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-            <span>&int;</span> Calculus Rules
-          </h3>
-          <div class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-            <div class="py-2.5 flex justify-between items-center">
-              <span class="font-medium text-slate-600 dark:text-slate-400">Integration by Parts</span>
-              <span class="font-mono">$$\int u \, dv = uv - \int v \, du$$</span>
-            </div>
-            <div class="py-2.5 flex justify-between items-center">
-              <span class="font-medium text-slate-600 dark:text-slate-400">Product Rule</span>
-              <span class="font-mono">$$(uv)' = u'v + uv'$$</span>
-            </div>
-            <div class="py-2.5 flex justify-between items-center">
-              <span class="font-medium text-slate-600 dark:text-slate-400">Quotient Rule</span>
-              <span class="font-mono">$$\left(\frac{u}{v}\right)' = \frac{u'v - uv'}{v^2}$$</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Table 2: Linear Algebra -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
-          <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-            <span>A</span> Matrices &amp; Vectors
-          </h3>
-          <div class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-            <div class="py-2.5 flex justify-between items-center">
-              <span class="font-medium text-slate-600 dark:text-slate-400">Characteristic Equation</span>
-              <span class="font-mono">$$\det(A - \lambda I) = 0$$</span>
-            </div>
-            <div class="py-2.5 flex justify-between items-center">
-              <span class="font-medium text-slate-600 dark:text-slate-400">$2 \times 2$ Inverse</span>
-              <span class="font-mono">$$A^{-1} = \frac{1}{ad-bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$$</span>
-            </div>
-            <div class="py-2.5 flex justify-between items-center">
-              <span class="font-medium text-slate-600 dark:text-slate-400">Trace Identity</span>
-              <span class="font-mono">$$\text{Tr}(A) = \sum \lambda_i$$</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Table 3: Probability -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm md:col-span-2">
-          <h3 class="font-bold text-sm text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-            <span>P</span> Probability Identities
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
-              <span class="font-semibold block mb-1">Bayes' Theorem</span>
-              $$P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B)}$$
-            </div>
-            <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
-              <span class="font-semibold block mb-1">Variance Definition</span>
-              $$\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$$
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- PAGE 6: SUBMIT / ASK A QUESTION PAGE (submit.html) -->
-    <!-- ========================================================================= -->
-    <section id="view-submit" class="page-view hidden space-y-6">
-      
-      <div class="max-w-3xl mx-auto">
-        <div class="pb-4 mb-6 border-b border-slate-200 dark:border-slate-800">
-          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-1">
-            <span>Community Contributions</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold">Submit a Problem</h2>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Post a mathematical question or proof with live KaTeX LaTeX preview.</p>
-        </div>
-
-        <form id="questionForm" onsubmit="handleQuestionSubmit(event)" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
-          
-          <div>
-            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">Subject Category</label>
-            <select id="q-category" class="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500">
-              <option value="Algebra">Algebra &amp; Matrices</option>
-              <option value="Calculus">Calculus &amp; Real Analysis</option>
-              <option value="Statistics">Probability &amp; Statistics</option>
-              <option value="Discrete">Discrete Mathematics</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">Problem Title</label>
-            <input type="text" id="q-title" required placeholder="e.g. Evaluating Definite Integral of x*exp(-x^2)" class="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-              Problem Statement (Supports LaTeX syntax, e.g. $\int_0^1 x \, dx$)
-            </label>
-            <textarea id="q-body" rows="4" oninput="updateLivePreview()" placeholder="Type here. For LaTeX equations, wrap in $$ for block or $ for inline." class="w-full px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 font-mono text-xs"></textarea>
-          </div>
-
-          <!-- Live LaTeX Preview Container -->
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Live LaTeX Render Preview</label>
-            <div id="livePreviewBox" class="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 min-h-[60px] text-sm text-slate-600 dark:text-slate-400">
-              <em>LaTeX equation preview will appear here as you type...</em>
-            </div>
-          </div>
-
-          <div class="pt-2 flex items-center justify-end gap-3">
-            <button type="reset" class="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Clear</button>
-            <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow transition">Submit to Hub</button>
-          </div>
-        </form>
-
-        <div id="submitNotice" class="hidden mt-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
-          🎉 Problem submitted successfully to local session storage!
-        </div>
-      </div>
-
-    </section>
-
-  </main>
-
-  <footer class="mt-auto bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-slate-500 text-xs py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="w-6 h-6 rounded bg-brand-600 text-white font-bold flex items-center justify-center text-xs">&sum;</span>
-        <span class="font-semibold text-slate-700 dark:text-slate-300">MathVault Knowledge Base</span>
-      </div>
-      <div class="flex flex-wrap items-center gap-4">
-        <button onclick="navigate('home')" class="hover:underline">Home</button>
-        <button onclick="navigate('algebra')" class="hover:underline">Algebra</button>
-        <button onclick="navigate('calculus')" class="hover:underline">Calculus</button>
-        <button onclick="navigate('statistics')" class="hover:underline">Statistics</button>
-        <button onclick="navigate('formulas')" class="hover:underline">Formulas</button>
-        <button onclick="openExportModal()" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">Download GitHub Pages Files</button>
-      </div>
-      <div class="text-[11px] text-slate-400">
-        100% Free &bull; Hosted on GitHub Pages &bull; KaTeX Integrated
-      </div>
-    </div>
-  </footer>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: GITHUB MULTI-FILE EXPORTER / CODE VIEWER -->
-  <!-- ========================================================================= -->
-  <div id="exportModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
-      
-      <!-- Modal Header -->
-      <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <div>
-          <h3 class="font-bold text-base sm:text-lg flex items-center gap-2">
-            <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            Export Standalone Files for GitHub Pages
-          </h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Copy each file below and create them in your GitHub repo so standard browser links (<code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">algebra.html</code>, etc.) load directly!
-          </p>
-        </div>
-        <button onclick="closeExportModal()" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-      </div>
-
-      <!-- File Tab Switcher -->
-      <div class="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4 gap-1 overflow-x-auto text-xs font-mono">
-        <button onclick="switchExportTab('index.html')" id="tab-index" class="export-tab py-2.5 px-3 border-b-2 border-brand-600 text-brand-600 font-bold">index.html</button>
-        <button onclick="switchExportTab('algebra.html')" id="tab-algebra" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">algebra.html</button>
-        <button onclick="switchExportTab('calculus.html')" id="tab-calculus" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">calculus.html</button>
-        <button onclick="switchExportTab('statistics.html')" id="tab-statistics" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">statistics.html</button>
-        <button onclick="switchExportTab('formulas.html')" id="tab-formulas" class="export-tab py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">formulas.html</button>
-      </div>
-
-      <!-- File Content Preview with Copy Button -->
-      <div class="p-4 flex-1 overflow-hidden flex flex-col">
-        <div class="flex items-center justify-between mb-2">
-          <span id="exportFilenameLabel" class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">index.html</span>
-          <button onclick="copyExportedCode()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-lg transition shadow-sm">
-            <svg id="copyIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span id="copyBtnText">Copy File Code</span>
-          </button>
-        </div>
-        <textarea id="exportCodeArea" readonly class="w-full flex-1 p-3 bg-slate-950 text-slate-200 font-mono text-xs rounded-xl border border-slate-800 code-editor-area resize-none focus:outline-none overflow-auto"></textarea>
-      </div>
-
-      <div class="p-3 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 px-5 flex items-center justify-between">
-        <span>💡 In your GitHub repo, click <strong>Add file &rarr; Create new file</strong>, paste the copied code, and name it identically.</span>
-        <button onclick="closeExportModal()" class="text-xs font-medium text-slate-700 dark:text-slate-300 hover:underline">Done</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // State management for Multi-Page simulation
-    const pages = {
-      home: { file: 'index.html', title: 'Home' },
-      algebra: { file: 'algebra.html', title: 'Algebra & Matrices' },
-      calculus: { file: 'calculus.html', title: 'Calculus & Analysis' },
-      statistics: { file: 'statistics.html', title: 'Probability & Statistics' },
-      formulas: { file: 'formulas.html', title: 'Formula Cheatsheet' },
-      submit: { file: 'submit.html', title: 'Submit Question' }
-    };
-
-    let currentPage = 'home';
-
-    // Router and Navigation Controller
-    function navigate(pageId) {
-      if (!pages[pageId]) pageId = 'home';
-      currentPage = pageId;
-
-      // Update visibility of subpages
-      document.querySelectorAll('.page-view').forEach(view => {
-        view.classList.add('hidden');
-      });
-      const targetView = document.getElementById('view-' + pageId);
-      if (targetView) targetView.classList.remove('hidden');
-
-      // Update Navigation Active State
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-brand-600', 'dark:text-brand-400', 'bg-brand-50', 'dark:bg-brand-900/30');
-        btn.classList.add('text-slate-600', 'dark:text-slate-300');
-      });
-      const activeNav = document.getElementById('nav-' + pageId);
-      if (activeNav) {
-        activeNav.classList.remove('text-slate-600', 'dark:text-slate-300');
-        activeNav.classList.add('text-brand-600', 'dark:text-brand-400', 'bg-brand-50', 'dark:bg-brand-900/30');
-      }
-
-      // Update Breadcrumbs
-      document.getElementById('breadcrumbCurrent').textContent = pages[pageId].title;
-      document.getElementById('currentFilename').textContent = pages[pageId].file;
-
-      // Update URL hash without reload
-      window.location.hash = 'page=' + pageId;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Re-trigger KaTeX typeset in case formulas loaded
-      triggerKaTeX();
-    }
-
-    // Toggle Mobile Navigation Menu
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobileMenu');
-      menu.classList.toggle('hidden');
-    }
-
-    // Accordion expand/collapse
-    function toggleAccordion(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.toggle('hidden');
-      const icon = document.getElementById(id + '-icon');
-      if (icon) {
-        icon.classList.toggle('rotate-180');
-      }
-    }
-
-    // Answer Verification for Featured Daily Problem
-    function checkDailyAnswer() {
-      const input = document.getElementById('daily-input').value.trim();
-      const feedback = document.getElementById('daily-feedback');
-      feedback.classList.remove('hidden', 'text-emerald-500', 'text-rose-500');
-
-      if (input === '8') {
-        feedback.textContent = '✓ Correct! The limit value is 8.';
-        feedback.classList.add('text-emerald-500');
-      } else {
-        feedback.textContent = '✗ Incorrect. Try applying L\'Hôpital\'s rule or expand cos(4x) with Taylor series.';
-        feedback.classList.add('text-rose-500');
-      }
-    }
-
-    // Generic Answer Checker
-    function checkAnswer(inputId, validList, feedbackId) {
-      const val = document.getElementById(inputId).value.trim().toLowerCase().replace(/\s+/g, '');
-      const fb = document.getElementById(feedbackId);
-      const isMatch = validList.some(item => val === item.toLowerCase().replace(/\s+/g, ''));
-
-      if (isMatch) {
-        fb.textContent = '✓ Correct';
-        fb.className = 'text-xs font-bold text-emerald-600 dark:text-emerald-400';
-      } else {
-        fb.textContent = '✗ Try again';
-        fb.className = 'text-xs font-bold text-rose-500';
-      }
-    }
-
-    // Live LaTeX Preview on Problem Submission
-    function updateLivePreview() {
-      const text = document.getElementById('q-body').value;
-      const previewBox = document.getElementById('livePreviewBox');
-      if (!text.trim()) {
-        previewBox.innerHTML = '<em>LaTeX equation preview will appear here as you type...</em>';
-        return;
-      }
-      previewBox.textContent = text;
-      triggerKaTeX(previewBox);
-    }
-
-    function handleQuestionSubmit(e) {
-      e.preventDefault();
-      const title = document.getElementById('q-title').value;
-      const category = document.getElementById('q-category').value;
-      const body = document.getElementById('q-body').value;
-
-      const notice = document.getElementById('submitNotice');
-      notice.classList.remove('hidden');
-      document.getElementById('questionForm').reset();
-      document.getElementById('livePreviewBox').innerHTML = '<em>Question added to database!</em>';
-      setTimeout(() => notice.classList.add('hidden'), 5000);
-    }
-
-    // Dark/Light Theme Switcher with localStorage persistence
-    function toggleTheme() {
-      const html = document.documentElement;
-      const isDark = html.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      updateThemeIcons(isDark);
-    }
-
-    function updateThemeIcons(isDark) {
-      document.getElementById('themeSun').classList.toggle('hidden', !isDark);
-      document.getElementById('themeMoon').classList.toggle('hidden', isDark);
-    }
-
-    // KaTeX Autorender Trigger
-    function triggerKaTeX(container) {
-      if (typeof renderMathInElement === 'function') {
-        renderMathInElement(container || document.body, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false}
-          ],
-          throwOnError: false
-        });
-      }
-    }
-
-    // Initializer on Page Load
-    window.addEventListener('DOMContentLoaded', () => {
-      // Check saved theme
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-        updateThemeIcons(true);
-      } else {
-        document.documentElement.classList.remove('dark');
-        updateThemeIcons(false);
-      }
-
-      // Read hash URL for direct page jump (e.g. #page=calculus)
-      const hash = window.location.hash;
-      if (hash.startsWith('#page=')) {
-        const page = hash.replace('#page=', '');
-        navigate(page);
-      } else {
-        triggerKaTeX();
-      }
-
-      // Initialize export preview
-      switchExportTab('index.html');
-    });
-
-    // Handle browser forward/back buttons
-    window.addEventListener('hashchange', () => {
-      const hash = window.location.hash;
-      if (hash.startsWith('#page=')) {
-        const page = hash.replace('#page=', '');
-        if (page !== currentPage) {
-          navigate(page);
-        }
-      }
-    });
-
-    // =========================================================================
-    // EXPORT MODAL LOGIC (Generates Clean Code for Separate Files)
-    // =========================================================================
-    const exportSnippets = {
-      "index.html": `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MathVault — Mathematics Home</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
-</head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
-  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
-    <div class="flex gap-4 text-sm font-medium">
-      <a href="index.html" class="text-blue-600 font-bold">Home</a>
-      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
-      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
-      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
-      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
-    </div>
-  </nav>
-  <main class="max-w-5xl mx-auto px-4 py-12 flex-1">
-    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl p-10 mb-8">
-      <h1 class="text-4xl font-extrabold mb-3">Math Problem Solving Hub</h1>
-      <p class="text-blue-100 mb-6">Interactive step-by-step mathematical questions with verified LaTeX proofs.</p>
-      <div class="flex flex-wrap gap-3">
-        <a href="algebra.html" class="px-4 py-2 bg-white text-slate-900 font-bold rounded-lg text-sm">Algebra</a>
-        <a href="calculus.html" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg text-sm">Calculus</a>
-        <a href="statistics.html" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-lg text-sm">Statistics</a>
-      </div>
-    </div>
-  </main>
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-    &copy; 2026 MathVault &bull; Hosted on GitHub Pages
-  </footer>
-</body>
-</html>`,
-
-      "algebra.html": `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Algebra & Matrices — MathVault</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
-</head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
-  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
-    <div class="flex gap-4 text-sm font-medium">
-      <a href="index.html" class="hover:text-blue-600">Home</a>
-      <a href="algebra.html" class="text-blue-600 font-bold">Algebra</a>
-      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
-      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
-      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
-    </div>
-  </nav>
-  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
-    <h1 class="text-3xl font-extrabold mb-4">Algebra & Matrix Problems</h1>
-    <article class="bg-white border rounded-2xl p-6 shadow-sm mb-6">
-      <h2 class="text-xl font-bold mb-2">Eigenvalues of a Matrix</h2>
-      <p class="mb-4">Compute the eigenvalues of $A = \\begin{pmatrix} 5 & 4 \\\\ 1 & 2 \\end{pmatrix}$.</p>
-      <div class="p-4 bg-slate-50 rounded-xl border text-sm">
-        <strong>Solution:</strong> The eigenvalues are $\\lambda_1 = 1$ and $\\lambda_2 = 6$.
-      </div>
-    </article>
-  </main>
-</body>
-</html>`,
-
-      "calculus.html": `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculus & Analysis — MathVault</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
-</head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
-  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
-    <div class="flex gap-4 text-sm font-medium">
-      <a href="index.html" class="hover:text-blue-600">Home</a>
-      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
-      <a href="calculus.html" class="text-blue-600 font-bold">Calculus</a>
-      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
-      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
-    </div>
-  </nav>
-  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
-    <h1 class="text-3xl font-extrabold mb-4">Calculus & Analysis Problems</h1>
-    <article class="bg-white border rounded-2xl p-6 shadow-sm mb-6">
-      <h2 class="text-xl font-bold mb-2">Definite Integration by Parts</h2>
-      <p class="mb-4">Evaluate: $\\int_{0}^{\\pi} x \\sin(x) \\, dx$.</p>
-      <div class="p-4 bg-slate-50 rounded-xl border text-sm">
-        <strong>Solution:</strong> The exact value is $\\pi$.
-      </div>
-    </article>
-  </main>
-</body>
-</html>`,
-
-      "statistics.html": `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Probability & Statistics — MathVault</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
-</head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
-  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
-    <div class="flex gap-4 text-sm font-medium">
-      <a href="index.html" class="hover:text-blue-600">Home</a>
-      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
-      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
-      <a href="statistics.html" class="text-blue-600 font-bold">Statistics</a>
-      <a href="formulas.html" class="hover:text-blue-600">Formulas</a>
-    </div>
-  </nav>
-  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
-    <h1 class="text-3xl font-extrabold mb-4">Probability & Statistics</h1>
-    <article class="bg-white border rounded-2xl p-6 shadow-sm mb-6">
-      <h2 class="text-xl font-bold mb-2">Bayes' Theorem Diagnostics</h2>
-      <p class="mb-4">Given $P(D)=0.01$, sensitivity $95\\%$, and false positive $5\\%$, find $P(D|+)$.</p>
-      <div class="p-4 bg-slate-50 rounded-xl border text-sm">
-        <strong>Solution:</strong> $P(D|+) = \\frac{0.0095}{0.059} \\approx 16.1\\%$.
-      </div>
-    </article>
-  </main>
-</body>
-</html>`,
-
-      "formulas.html": `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formula Reference — MathVault</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"><\/script>
-</head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
-  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-    <a href="index.html" class="font-extrabold text-xl text-blue-600">&sum; MathVault</a>
-    <div class="flex gap-4 text-sm font-medium">
-      <a href="index.html" class="hover:text-blue-600">Home</a>
-      <a href="algebra.html" class="hover:text-blue-600">Algebra</a>
-      <a href="calculus.html" class="hover:text-blue-600">Calculus</a>
-      <a href="statistics.html" class="hover:text-blue-600">Statistics</a>
-      <a href="formulas.html" class="text-blue-600 font-bold">Formulas</a>
-    </div>
-  </nav>
-  <main class="max-w-5xl mx-auto px-4 py-8 flex-1">
-    <h1 class="text-3xl font-extrabold mb-4">Formula Sheet</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-white p-4 border rounded-xl">
-        <h2 class="font-bold text-sm mb-2">Integration by Parts</h2>
-        $$\\int u \\, dv = uv - \\int v \\, du$$
-      </div>
-      <div class="bg-white p-4 border rounded-xl">
-        <h2 class="font-bold text-sm mb-2">Bayes' Theorem</h2>
-        $$P(A \\mid B) = \\frac{P(B \\mid A)P(A)}{P(B)}$$
-      </div>
-    </div>
-  </main>
-</body>
-</html>`
-    };
-
-    let activeExportTab = 'index.html';
-
-    function openExportModal() {
-      document.getElementById('exportModal').classList.remove('hidden');
-      document.getElementById('exportModal').classList.add('flex');
-    }
-
-    function closeExportModal() {
-      document.getElementById('exportModal').classList.add('hidden');
-      document.getElementById('exportModal').classList.remove('flex');
-    }
-
-    function switchExportTab(fileName) {
-      activeExportTab = fileName;
-      document.getElementById('exportFilenameLabel').textContent = fileName;
-      document.getElementById('exportCodeArea').value = exportSnippets[fileName];
-
-      document.querySelectorAll('.export-tab').forEach(tab => {
-        tab.classList.remove('border-brand-600', 'text-brand-600', 'font-bold');
-        tab.classList.add('border-transparent', 'text-slate-500');
-      });
-
-      const tabId = 'tab-' + fileName.replace('.html', '');
-      const currentTab = document.getElementById(tabId);
-      if (currentTab) {
-        currentTab.classList.remove('border-transparent', 'text-slate-500');
-        currentTab.classList.add('border-brand-600', 'text-brand-600', 'font-bold');
-      }
-    }
-
-    function copyExportedCode() {
-      const codeArea = document.getElementById('exportCodeArea');
-      codeArea.select();
-      try {
-        document.execCommand('copy');
-        const btnText = document.getElementById('copyBtnText');
-        btnText.textContent = 'Copied to Clipboard!';
-        setTimeout(() => {
-          btnText.textContent = 'Copy File Code';
-        }, 2000);
-      } catch (err) {
-        console.error('Failed to copy', err);
-      }
-    }
-  </script>
 </body>
 </html>
