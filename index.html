@@ -1,1681 +1,952 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Prime Math | Mathematics Learning Portal</title>
+  <meta name="description" content="Advanced Mathematics Portal by Dr. Shantanu Guria for Class XI, XII, WBJEE, JEE Main & Advanced." />
 
-  <!-- Google Fonts -->
+  <!-- Google Web Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- MathJax Configuration -->
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['\\(', '\\)']],
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
         displayMath: [['\\[', '\\]'], ['$$', '$$']],
         processEscapes: true
       },
       chtml: {
-        scale: 0.88
+        scale: 0.90
       }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 
   <style>
+    :root {
+      --primary: #0369a1;
+      --primary-dark: #075985;
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --accent: #0d9488;
+      --accent-light: #14b8a6;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+
     * {
       box-sizing: border-box;
-    }
-
-    /* Edge-to-edge layout with zero margin waste */
-    html, body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      background-color: #f1f5f9;
+    }
+
+    body {
       font-family: 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #1e293b;
-      line-height: 1.8;
-      font-size: 13.5px;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      font-size: 14px;
       overflow-x: hidden;
-      scroll-behavior: smooth;
     }
 
-    .container {
-      width: 100%;
-      max-width: 100% !important; /* Full width edge-to-edge */
-      margin: 0;
-      padding: 4px 2px; /* Minimal padding for maximum printable area */
+    /* Header & Navigation */
+    header {
+      background: var(--navy);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    /* =========================================
-       PAGE 1: FRONT COVER DESIGN
-       ========================================= */
-    .front-cover {
-      background: linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0369a1 100%);
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+    }
+
+    .logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
       color: #ffffff;
-      border-radius: 8px;
-      padding: 30px 14px 24px 14px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo span {
+      color: var(--accent-light);
+      font-size: 24px;
+    }
+
+    nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 2px;
+    }
+
+    nav button {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    nav button:hover, nav button.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    nav button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Tab Switcher Logic */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 65%, #0369a1 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 40px 24px;
+      text-align: center;
+      margin-bottom: 24px;
       position: relative;
       overflow: hidden;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      width: 100%;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
     }
 
-    .front-cover::before {
-      content: "";
-      position: absolute;
-      top: -60px;
-      right: -60px;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(0,0,0,0) 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .hero-badge {
+      display: inline-block;
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
       padding: 4px 14px;
-      border-radius: 9999px;
-      font-family: 'Outfit', sans-serif;
+      border-radius: 20px;
       font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #38bdf8;
+      color: var(--accent-light);
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .cover-title {
-      font-family: 'Outfit', 'Noto Sans Bengali', sans-serif;
-      font-size: 24px;
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
       font-weight: 800;
-      line-height: 1.3;
-      margin: 0 0 8px 0;
-      color: #ffffff;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
     }
 
-    .cover-subtitle {
-      font-size: 13px;
-      color: #94a3b8;
-      margin: 0 auto 18px auto;
-      font-weight: 400;
-      line-height: 1.5;
+    .hero p {
+      color: #cbd5e1;
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
     }
 
-    .cover-card-meta {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 12px;
-      margin: 0 auto 18px auto;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      text-align: left;
-    }
-
-    .meta-item {
+    .hero-tags {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
     }
 
-    .meta-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: #64748b;
-      letter-spacing: 0.8px;
+    .hero-tag {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 600;
+      color: #f1f5f9;
     }
 
-    .meta-value {
-      font-size: 12.5px;
-      color: #f8fafc;
-      font-weight: 600;
-      margin-top: 2px;
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .jump-btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-      color: #ffffff;
-      text-decoration: none;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
       font-weight: 600;
       font-size: 13px;
-      padding: 9px 20px;
-      border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .jump-btn:active {
-      transform: scale(0.98);
-    }
-
-    /* =========================================
-       PAGE 2: EXERCISES & SOLUTIONS
-       ========================================= */
-    .page-break-divider {
-      height: 1px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
       border: none;
-      margin: 14px 0;
     }
 
-    .chapter-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 14px 6px; /* Edge-to-edge internal padding */
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-      width: 100%;
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
     }
 
-    .chapter-header {
-      border-bottom: 2px solid #0284c7;
-      padding-bottom: 8px;
-      margin-bottom: 16px;
+    .btn-accent {
+      background: var(--accent);
+      color: #ffffff;
+    }
+    .btn-accent:hover {
+      background: #0f766e;
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      color: var(--navy);
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-left: 6px;
-      padding-right: 6px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
     }
 
-    h1 {
-      color: #0369a1;
-      font-size: 17px;
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    /* Problem of the Day Section */
+    .potd-card {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .potd-badge {
+      display: inline-block;
+      background: #ccfbf1;
+      color: var(--accent);
       font-weight: 700;
-      margin: 0;
-    }
-
-    .tag-badge {
-      background: #e0f2fe;
-      color: #0369a1;
       font-size: 11px;
-      font-weight: 700;
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 4px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
 
-    /* Tight horizontal list indentation */
-    ol {
-      padding-left: 18px;
-      margin: 0;
-    }
-
-    li {
-      margin-bottom: 20px;
-      padding-bottom: 4px;
-      overflow-wrap: break-word;
-    }
-
-    .question-text {
-      color: #1e40af;
+    .potd-question {
       font-weight: 600;
-      display: inline;
-      line-height: 1.8;
+      color: var(--navy);
+      font-size: 15px;
+      margin-bottom: 12px;
     }
 
-    .question-text mjx-container {
-      white-space: normal !important;
-      display: inline !important;
-    }
-
-    /* Full-width interactive solution box */
-    details.solution-box {
-      margin-top: 8px;
-      margin-bottom: 10px;
+    details.solution-accordion {
+      margin-top: 10px;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
       overflow: hidden;
-      background: #ffffff;
-      width: 100%;
     }
 
-    details.solution-box[open] {
-      border-color: #0d9488;
-      box-shadow: 0 2px 4px rgba(13, 148, 136, 0.06);
-    }
-
-    summary.sol-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background-color: #f0fdfa;
-      color: #0d9488;
+    summary.solution-summary {
+      background: #f8fafc;
+      padding: 8px 12px;
       font-weight: 700;
-      font-size: 12.5px;
-      padding: 6px 10px;
+      color: var(--accent);
       cursor: pointer;
       user-select: none;
-      list-style: none;
+      font-size: 13px;
+    }
+
+    .solution-body {
+      padding: 12px;
+      background: #fff;
+      color: #334155;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* Search Bar */
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
       width: 100%;
-      border-bottom: 1px solid transparent;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
     }
 
-    summary.sol-btn::-webkit-details-marker {
-      display: none;
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
     }
 
-    summary.sol-btn:hover {
-      background-color: #ccfbf1;
+    /* Chapter Resource Lists */
+    .chapter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border);
     }
 
-    details[open] summary.sol-btn {
-      border-bottom: 1px solid #99f6e4;
-      background-color: #e6fffa;
+    .chapter-row:last-child {
+      border-bottom: none;
     }
 
-    summary.sol-btn .icon {
-      display: inline-block;
-      transition: transform 0.2s ease;
-      font-size: 10px;
+    .btn-group {
+      display: flex;
+      gap: 6px;
     }
 
-    details[open] summary.sol-btn .icon {
-      transform: rotate(90deg);
+    .btn-sm {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
     }
 
-    .solution-content {
-      padding: 10px 6px; /* Edge-to-edge solution text */
-      color: #374151;
-      background: #fafafa;
-      line-height: 1.8;
+    .btn-sm:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Notice Board */
+    .notice-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notice-date {
+      background: #e0f2fe;
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 85px;
+      text-align: center;
+    }
+
+    .notice-title {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    /* Table Styles */
+    table {
       width: 100%;
-    }
-
-    .sub-list {
-      list-style-type: lower-roman;
-      padding-left: 14px;
+      border-collapse: collapse;
       margin-top: 10px;
+      font-size: 13px;
     }
 
-    .sub-list > li {
-      margin-bottom: 16px;
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
     }
 
-    .sub-alpha-list {
-      list-style-type: lower-alpha;
-      padding-left: 14px;
-      margin-top: 6px;
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
     }
 
-    .condition-note {
-      text-align: right;
-      margin: 4px 0 8px 0;
+    /* Mentor Profile Box */
+    .mentor-profile {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .mentor-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy);
+      color: #94a3b8;
+      padding: 24px 16px;
+      text-align: center;
       font-size: 12px;
-      color: #64748b;
+      margin-top: 40px;
+      border-top: 1px solid var(--navy-light);
     }
 
-    /* Edge-to-edge smooth math slider */
-    .math-scroll {
-      width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
-      margin: 6px 0;
-      padding: 2px 0;
-      -webkit-overflow-scrolling: touch;
+    footer p {
+      margin-bottom: 6px;
     }
 
-    mjx-container[jax="CHTML"][display="true"] {
-      margin: 4px 0 !important;
+    /* Mobile Adaptability */
+    @media (max-width: 640px) {
+      .hero {
+        padding: 24px 16px;
+      }
+      .hero h1 {
+        font-size: 22px;
+      }
+      .chapter-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .mentor-profile {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
 
+
+
+<a href="#" class="logo" onclick="switchTab('home')">
+  <img src="https://uploads.onecompiler.io/453vp5b2t/453zadsky/Logo_f2.png" alt="Prime Math Logo" width="48" height="48" style="width: 48px !important; height: 48px !important; min-width: 48px !important; min-height: 48px !important; max-height: none !important; object-fit: contain; display: inline-block; vertical-align: middle;">
+  <span style="color: #38bdf8 !important;">PRIME MATH</span>
+    </a>
+      <nav id="nav-tabs">
+        <button class="active" onclick="switchTab('home')">Home</button>
+        <button onclick="switchTab('study')">Study Materials</button>
+        <button onclick="switchTab('qbank')">Question Bank</button>
+        <!-- Temporarily blocked:
+        <button onclick="switchTab('tests')">Online Tests</button>
+        -->
+        <button onclick="switchTab('notices')">Notice Board</button>
+        <button onclick="switchTab('courses')">Courses</button>
+        <button onclick="switchTab('about')">Mentorship</button>
+        <button onclick="switchTab('contact')">Contact</button>
+      </nav>
+    </div>
+  </header>
+
   <div class="container">
 
-    <!-- PAGE 1: FRONT COVER -->
-    <header class="front-cover">
-      <div class="brand-badge">Prime Math • Workbook</div>
-      <h1 class="cover-title">গাণিতিক আরোহ তত্ত্ব</h1>
-      <div class="cover-subtitle">Principle of Mathematical Induction (PMI) — Complete Questions & Comprehensive Solutions</div>
+    <!-- ==================== TAB 1: HOME ==================== -->
+    <div id="tab-home" class="tab-content active">
+      <section class="hero">
+        <div class="hero-badge">Mathematics Learning Portal</div>
+        <h1>Prime Math</h1>
+        <p>Learn Mathematics. Build Concepts. Achieve More.</p>
+        <div class="hero-tags">
+          <span class="hero-tag">Class XI</span>
+          <span class="hero-tag">Class XII</span>
+          <span class="hero-tag">WBJEE</span>
+          <span class="hero-tag">JEE Main</span>
+          <span class="hero-tag">JEE Advanced</span>
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-accent" onclick="switchTab('study')">Study Materials</button>
+          <button class="btn btn-primary" onclick="switchTab('qbank')">Question Bank</button>
+          <button class="btn btn-outline" onclick="switchTab('notices')">Latest Notices</button>
+        </div>
+      </section>
 
-      <div class="cover-card-meta">
-        <div class="meta-item">
-          <span class="meta-label">বিষয় (Subject)</span>
-          <span class="meta-value">উচ্চতর গণিত (Higher Math)</span>
+      <!-- Problem of the Day -->
+      <section class="potd-card">
+        <span class="potd-badge">Problem of the Day</span>
+        <div class="potd-question">
+          If \(x + \frac{1}{x} = 3\), find the value of \(x^2 + \frac{1}{x^2}\).
         </div>
-        <div class="meta-item">
-          <span class="meta-label">শ্রেণি / বিভাগ</span>
-          <span class="meta-value">একাদশ-দ্বাদশ (XI–XII)</span>
+        <details class="solution-accordion">
+          <summary class="solution-summary">সমাধান দেখুন (Show Solution)</summary>
+          <div class="solution-body">
+            প্রদত্ত আছে, \(x + \frac{1}{x} = 3\)।<br>
+            উভয়পক্ষে বর্গ করে পাই:
+            $$\left(x + \frac{1}{x}\right)^2 = 3^2$$
+            $$\implies x^2 + 2\cdot x\cdot\frac{1}{x} + \frac{1}{x^2} = 9$$
+            $$\implies x^2 + 2 + \frac{1}{x^2} = 9$$
+            $$\implies x^2 + \frac{1}{x^2} = 9 - 2 = 7$$
+            <strong>উত্তর: 7</strong>
+          </div>
+        </details>
+      </section>
+
+      <!-- Chapter of the Week & Latest Notice -->
+      <div class="grid-2">
+        <div class="card">
+          <h2><span>Chapter of the Week</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
+          <h3 style="color: var(--primary); font-size: 17px; margin-bottom: 8px;">Integration (সমাকলন)</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Complete notes, 50 Practice Problems, JEE Main archive &amp; worked solutions are now live.
+          </p>
+          <div class="btn-group">
+            <a href="#" class="btn-sm" onclick="switchTab('study')">View Complete Notes</a>
+            <a href="#" class="btn-sm" onclick="switchTab('qbank')">Practise 50 Problems</a>
+          </div>
         </div>
-        <div class="meta-item">
-          <span class="meta-label">মোট সমস্যা</span>
-          <span class="meta-value">২২টি সমাধানসহ প্রশ্ন</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">ফিচার</span>
-          <span class="meta-value">ফুল-উইডথ ও বাটন সলিউশন</span>
+
+        <div class="card">
+          <h2><span>সাম্প্রতিক নোটিশ (Latest Notices)</span> <button class="btn-sm" onclick="switchTab('notices')">সব দেখুন</button></h2>
+          <div class="notice-item">
+            <div class="notice-date">22 Sep 2026</div>
+            <div>
+              <div class="notice-title">Class XII Test on Integration</div>
+              <small style="color: var(--text-muted);">Syllabus: Indefinite & Definite Integrals</small>
+            </div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-date">20 Sep 2026</div>
+            <div>
+              <div class="notice-title">New notes uploaded: Differential Equations</div>
+              <small style="color: var(--text-muted);">Standard methods for first order & degree</small>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <a href="#problems-section" class="jump-btn">অনুশীলনী শুরু করুন ↓</a>
-    </header>
+    <!-- ==================== TAB 2: STUDY MATERIALS ==================== -->
+    <div id="tab-study" class="tab-content">
+      <div class="card">
+        <h2><span>স্টাডি মেটেরিয়ালস (Study Materials Library)</span></h2>
+        
+        <div class="search-container">
+          <input type="text" id="study-search" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices, Integration)..." onkeyup="filterChapters()">
+        </div>
 
-    <hr class="page-break-divider" id="problems-section">
+        <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Class XI Mathematics (WBCHSE / CBSE)</h3>
+        <div id="class11-list">
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+        </div>
 
-    <!-- PAGE 2: PROBLEMS AND SOLUTIONS -->
-    <main class="chapter-card">
-      <div class="chapter-header">
-        <h1>গাণিতিক আরোহ তত্ত্ব (অনুশীলনী)</h1>
-        <span class="tag-badge">অধ্যায় - ৪</span>
+        <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Class XII Mathematics</h3>
+        <div id="class12-list">
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions</a>
+              <a href="#" class="btn-sm">Solutions</a>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <ol>
-        <!-- Question 1 -->
-        <li>
-          <span class="question-text">\((2^{2n} - 1)\) যদি \(3\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \([2^{2(n + 1)} - 1]\)-ও \(3\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত শর্তানুসারে, \((2^{2n} - 1)\) রাশিটি \(3\) দ্বারা বিভাজ্য।<br>
-              সুতরাং, আমরা লিখতে পারি \(2^{2n} - 1 = 3k\), যেখানে \(k \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
-              এখান থেকে পাই, \(2^{2n} = 3k + 1\)।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              2^{2(n + 1)} - 1 &= 2^{2n + 2} - 1 = (2^{2n}\cdot 2^2) - 1 = (4\cdot 2^{2n}) - 1 \\
-              &= 4(3k + 1) - 1 = 12k + 4 - 1 = 12k + 3 \\
-              &= 3(4k + 1) = 3k'
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[যেখানে \(k' = 4k + 1 \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা]</div>
-              অতএব \([2^{2(n + 1)} - 1]\) রাশিটিও \(3\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
+    <!-- ==================== TAB 3: QUESTION BANK ==================== -->
+    <div id="tab-qbank" class="tab-content">
+      <div class="card">
+        <h2><span>কোশ্চেন ব্যাংক (Question Bank)</span></h2>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">
+          Select target examination, standard, and topic to access customized problem sets.
+        </p>
 
-        <!-- Question 2 -->
-        <li>
-          <span class="question-text">সব \(n \in \mathbb{N}\) এর জন্য \(2n + 7 < (n + 3)^2\) হলে দেখাও যে, \(2(n + 1) + 7 < (n + 4)^2\)।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত বিবৃতিটি হল \(2n + 7 < (n + 3)^2\), যা সকল স্বাভাবিক সংখ্যা \(n \in \mathbb{N}\)-এর জন্য সত্য।<br>
-              যেহেতু অসমতাটি যেকোনো স্বাভাবিক সংখ্যার জন্যই সিদ্ধ হয়, সুতরাং \(n\)-এর পরিবর্তে পরবর্তী স্বাভাবিক সংখ্যা \((n + 1)\) বসিয়ে আমরা পাই,
-              <div class="math-scroll">
-              $$2(n + 1) + 7 < \{(n + 1) + 3\}^2 \implies 2(n + 1) + 7 < (n + 4)^2$$
-              </div>
-              অতএব নির্ণেয় অসমতাটি প্রমাণিত হল।
-            </div>
-          </details>
-        </li>
+        <div class="grid-3" style="margin-bottom: 20px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted);">পরীক্ষা (Exam)</label>
+            <select class="search-input" style="padding: 8px;">
+              <option>WBJEE</option>
+              <option>JEE Main</option>
+              <option>JEE Advanced</option>
+              <option>WBCHSE Board</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted);">শ্রেণি (Class)</label>
+            <select class="search-input" style="padding: 8px;">
+              <option>Class XII</option>
+              <option>Class XI</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted);">ক্যাটাগরি (Type)</label>
+            <select class="search-input" style="padding: 8px;">
+              <option>MCQs (Single Correct)</option>
+              <option>Assertion &amp; Reason</option>
+              <option>Previous Year Questions (PYQ)</option>
+              <option>Comprehensive Test Series</option>
+            </select>
+          </div>
+        </div>
 
-        <!-- Question 3 -->
-        <li>
-          <span class="question-text">\((2^{3n} - 1)\) যদি \(7\) দ্বারা বিভাজ্য হয়, তবে প্রমাণ করো যে, \([2^{3(n + 1)} - 1]\)-ও \(7\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত শর্তানুসারে, \((2^{3n} - 1)\) রাশিটি \(7\) দ্বারা বিভাজ্য।<br>
-              অতএব, \(2^{3n} - 1 = 7\lambda\) ধরা যাক, যেখানে \(\lambda \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
-              এখান থেকে পাই, \(2^{3n} = 7\lambda + 1\)।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              2^{3(n + 1)} - 1 &= 2^{3n + 3} - 1 = 2^{3n}\cdot 2^3 - 1 = 8\cdot 2^{3n} - 1 \\
-              &= 8(7\lambda + 1) - 1 = 56\lambda + 8 - 1 = 56\lambda + 7 \\
-              &= 7(8\lambda + 1) = 7\mu
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[যেখানে \(\mu = 8\lambda + 1 \in \mathbb{Z}\) একটি পূর্ণসংখ্যা]</div>
-              সুতরাং, \([2^{3(n + 1)} - 1]\) রাশিটিও \(7\) দ্বারা সম্পূর্ণ বিভাজ্য হবে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
+        <div class="chapter-row">
+          <div>
+            <strong>JEE Main: Indefinite Integration — Practice Set 01</strong>
+            <div style="font-size: 12px; color: var(--text-muted);">30 Questions | Level: Moderate to Advanced</div>
+          </div>
+          <a href="#" class="btn-sm">Download Paper (PDF)</a>
+        </div>
+        <div class="chapter-row">
+          <div>
+            <strong>WBJEE: Vectors &amp; 3D Geometry — Speed Test</strong>
+            <div style="font-size: 12px; color: var(--text-muted);">40 MCQs | 1-Minute Target Drills</div>
+          </div>
+          <a href="#" class="btn-sm">Download Paper (PDF)</a>
+        </div>
+        <div class="chapter-row">
+          <div>
+            <strong>Class XI: Quadratic Equations &amp; Complex Numbers</strong>
+            <div style="font-size: 12px; color: var(--text-muted);">Subjective &amp; Board Standard Model Paper</div>
+          </div>
+          <a href="#" class="btn-sm">Download Paper (PDF)</a>
+        </div>
+      </div>
+    </div>
 
-        <!-- Question 4 -->
-        <li>
-          <span class="question-text">\(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n! = (n + 1)! - 1\) হলে, দেখাও যে, \(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n! + (n + 1)(n + 1)! = (n + 2)! - 1\)।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত সমীকরণটি হল \(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n! = (n + 1)! - 1\)।<br>
-              এখন বামপক্ষের প্রথম \(n\)-টি পদের সমষ্টির পরিবর্তে এই মান বসিয়ে পাই,
-              <div class="math-scroll">
-              $$\begin{align*}
-              \text{L.H.S.} &= \{1\cdot 1! + 2\cdot 2! + 3\cdot 3! + \dots + n\cdot n!\} + (n + 1)(n + 1)! \\
-              &= \{(n + 1)! - 1\} + (n + 1)(n + 1)! \\
-              &= (n + 1)! + (n + 1)(n + 1)! - 1 \\
-              &= (n + 1)![1 + (n + 1)] - 1 = (n + 2)(n + 1)! - 1 \\
-              &= (n + 2)! - 1 = \text{R.H.S.}
-              \end{align*}$$
-              </div>
-              অতএব সম্পর্কটি প্রমাণিত।
-            </div>
-          </details>
-        </li>
+    <!-- ==================== TAB 4: ONLINE TESTS ==================== -->
+    <div id="tab-tests" class="tab-content">
+      <div class="card">
+        <h2><span>মক টেস্ট সূচি (Mock Test Series)</span></h2>
+        <p style="color: var(--text-muted); margin-bottom: 12px;">Regular assessment tests for board preparations and entrance examinations.</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Test ID</th>
+              <th>Topic</th>
+              <th>Questions</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Test 01</strong></td>
+              <td>Matrices &amp; Determinants</td>
+              <td>20 MCQs</td>
+              <td>30 Mins</td>
+              <td><a href="#" class="btn-sm">Start Test</a></td>
+            </tr>
+            <tr>
+              <td><strong>Test 02</strong></td>
+              <td>Differential Calculus</td>
+              <td>25 MCQs</td>
+              <td>40 Mins</td>
+              <td><a href="#" class="btn-sm">Start Test</a></td>
+            </tr>
+            <tr>
+              <td><strong>Test 03</strong></td>
+              <td>Integral Calculus &amp; Differential Eq.</td>
+              <td>30 MCQs</td>
+              <td>45 Mins</td>
+              <td><span style="color: var(--text-muted); font-size: 12px;">Upcoming</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        <!-- Question 5 -->
-        <li>
-          <span class="question-text">\((10^{2n - 1} + 1)\) যদি \(11\) দ্বারা বিভাজ্য হয়, তবে প্রমাণ করো যে, \((10^{2n + 1} + 1)\)-ও \(11\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত শর্তানুযায়ী, \((10^{2n - 1} + 1)\) রাশিটি \(11\) দ্বারা বিভাজ্য।<br>
-              সুতরাং ধরি, \(10^{2n - 1} + 1 = 11\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি পূর্ণসংখ্যা।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              10^{2n + 1} + 1 &= 10^{(2n - 1) + 2} + 1 = 100\cdot 10^{2n - 1} + 1 \\
-              &= 99\cdot 10^{2n - 1} + (10^{2n - 1} + 1) = 11\cdot 9\cdot 10^{2n - 1} + 11\lambda \\
-              &= 11(9\cdot 10^{2n - 1} + \lambda) = 11\mu
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[যেখানে \(\mu = 9\cdot 10^{2n - 1} + \lambda \in \mathbb{Z}\)]</div>
-              যেহেতু \(\mu\) একটি পূর্ণসংখ্যা, তাই \((10^{2n + 1} + 1)\) রাশিটিও \(11\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
+    <!-- ==================== TAB 5: NOTICES ==================== -->
+    <div id="tab-notices" class="tab-content">
+      <div class="card">
+        <h2><span>নোটিশ বোর্ড (Class Notices &amp; Announcements)</span></h2>
+        <div class="notice-item">
+          <div class="notice-date">22 Sep 2026</div>
+          <div>
+            <div class="notice-title">Class XII Mathematics Test on Integration</div>
+            <p style="font-size: 13px; color: var(--text-muted);">All students must carry their graph sheet and formula booklets. Total marks: 50.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">20 Sep 2026</div>
+          <div>
+            <div class="notice-title">New Study Materials Uploaded</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Differential Equations practice modules with solved answers are now downloadable in the study portal.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">18 Sep 2026</div>
+          <div>
+            <div class="notice-title">WBJEE Mathematics Practice Set 05 Released</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Includes Category-1, Category-2, and Category-3 questions strictly following the latest test pattern.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Question 6 -->
-        <li>
-          <span class="question-text">\((15^{2n - 1} + 1)\) যদি \(16\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \((15^{2n + 1} + 1)\)-ও \(16\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত শর্তানুসারে, \((15^{2n - 1} + 1)\) রাশিটি \(16\) দ্বারা বিভাজ্য।<br>
-              ধরি, \(15^{2n - 1} + 1 = 16k \implies 15^{2n - 1} = 16k - 1\), যেখানে \(k \in \mathbb{Z}\) একটি পূর্ণসংখ্যা।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              15^{2n + 1} + 1 &= 15^{(2n - 1) + 2} + 1 = 15^2\cdot 15^{2n - 1} + 1 \\
-              &= 225(16k - 1) + 1 = 225\cdot 16k - 224 = 16(225k - 14) \\
-              &= 16m
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[যেখানে \(m = 225k - 14 \in \mathbb{Z}\) একটি পূর্ণসংখ্যা]</div>
-              যেহেতু \(m\) একটি অখণ্ড সংখ্যা, তাই \((15^{2n + 1} + 1)\) রাশিটিও \(16\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
+    <!-- ==================== TAB 6: COURSES ==================== -->
+    <div id="tab-courses" class="tab-content">
+      <div class="card">
+        <h2><span>গাইডেন্স প্রোগ্রাম ও কোর্সসমূহ (Courses Offered)</span></h2>
+        <div class="grid-2">
+          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
+            <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;">Class XI Foundation Mathematics</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Board: WBCHSE / CBSE</p>
+            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
+              <li>Deep focus on core algebra, trigonometry, and coordinate geometry.</li>
+              <li>Dual preparation: Board syllabus + Entrance foundation.</li>
+              <li>Weekly doubt-clearing sessions and mock assessments.</li>
+            </ul>
+          </div>
+          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
+            <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;">Class XII Advanced &amp; Board Mastery</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Board: WBCHSE / CBSE</p>
+            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
+              <li>Comprehensive coverage of Calculus, Vectors, 3D Geometry &amp; Probability.</li>
+              <li>Extensive practice with test papers, past 10-year board questions.</li>
+              <li>Targeted test series to ensure 95%+ board performance.</li>
+            </ul>
+          </div>
+          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
+            <h3 style="color: var(--accent); font-size: 16px; margin-bottom: 6px;">WBJEE Target Batch</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Entrance Exclusive</p>
+            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
+              <li>Speed techniques, shortcut methods, and time management.</li>
+              <li>Focus on high-weightage topics: Calculus, Coordinate Geometry, Matrices.</li>
+              <li>Full-length mock tests under real examination conditions.</li>
+            </ul>
+          </div>
+          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
+            <h3 style="color: var(--accent); font-size: 16px; margin-bottom: 6px;">JEE Main &amp; Advanced Mentorship</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">National Level Guidance</p>
+            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
+              <li>Multi-concept problem solving and analytical thinking.</li>
+              <li>Thorough practice of archive papers and advanced graded problem sets.</li>
+              <li>Individual mentorship and periodic progress evaluation.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Question 7 -->
-        <li>
-          <span class="question-text">\([(12)^n + (25)^{n - 1}]\) যদি \(13\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \([(12)^{n + 1} + (25)^n]\)-ও \(13\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত আছে যে, \([(12)^n + (25)^{n - 1}]\) রাশিটি \(13\) দ্বারা বিভাজ্য।<br>
-              ধরি, \(12^n + 25^{n - 1} = 13\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি পূর্ণসংখ্যা।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              12^{n + 1} + 25^n &= 12\cdot 12^n + 25\cdot 25^{n - 1} = 12(12^n + 25^{n - 1}) + 13\cdot 25^{n - 1} \\
-              &= 12(13\lambda) + 13\cdot 25^{n - 1} = 13(12\lambda + 25^{n - 1}) \\
-              &= 13\mu
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[যেখানে \(\mu = 12\lambda + 25^{n - 1} \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা]</div>
-              অতএব, \([(12)^{n + 1} + (25)^n]\) রাশিটি সর্বদা \(13\) দ্বারা বিভাজ্য। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
+    <!-- ==================== TAB 7: ABOUT MENTOR ==================== -->
+    <div id="tab-about" class="tab-content">
+      <div class="card">
+        <h2><span>About the Mentor</span></h2>
+        <div class="mentor-profile">
+          <div class="mentor-avatar">SG</div>
+          <div>
+            <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 2px;">Dr. Shantanu Guria</h3>
+            <p style="color: var(--accent); font-weight: 600; font-size: 13px; margin-bottom: 8px;">Mentor, Prime Math</p>
+            <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+              Advanced mathematics guidance for Class XI &amp; XII board examinations, WBJEE, JEE Main, and JEE Advanced. Dedicated to concept-based learning and problem-solving pedagogy.
+            </p>
+          </div>
+        </div>
 
-        <!-- Question 8 -->
-        <li>
-          <span class="question-text">যদি \([n^3 + (n + 1)^3 + (n + 2)^3]\) সর্বদা \(9\) দ্বারা বিভাজ্য হয়, তবে দেখাও যে, \((n + 1)^3 + (n + 2)^3 + (n + 3)^3\)-ও সর্বদা \(9\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত শর্তানুসারে, \(n^3 + (n + 1)^3 + (n + 2)^3 = 9\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
-              এখান থেকে পাই, \((n + 1)^3 + (n + 2)^3 = 9\lambda - n^3\)।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              (n + 1)^3 + (n + 2)^3 + (n + 3)^3 &= 9\lambda - n^3 + (n + 3)^3 \\
-              &= 9\lambda + (n + 3 - n)\{(n + 3)^2 + n(n + 3) + n^2\} \\
-              &= 9\lambda + 3(3n^2 + 9n + 9) = 9(\lambda + n^2 + 3n + 3) \\
-              &= 9\mu
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[যেখানে \(\mu = \lambda + n^2 + 3n + 3 \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা]</div>
-              সুতরাং, রাশিটি সর্বদা \(9\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
+        <h3 style="color: var(--primary); margin: 24px 0 12px 0; font-size: 15px;">শিক্ষণ দর্শন (Teaching Approach)</h3>
+        <div class="grid-2">
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--primary);">
+            <strong>Concept-Based Learning:</strong> মুখস্থ নয়, গাণিতিক সূত্রের উৎস এবং প্রয়োগ স্পষ্ট করে আত্মবিশ্বাস গঠন।
+          </div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent);">
+            <strong>Personal Attention:</strong> প্রতিটি শিক্ষার্থীর শক্তি এবং দুর্বলতা চিহ্নিত করে ব্যক্তিগত স্তরে গাইডেন্স।
+          </div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--primary);">
+            <strong>Regular Practice &amp; Evaluation:</strong> পর্যাপ্ত হোমওয়ার্ক, ক্লাস টেস্ট এবং নিয়মিত মক টেস্ট সেশন।
+          </div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent);">
+            <strong>Bilingual Instruction:</strong> বাংলা ও ইংরেজি উভয় মাধ্যমেই সহজ ও সাবলীল উপস্থাপনা।
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Question 9 -->
-        <li>
-          <span class="question-text">\(n \in \mathbb{N}\), \(x > -1\) এবং \((1 + x)^n \ge 1 + nx\) হলে, প্রমাণ করো যে, \((1 + x)^{n + 1} \ge 1 + (n + 1)x\)।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত আছে \(x > -1\), যার ফলে \((1 + x) > 0\)।<br>
-              প্রদত্ত সম্পর্ক \((1 + x)^n \ge 1 + nx\)-এর উভয়পক্ষে \((1 + x)\) গুণ করে পাই,
-              <div class="math-scroll">
-              $$\begin{align*}
-              (1 + x)^{n + 1} &= (1 + x)^n(1 + x) \ge (1 + nx)(1 + x) \\
-              &= 1 + x + nx + nx^2 = 1 + (n + 1)x + nx^2
-              \end{align*}$$
-              </div>
-              যেহেতু \(n \in \mathbb{N}\) এবং বাস্তব সংখ্যার বর্গের ধর্ম অনুযায়ী \(x^2 \ge 0\), তাই \(nx^2 \ge 0\)।<br>
-              অতএব, \(1 + (n + 1)x + nx^2 \ge 1 + (n + 1)x\)।<br>
-              সুতরাং প্রমাণিত হল যে, \((1 + x)^{n + 1} \ge 1 + (n + 1)x\)।
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 10 -->
-        <li>
-          <span class="question-text">মনে করো, \(f(n) = n(n + 1)(2n + 1)\); যদি \(f(n)\) সর্বদা \(6\) দ্বারা বিভাজ্য হয়, তবে প্রমাণ করো যে, \(f(n + 1)\)-ও সর্বদা \(6\) দ্বারা বিভাজ্য হবে।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              প্রদত্ত শর্তানুযায়ী, \(f(n) = n(n + 1)(2n + 1) = 6\lambda\), যেখানে \(\lambda \in \mathbb{Z}\) একটি অখণ্ড সংখ্যা।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              f(n + 1) &= (n + 1)(n + 2)(2n + 3) = (n + 1)(n + 2)[(2n + 1) + 2] \\
-              &= n(n + 1)(2n + 1) + 2(n + 1)(3n + 3) \\
-              &= 6\lambda + 6(n + 1)^2 = 6[\lambda + (n + 1)^2] = 6\mu
-              \end{align*}$$
-              </div>
-              যেহেতু \(\mu = \lambda + (n + 1)^2 \in \mathbb{Z}\), অতএব \(f(n + 1)\)-ও সর্বদা \(6\) দ্বারা বিভাজ্য হবে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 11 -->
-        <li>
-          <span class="question-text">\(n \in \mathbb{N}\) হলে গাণিতিক আরোহ নীতির প্রয়োগে নিম্নলিখিতগুলি প্রমাণ করো:</span>
-          <ol class="sub-list">
-            <!-- 11 (i) -->
-            <li>
-              <span class="question-text">\(1 + 3 + 5 + \dots + (2n - 1)\) \(=\) \(n^2\)</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n) : 1 + 3 + \dots + (2n - 1) = n^2\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1\) এবং \(\text{R.H.S.} = 1^2 = 1\)। সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এর জন্য বিবৃতিটি সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$P(m) : 1 + 3 + 5 + \dots + (2m - 1) = m^2 \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  1 + 3 + \dots + (2m - 1) + \{2(m + 1) - 1\} &= m^2 + (2m + 1) \\
-                  &= (m + 1)^2
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) বিবৃতিটি সত্য।<br>
-                  সুতরাং গাণিতিক আরোহ নীতি অনুসারে সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (ii) -->
-            <li>
-              <span class="question-text">
-                \(a + (a + d) + (a + 2d) + \dots\) 
-                ( \(n\)-সংখ্যক পদ পর্যন্ত )
-                \(=\) 
-                \(\frac{n}{2}[2a + (n - 1)d]\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  শ্রেণিটির \(n\)-তম পদ \(T_n = a + (n - 1)d\)। মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = a\) এবং \(\text{R.H.S.} = \frac{1}{2}[2a + 0] = a\)। অতএব \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\) (\(m \in \mathbb{N}\))-এর জন্য বিবৃতিটি সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$a + (a + d) + \dots + [a + (m - 1)d] = \frac{m}{2}[2a + (m - 1)d] \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য প্রথম \((m + 1)\)-টি পদের সমষ্টি পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S_{m + 1} &= \frac{m}{2}[2a + (m - 1)d] + [a + md] \\
-                  &= (m + 1)a + md\left(\frac{m - 1}{2} + 1\right) = (m + 1)a + \frac{m(m + 1)}{2}d \\
-                  &= \frac{m + 1}{2}[2a + md] = \frac{m + 1}{2}[2a + \{(m + 1) - 1\}d]
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য হয়। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (iii) -->
-            <li>
-              <span class="question-text">
-                \(\sin x + \sin 2x + \dots + \sin nx\) 
-                \(=\) 
-                \(\frac{\sin\frac{n + 1}{2}x \sin\frac{nx}{2}}{\sin\frac{x}{2}}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, প্রদত্ত উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \sin x\) এবং \(\text{R.H.S.} = \frac{\sin x \sin(x/2)}{\sin(x/2)} = \sin x\)। সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এর জন্য উক্তিটি সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$\sin x + \sin 2x + \dots + \sin mx = \frac{\sin\frac{m + 1}{2}x \sin\frac{mx}{2}}{\sin\frac{x}{2}} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S_{m + 1} &= \frac{\sin\frac{m + 1}{2}x \sin\frac{mx}{2}}{\sin\frac{x}{2}} + \sin(m + 1)x \\
-                  &= \frac{\sin\frac{m + 1}{2}x}{\sin\frac{x}{2}}\left[\sin\frac{mx}{2} + 2\cos\frac{m + 1}{2}x \sin\frac{x}{2}\right] \\
-                  &= \frac{\sin\frac{m + 1}{2}x}{\sin\frac{x}{2}}\left[\sin\frac{mx}{2} + \sin\frac{m + 2}{2}x - \sin\frac{mx}{2}\right] = \frac{\sin\frac{m + 2}{2}x \sin\frac{m + 1}{2}x}{\sin\frac{x}{2}}
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য এটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (iv) -->
-            <li>
-              <span class="question-text">
-                \(\sin x + \sin 3x + \dots + \sin(2n - 1)x\) 
-                \(=\) 
-                \(\frac{\sin^2 nx}{\sin x}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য উভয়পক্ষ \(\sin x\)-এর সমান; সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ উক্তিটি সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$\sin x + \dots + \sin(2m - 1)x = \frac{\sin^2 mx}{\sin x} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> এখন \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S_{m + 1} &= \frac{\sin^2 mx}{\sin x} + \sin(2m + 1)x \\
-                  &= \frac{2\sin^2 mx + 2\sin(2m + 1)x \sin x}{2\sin x} \\
-                  &= \frac{(1 - \cos 2mx) + \{\cos 2mx - \cos 2(m + 1)x\}}{2\sin x} = \frac{\sin^2(m + 1)x}{\sin x}
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (v) -->
-            <li>
-              <span class="question-text">
-                \((\cos\theta + i\sin\theta)^n\) 
-                \(=\) 
-                \(\cos n\theta + i\sin n\theta\) 
-                \((i = \sqrt{-1})\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \((\cos\theta + i\sin\theta)^1 = \cos\theta + i\sin\theta\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ উক্তিটি সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$(\cos\theta + i\sin\theta)^m = \cos m\theta + i\sin m\theta \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য বিবেচনা করে পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  (\cos\theta + i\sin\theta)^{m + 1} &= (\cos\theta + i\sin\theta)^m(\cos\theta + i\sin\theta) \\
-                  &= (\cos m\theta + i\sin m\theta)(\cos\theta + i\sin\theta) \\
-                  &= (\cos m\theta \cos\theta - \sin m\theta \sin\theta) + i(\sin m\theta \cos\theta + \cos m\theta \sin\theta) \\
-                  &= \cos(m + 1)\theta + i\sin(m + 1)\theta
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য সম্পর্কটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (vi) -->
-            <li>
-              <span class="question-text">
-                \(\frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{2^n}\) 
-                \(=\) 
-                \(1 - \frac{1}{2^n}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{1}{2} = 1 - \frac{1}{2^1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$\frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{2^m} = 1 - \frac{1}{2^m} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = 1 - \frac{1}{2^m} + \frac{1}{2^{m + 1}} = 1 - \frac{1}{2^m}\left(1 - \frac{1}{2}\right) = 1 - \frac{1}{2^{m + 1}}$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (vii) -->
-            <li>
-              <span class="question-text">
-                \(a + ar + ar^2 + \dots\) 
-                ( \(n\)-সংখ্যক পদ পর্যন্ত )
-                \(=\) 
-                \(a\cdot\frac{r^n - 1}{r - 1}\) 
-                \([r \ne 1]\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  শ্রেণিটির \(n\)-তম পদ \(ar^{n - 1}\)। মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = a = a\frac{r^1 - 1}{r - 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$a + ar + \dots + ar^{m - 1} = a\frac{r^m - 1}{r - 1} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = a\frac{r^m - 1}{r - 1} + ar^m = \frac{ar^m - a + ar^{m + 1} - ar^m}{r - 1} = a\frac{r^{m + 1} - 1}{r - 1}$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (viii) -->
-            <li>
-              <span class="question-text">
-                \(1^2 + 3^2 + 5^2 + \dots + (2n - 1)^2\) 
-                \(=\) 
-                \(\frac{n}{3}(4n^2 - 1)\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1^2 = 1 = \frac{1}{3}(4\cdot 1^2 - 1) = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$1^2 + 3^2 + \dots + (2m - 1)^2 = \frac{m}{3}(4m^2 - 1) \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S_{m + 1} &= \frac{m}{3}(2m + 1)(2m - 1) + (2m + 1)^2 \\
-                  &= (2m + 1)\left[\frac{2m^2 - m + 6m + 3}{3}\right] = \frac{(2m + 1)(2m + 3)(m + 1)}{3} \\
-                  &= \frac{m + 1}{3}[4(m + 1)^2 - 1]
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[যেখানে \((1)\)-এর সাহায্য নেওয়া হয়েছে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (ix) -->
-            <li>
-              <span class="question-text">
-                \(1\cdot 2 + 2\cdot 3 + \dots + n(n + 1)\) 
-                \(=\) 
-                \(\frac{1}{3}n(n + 1)(n + 2)\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1\cdot 2 = 2 = \frac{1}{3}(1)(2)(3) = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$1\cdot 2 + \dots + m(m + 1) = \frac{1}{3}m(m + 1)(m + 2) \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S_{m + 1} &= \frac{1}{3}m(m + 1)(m + 2) + (m + 1)(m + 2) \\
-                  &= (m + 1)(m + 2)\left(\frac{m}{3} + 1\right) = \frac{1}{3}(m + 1)(m + 2)(m + 3)
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (x) -->
-            <li>
-              <span class="question-text">
-                \(2^2 + 5^2 + 8^2 + \dots\) 
-                ( \(n\)-সংখ্যক পদ পর্যন্ত )
-                \(=\) 
-                \(\frac{n}{2}(6n^2 + 3n - 1)\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  প্রদত্ত শ্রেণির \(n\)-তম পদ \(T_n = (3n - 1)^2\)। মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 2^2 = 4 = \frac{1}{2}(6 + 3 - 1) = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$2^2 + 5^2 + \dots + (3m - 1)^2 = \frac{m}{2}(6m^2 + 3m - 1) \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S_{m + 1} &= \frac{m}{2}(6m^2 + 3m - 1) + (3m + 2)^2 \\
-                  &= \frac{6m^3 + 21m^2 + 23m + 8}{2} = \frac{m + 1}{2}[6(m + 1)^2 + 3(m + 1) - 1]
-                  \end{align*}$$
-                  </div>
-                  <div class="condition-note">[(1)-এর সাহায্যে]</div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xi) -->
-            <li>
-              <span class="question-text">
-                \(\frac{1}{1\cdot 2} + \frac{1}{2\cdot 3} + \dots + \frac{1}{n(n + 1)}\) 
-                \(=\) 
-                \(\frac{n}{n + 1}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{1}{1\cdot 2} = \frac{1}{2} = \frac{1}{1 + 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$\frac{1}{1\cdot 2} + \dots + \frac{1}{m(m + 1)} = \frac{m}{m + 1} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = \frac{m}{m + 1} + \frac{1}{(m + 1)(m + 2)} = \frac{m^2 + 2m + 1}{(m + 1)(m + 2)} = \frac{m + 1}{m + 2}$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xii) -->
-            <li>
-              <span class="question-text">
-                \(\frac{1}{1\cdot 4} + \frac{1}{4\cdot 7} + \dots\) 
-                ( \(n\)-সংখ্যক পদ পর্যন্ত )
-                \(=\) 
-                \(\frac{n}{3n + 1}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  শ্রেণিটির \(n\)-তম পদ \(T_n = \frac{1}{(3n - 2)(3n + 1)}\)। মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{1}{1\cdot 4} = \frac{1}{4} = \frac{1}{3(1) + 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$\frac{1}{1\cdot 4} + \dots + \frac{1}{(3m - 2)(3m + 1)} = \frac{m}{3m + 1} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = \frac{m}{3m + 1} + \frac{1}{(3m + 1)(3m + 4)} = \frac{3m^2 + 4m + 1}{(3m + 1)(3m + 4)} = \frac{m + 1}{3(m + 1) + 1}$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xiii) -->
-            <li>
-              <span class="question-text">
-                \(\left(1 - \frac{1}{2^2}\right)\left(1 - \frac{1}{3^2}\right)\dots\left(1 - \frac{1}{(n + 1)^2}\right)\) 
-                \(=\) 
-                \(\frac{n + 2}{2n + 2}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1 - \frac{1}{2} = \frac{1}{2} = \frac{1}{1 + 1} = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$\left(1 - \frac{1}{2}\right)\dots\left(1 - \frac{1}{m + 1}\right) = \frac{1}{m + 1} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
-                  <div class="math-scroll">
-                  $$P_{m + 1} = \frac{1}{m + 1}\left(1 - \frac{1}{m + 2}\right) = \frac{1}{m + 1}\cdot\frac{m + 1}{m + 2} = \frac{1}{(m + 1) + 1}$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xiv) -->
-            <li>
-              <span class="question-text">
-                \(1 + \frac{1}{1 + 2} + \dots + \frac{1}{1 + 2 + \dots + n}\) 
-                \(=\) 
-                \(\frac{2n}{n + 1}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  আমরা জানি, \(1 + 2 + \dots + n = \frac{n(n + 1)}{2}\)। মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য উভয়পক্ষ \(1\)-এর সমান; সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$1 + \frac{1}{1 + 2} + \dots + \frac{1}{1 + 2 + \dots + m} = \frac{2m}{m + 1} \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = \frac{2m}{m + 1} + \frac{2}{(m + 1)(m + 2)} = \frac{2(m^2 + 2m + 1)}{(m + 1)(m + 2)} = \frac{2(m + 1)}{(m + 1) + 1}$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xv) -->
-            <li>
-              <span class="question-text">\(1\cdot 1! + 2\cdot 2! + \dots + n\cdot n!\) \(=\) \((n + 1)! - 1\)</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, উক্তিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1\cdot 1! = 1 = (1 + 1)! - 1 = \text{R.H.S.}\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ,
-                  <div class="math-scroll">
-                  $$1\cdot 1! + \dots + m\cdot m! = (m + 1)! - 1 \quad \dots(1)$$
-                  </div>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = (m + 1)! - 1 + (m + 1)(m + 1)! = (m + 1)!(1 + m + 1) - 1 = \{(m + 1) + 1\}! - 1$$
-                  </div>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xvi) -->
-            <li>
-              <span class="question-text">\(2^{3n} - 1\) সর্বদা \(7\) দ্বারা বিভাজ্য</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n) : 2^{3n} - 1\) সর্বদা \(7\) দ্বারা বিভাজ্য।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(2^3 - 1 = 7\), যা \(7\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(2^{3m} - 1 = 7K \implies 2^{3m} = 7K + 1\) (\(K \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য,
-                  <div class="math-scroll">
-                  $$2^{3(m + 1)} - 1 = 8\cdot 2^{3m} - 1 = 8(7K + 1) - 1 = 56K + 7 = 7(8K + 1) = 7K'$$
-                  </div>
-                  যেহেতু \(K' = 8K + 1 \in \mathbb{Z}\), তাই \(2^{3(m + 1)} - 1\) সর্বদা \(7\) দ্বারা বিভাজ্য।<br>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xvii) -->
-            <li>
-              <span class="question-text">\(4^n + 15n - 1\) সর্বদা \(9\)-এর গুণিতক</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n) : 4^n + 15n - 1\) সর্বদা \(9\)-এর গুণিতক।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(4^1 + 15(1) - 1 = 18 = 9\times 2\); সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(4^m + 15n - 1 = 9K \implies 4^m = 9K - 15m + 1\) (\(K \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  4^{m + 1} + 15(m + 1) - 1 &= 4(9K - 15m + 1) + 15m + 14 \\
-                  &= 36K - 45m + 18 = 9(4K - 5m + 2) = 9K'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু \(K' \in \mathbb{Z}\), অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xviii) -->
-            <li>
-              <span class="question-text">\(2\cdot 7^n + 3\cdot 5^n - 5\) সর্বদা \(24\) দ্বারা বিভাজ্য</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n) : 2\cdot 7^n + 3\cdot 5^n - 5\) সর্বদা \(24\) দ্বারা বিভাজ্য।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(2(7) + 3(5) - 5 = 24\), যা \(24\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(2\cdot 7^m + 3\cdot 5^m - 5 = 24K\) (\(K \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  2\cdot 7^{m + 1} + 3\cdot 5^{m + 1} - 5 &= (2\cdot 7^m + 3\cdot 5^m - 5) + 12(7^m + 5^m) \\
-                  &= 24K + 12(2K_1) = 24(K + K_1) = 24K'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু অযুগ্ম সংখ্যার ঘাতের সমষ্টি \((7^m + 5^m)\) সর্বদা একটি যুগ্ম সংখ্যা, তাই \(7^m + 5^m = 2K_1\) (\(K_1 \in \mathbb{Z}\))।<br>
-                  \(\therefore P(m)\) সত্য হলে \(P(m + 1)\) সত্য। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xix) -->
-            <li>
-              <span class="question-text">\(15^{2n - 1} + 1\) সর্বদা \(16\) দ্বারা বিভাজ্য</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n) : 15^{2n - 1} + 1\) সর্বদা \(16\) দ্বারা বিভাজ্য।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(15^1 + 1 = 16\), যা \(16\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(15^{2m - 1} + 1 = 16K \implies 15^{2m - 1} = 16K - 1\) (\(K \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$15^{2m + 1} + 1 = 225(16K - 1) + 1 = 225\cdot 16K - 224 = 16(225K - 14) = 16K'$$
-                  </div>
-                  যেহেতু \(K' \in \mathbb{Z}\), অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 11 (xx) -->
-            <li>
-              <span class="question-text">\(12^n + 25^{n - 1}\) সর্বদা \(13\) দ্বারা বিভাজ্য</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n) : 12^n + 25^{n - 1}\) সর্বদা \(13\) দ্বারা বিভাজ্য।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(12^1 + 25^0 = 13\), যা \(13\) দ্বারা বিভাজ্য; সুতরাং \(P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(12^m + 25^{m - 1} = 13K\) (\(K \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  12^{m + 1} + 25^m &= 12(12^m + 25^{m - 1}) + 13\cdot 25^{m - 1} \\
-                  &= 12(13K) + 13\cdot 25^{m - 1} = 13(12K + 25^{m - 1}) = 13K'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু \(K' \in \mathbb{Z}\), অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-          </ol>
-        </li>
-
-        <!-- Question 12 -->
-        <li>
-          <span class="question-text">স্বাভাবিক সংখ্যা \(n\)-এর মানসমূহ নির্ণয় করো যাতে \(2^n > 2n + 1\) অসমতা সিদ্ধ হয়।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              \(n\)-এর প্রাথমিক স্বাভাবিক মান পরীক্ষা করে পাই:
-              <ul>
-                <li>\(n = 1\)-এর জন্য, \(2^1 = 2 \not> 2(1) + 1 = 3\) (অসত্য)</li>
-                <li>\(n = 2\)-এর জন্য, \(2^2 = 4 \not> 2(2) + 1 = 5\) (অসত্য)</li>
-                <li>\(n = 3\)-এর জন্য, \(2^3 = 8 > 2(3) + 1 = 7\) (সত্য)</li>
-              </ul>
-              মনে করো, \(2n + 1 < 2^n\) যখন \(n \ge 3\)—বিবৃতিটি \(P(n)\) দ্বারা সূচিত হয়।<br>
-              স্পষ্টতই, \(P(3)\) বিবৃতিটি সত্য।<br>
-              এখন, মনে করো \(P(m)\) বিবৃতিটি সত্য;<br>
-              অর্থাৎ,
-              <div class="math-scroll">
-              $$P(m) : 2m + 1 < 2^m, \quad m \ge 3 \quad \dots(1)$$
-              </div>
-              যেহেতু \(m \ge 3\), সুতরাং \(2 < 2^m \quad \dots(2)\)।<br>
-              এখন,
-              <div class="math-scroll">
-              $$\begin{align*}
-              2(m + 1) + 1 &= 2m + 1 + 2 \\
-              &< 2^m + 2^m \\
-              &= 2\cdot 2^m = 2^{m + 1}
-              \end{align*}$$
-              </div>
-              <div class="condition-note">[(1) ও (2)-এর সাহায্যে]</div>
-              \(\therefore P(m + 1) : 2(m + 1) + 1 < 2^{m + 1}\) বিবৃতিটি সত্য।<br>
-              যেহেতু \(P(m)\) সত্য হলে \(P(m + 1)\) সত্য হয়, সুতরাং গাণিতিক আরোহ নীতির প্রয়োগে পাওয়া যায়, \(n \ge 3\)-এর জন্য \(P(n)\) সত্য।<br>
-              অতএব, নির্ণেয় মানসমূহ: \(n \ge 3\), যেখানে \(n \in \mathbb{N}\)।
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 13 -->
-        <li>
-          <span class="question-text">\(n \in \mathbb{N}\) হলে গাণিতিক আরোহ নীতির প্রয়োগে প্রমাণ করো:</span>
-          <ol class="sub-list">
-            <!-- 13 (i) -->
-            <li>
-              <span class="question-text">\(5^{2n + 2} - 24n - 25\) সর্বদা \(576\) দ্বারা বিভাজ্য।</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(5^{2(1) + 2} - 24(1) - 25 = 625 - 49 = 576\), যা \(576\) দ্বারা বিভাজ্য; \(\therefore P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(5^{2m + 2} = 576k + 24m + 25\) (\(k \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  5^{2(m + 1) + 2} - 24(m + 1) - 25 &= 25(576k + 24m + 25) - 24m - 49 \\
-                  &= 25\cdot 576k + 576m + 576 = 576(25k + m + 1) = 576k'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু \(k' \in \mathbb{Z}\), অতএব আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (ii) -->
-            <li>
-              <span class="question-text">\(10^n + 3\cdot 4^{n + 2} + 5\) (\(n \ge 0\)) সর্বদা \(9\) দ্বারা বিভাজ্য।</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 0\)-এর জন্য, \(10^0 + 3\cdot 4^2 + 5 = 54 = 9\times 6\), যা \(9\) দ্বারা বিভাজ্য; \(\therefore P(0)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\) (\(m \ge 0\))-এ সত্য; অর্থাৎ, \(10^m = 9k - 3\cdot 4^{m + 2} - 5\) (\(k \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর জন্য,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  10^{m + 1} + 3\cdot 4^{m + 3} + 5 &= 10(9k - 3\cdot 4^{m + 2} - 5) + 12\cdot 4^{m + 2} + 5 \\
-                  &= 90k - 18\cdot 4^{m + 2} - 45 = 9(10k - 2\cdot 4^{m + 2} - 5) = 9k'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু \(k' \in \mathbb{Z}\), অতএব সকল অখণ্ড সংখ্যা \(n \ge 0\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (iii) -->
-            <li>
-              <span class="question-text">\(3^{4n + 1} + 2^{2n + 2}\) (\(n \ge 0\)) সর্বদা \(7\)-এর গুণিতক।</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 0\)-এর জন্য, \(3^1 + 2^2 = 7\), যা \(7\)-এর গুণিতক; \(\therefore P(0)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\) (\(m \ge 0\))-এ সত্য; অর্থাৎ, \(3^{4m + 1} = 7k - 2^{2m + 2}\) (\(k \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  3^{4(m + 1) + 1} + 2^{2(m + 1) + 2} &= 81(7k - 2^{2m + 2}) + 4\cdot 2^{2m + 2} \\
-                  &= 81\cdot 7k - 77\cdot 2^{2m + 2} = 7(81k - 11\cdot 2^{2m + 2}) = 7k'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু \(k' \in \mathbb{Z}\), সুতরাং সকল অখণ্ড সংখ্যা \(n \ge 0\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (iv) -->
-            <li>
-              <span class="question-text">\(3^{2n + 2} - 8n - 9\) সর্বদা \(64\) দ্বারা বিভাজ্য।</span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  মনে করো, বিবৃতিটি \(P(n)\)।<br>
-                  <strong>ভিত্তি ধাপ:</strong> \(n = 1\)-এর জন্য, \(3^4 - 8(1) - 9 = 64\), যা \(64\) দ্বারা বিভাজ্য; \(\therefore P(1)\) সত্য।<br>
-                  <strong>আরোহ অনুমান:</strong> মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(3^{2m + 2} = 64k + 8m + 9\) (\(k \in \mathbb{Z}\))।<br>
-                  <strong>আরোহ ধাপ:</strong> \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  3^{2(m + 1) + 2} - 8(m + 1) - 9 &= 9(64k + 8m + 9) - 8m - 17 \\
-                  &= 9\cdot 64k + 64m + 64 = 64(9k + m + 1) = 64k'
-                  \end{align*}$$
-                  </div>
-                  যেহেতু \(k' \in \mathbb{Z}\), অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (v) -->
-            <li>
-              <span class="question-text">প্রমাণ করো:</span>
-              <ol class="sub-alpha-list">
-                <!-- (a) -->
-                <li>
-                  <span class="question-text">\(n < 2^n\)</span>
-                  <details class="solution-box">
-                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                    <div class="solution-content">
-                      \(n = 1\)-এর জন্য, \(1 < 2^1 = 2\) সত্য।<br>
-                      মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(m < 2^m\) (\(m \in \mathbb{N}\))।<br>
-                      যেহেতু \(m \ge 1 \implies 1 \le 2^m\), তাই \(n = m + 1\)-এর ক্ষেত্রে,
-                      <div class="math-scroll">
-                      $$m + 1 < 2^m + 2^m = 2\cdot 2^m = 2^{m + 1}$$
-                      </div>
-                      সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                    </div>
-                  </details>
-                </li>
-                <!-- (b) -->
-                <li>
-                  <span class="question-text">\(3^n > n^3\) (\(n \ge 4\))</span>
-                  <details class="solution-box">
-                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                    <div class="solution-content">
-                      \(n = 4\)-এর জন্য, \(3^4 = 81 > 4^3 = 64\) সত্য।<br>
-                      মনে করো, \(n = m\) (\(m \ge 4\))-এ সত্য; অর্থাৎ, \(3^m > m^3\)।<br>
-                      যেহেতু \(m \ge 4\), সুতরাং \(2m^3 > 3m^2 + 3m + 1 \implies 3m^3 > (m + 1)^3\)।<br>
-                      অতএব \(n = m + 1\)-এর ক্ষেত্রে,
-                      <div class="math-scroll">
-                      $$3^{m + 1} = 3\cdot 3^m > 3m^3 > (m + 1)^3$$
-                      </div>
-                      সুতরাং সকল \(n \ge 4\) (\(n \in \mathbb{N}\))-এর জন্য অসমতাটি সত্য। (প্রমাণিত)
-                    </div>
-                  </details>
-                </li>
-                <!-- (c) -->
-                <li>
-                  <span class="question-text">\(2^n < n!\) (\(n \ge 4\))</span>
-                  <details class="solution-box">
-                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                    <div class="solution-content">
-                      \(n = 4\)-এর জন্য, \(2^4 = 16 < 4! = 24\) সত্য।<br>
-                      মনে করো, \(n = m\) (\(m \ge 4\))-এ সত্য; অর্থাৎ, \(2^m < m!\)।<br>
-                      যেহেতু \(m \ge 4 \implies 2 < m + 1\), তাই \(n = m + 1\)-এর জন্য,
-                      <div class="math-scroll">
-                      $$2^{m + 1} = 2\cdot 2^m < (m + 1)\cdot m! = (m + 1)!$$
-                      </div>
-                      সুতরাং সকল \(n \ge 4\) (\(n \in \mathbb{N}\))-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                    </div>
-                  </details>
-                </li>
-                <!-- (d) -->
-                <li>
-                  <span class="question-text">\(3^n > 2^n\)</span>
-                  <details class="solution-box">
-                    <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                    <div class="solution-content">
-                      \(n = 1\)-এর জন্য, \(3^1 > 2^1\) সত্য। মনে করো, \(n = m\)-এ সত্য; অর্থাৎ, \(3^m > 2^m\)।<br>
-                      \(n = m + 1\)-এর জন্য পাই,
-                      <div class="math-scroll">
-                      $$3^{m + 1} = 3\cdot 3^m > 3\cdot 2^m > 2\cdot 2^m = 2^{m + 1}$$
-                      </div>
-                      অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                    </div>
-                  </details>
-                </li>
-              </ol>
-            </li>
-
-            <!-- 13 (vi) -->
-            <li>
-              <span class="question-text">
-                \(1 + 2 + \dots + n\) 
-                \(<\) 
-                \(\frac{1}{8}(2n + 1)^2\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য, \(1 < \frac{9}{8}\) সত্য। মনে করো, \(n = m\)-এ সত্য: \(S_m < \frac{1}{8}(2m + 1)^2\)।<br>
-                  \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} < \frac{(2m + 1)^2}{8} + (m + 1) = \frac{4m^2 + 12m + 9}{8} = \frac{\{2(m + 1) + 1\}^2}{8}$$
-                  </div>
-                  সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য অসমতাটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (vii) -->
-            <li>
-              <span class="question-text">
-                \(1^2 + 2^2 + \dots + n^2\) 
-                \(>\) 
-                \(\frac{n^3}{3}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য, \(1 > \frac{1}{3}\) সত্য। মনে করো, \(n = m\)-এ সত্য: \(S_m > \frac{m^3}{3}\)।<br>
-                  \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$S_{m + 1} > \frac{m^3}{3} + (m + 1)^2 = \frac{m^3 + 3m^2 + 6m + 3}{3} > \frac{(m + 1)^3}{3}$$
-                  </div>
-                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (viii) -->
-            <li>
-              <span class="question-text">
-                \(\frac{1}{5}n^5 + \frac{1}{3}n^3 + \frac{7}{15}n\) 
-                একটি অখণ্ড সংখ্যা
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য রাশিটির মান \(= \frac{1}{5} + \frac{1}{3} + \frac{7}{15} = 1 \in \mathbb{Z}\)।<br>
-                  মনে করো, \(n = m\)-এ রাশিটি একটি অখণ্ড সংখ্যা \(I\) (\(I \in \mathbb{Z}\))।<br>
-                  \(n = m + 1\)-এর জন্য দ্বিপদ উপপাদ্যের সাহায্যে পাই,
-                  <div class="math-scroll">
-                  $$f(m + 1) = f(m) + (m^4 + 2m^3 + 3m^2 + 2m + 1) = I + (m^4 + 2m^3 + 3m^2 + 2m + 1)$$
-                  </div>
-                  যেহেতু \(m \in \mathbb{N}\), তাই যোগফলটি একটি অখণ্ড সংখ্যা। অতএব সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (ix) -->
-            <li>
-              <span class="question-text">
-                \(\frac{n^{11}}{11} + \frac{n^5}{5} + \frac{n^3}{3} + \frac{62n}{165}\) 
-                একটি পূর্ণসংখ্যা
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য রাশিটির মান \(= \frac{1}{11} + \frac{1}{5} + \frac{1}{3} + \frac{62}{165} = \frac{165}{165} = 1 \in \mathbb{Z}\)।<br>
-                  মনে করো, \(n = m\)-এ রাশিটি একটি পূর্ণসংখ্যা।<br>
-                  দ্বিপদ উপপাদ্য প্রয়োগ করলে দেখা যায় যে, \(g(m + 1) - g(m)\) সর্বদা একটি পূর্ণসংখ্যা হয়।<br>
-                  সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য রাশিটি সর্বদা একটি পূর্ণসংখ্যা। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (x) -->
-            <li>
-              <span class="question-text">
-                \(n\cdot 1 + (n - 1)\cdot 2 + \dots + 1\cdot n\) 
-                \(=\) 
-                \(\frac{1}{6}n(n + 1)(n + 2)\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 1 = \frac{1}{6}(1)(2)(3) = \text{R.H.S.}\); সুতরাং সত্য।<br>
-                  মনে করো, \(n = m\)-এ সত্য: \(S(m) = \frac{m(m + 1)(m + 2)}{6}\)।<br>
-                  \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$\begin{align*}
-                  S(m + 1) &= S(m) + \{1 + 2 + \dots + (m + 1)\} = \frac{m(m + 1)(m + 2)}{6} + \frac{(m + 1)(m + 2)}{2} \\
-                  &= \frac{(m + 1)(m + 2)}{2}\left(\frac{m}{3} + 1\right) = \frac{(m + 1)(m + 2)(m + 3)}{6}
-                  \end{align*}$$
-                  </div>
-                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য সম্পর্কটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (xi) -->
-            <li>
-              <span class="question-text">
-                \(2 + \sqrt{2 + \sqrt{2 + \dots}}\) 
-                ( \(n\) সংখ্যক পদ ) 
-                \(< 4\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  ধরি পদটি \(x_n\), যেখানে \(x_1 = 2 < 4\) সত্য।<br>
-                  মনে করো, \(n = m\)-এ সত্য: \(x_m < 4 \implies \sqrt{x_m} < 2\)।<br>
-                  তাহলে \(n = m + 1\)-এর ক্ষেত্রে,
-                  <div class="math-scroll">
-                  $$x_{m + 1} = 2 + \sqrt{x_m} < 2 + 2 = 4$$
-                  </div>
-                  সুতরাং আরোহ নীতি দ্বারা সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (xii) -->
-            <li>
-              <span class="question-text">
-                \(\left(1 - \frac{1}{2^2}\right)\left(1 - \frac{1}{3^2}\right)\dots\left(1 - \frac{1}{(n + 1)^2}\right)\) 
-                \(=\) 
-                \(\frac{n + 2}{2n + 2}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য, \(\text{L.H.S.} = \frac{3}{4} = \frac{3}{4} = \text{R.H.S.}\); সুতরাং সত্য।<br>
-                  মনে করো, \(n = m\)-এ সত্য: \(P_m = \frac{m + 2}{2(m + 1)}\)।<br>
-                  \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$P_{m + 1} = \frac{m + 2}{2(m + 1)}\left[1 - \frac{1}{(m + 2)^2}\right] = \frac{m + 2}{2(m + 1)}\cdot\frac{(m + 1)(m + 3)}{(m + 2)^2} = \frac{(m + 1) + 2}{2(m + 1) + 2}$$
-                  </div>
-                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য বিবৃতিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (xiii) -->
-            <li>
-              <span class="question-text">
-                \(2 + 222 + \dots + 222\dots 2\) 
-                ( \(2n - 1\) সংখ্যক ) 
-                \(=\) 
-                \(\frac{20}{891}(10^{2n} - 1) - \frac{2n}{9}\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  শ্রেণিটির \(n\)-তম পদ \(T_n = \frac{2}{9}(10^{2n - 1} - 1)\)।<br>
-                  \(n = 1\)-এর জন্য উভয়পক্ষ \(2\)-এর সমান; সুতরাং সত্য।<br>
-                  মনে করো, \(n = m\)-এ সত্য: \(S_m = \frac{20}{891}(10^{2m} - 1) - \frac{2m}{9}\)।<br>
-                  \(n = m + 1\)-এর ক্ষেত্রে \(T_{m + 1} = \frac{2}{9}(10^{2m + 1} - 1)\) যোগ করে পাই,
-                  <div class="math-scroll">
-                  $$S_{m + 1} = S_m + T_{m + 1} = \frac{20}{891}(10^{2m + 2} - 1) - \frac{2(m + 1)}{9}$$
-                  </div>
-                  সুতরাং সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-
-            <!-- 13 (xiv) -->
-            <li>
-              <span class="question-text">
-                \({}^n C_0 + {}^n C_1 + \dots + {}^n C_n\) 
-                \(=\) 
-                \(2^n\)
-              </span>
-              <details class="solution-box">
-                <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-                <div class="solution-content">
-                  \(n = 1\)-এর জন্য, \({}^1 C_0 + {}^1 C_1 = 2 = 2^1\); সুতরাং সত্য।<br>
-                  মনে করো, \(n = m\)-এ সত্য: \(\sum_{r = 0}^m {}^m C_r = 2^m\)।<br>
-                  যেহেতু \({}^{m + 1} C_r = {}^m C_r + {}^m C_{r - 1}\), তাই \(n = m + 1\)-এর জন্য পাই,
-                  <div class="math-scroll">
-                  $$\sum_{r = 0}^{m + 1} {}^{m + 1} C_r = 2\sum_{r = 0}^m {}^m C_r = 2\cdot 2^m = 2^{m + 1}$$
-                  </div>
-                  অতএব সকল \(n \in \mathbb{N}\)-এর জন্য সম্পর্কটি সত্য। (প্রমাণিত)
-                </div>
-              </details>
-            </li>
-          </ol>
-        </li>
-
-        <!-- Question 14 -->
-        <li>
-          <span class="question-text">\(x\) ও \(y\) দুটি বাস্তব সংখ্যা হলে গাণিতিক আরোহ নীতির প্রয়োগে দেখাও যে, \((x^n - y^n)\) সর্বদা \((x - y)\) দ্বারা বিভাজ্য, যখন \(n \in \mathbb{N}\)।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              \(n = 1\)-এর জন্য, \(x^1 - y^1 = x - y\), যা স্পষ্টতই \((x - y)\) দ্বারা বিভাজ্য।<br>
-              মনে করো, \(n = m\)-এ সত্য: \(x^m - y^m = k(x - y) \implies x^m = k(x - y) + y^m\) (\(k \in \mathbb{Z}\))।<br>
-              \(n = m + 1\)-এর ক্ষেত্রে পাই,
-              <div class="math-scroll">
-              $$x^{m + 1} - y^{m + 1} = x[k(x - y) + y^m] - y\cdot y^m = (x - y)(kx + y^m)$$
-              </div>
-              যেহেতু \((x - y)\) একটি সাধারণ উৎপাদক, অতএব উক্তিটি সকল \(n \in \mathbb{N}\)-এর জন্য সত্য। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 15 -->
-        <li>
-          <span class="question-text">\(n\) একটি অযুগ্ম ধনাত্মক পূর্ণসংখ্যা হলে, আরোহ নীতির প্রয়োগে প্রমাণ করো যে, \((a^n + b^n)\) সর্বদা \((a + b)\) দ্বারা বিভাজ্য।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              ধরি \(n = 2k - 1\), যেখানে \(k \in \mathbb{N}\)।<br>
-              \(k = 1\)-এর জন্য, \(a^1 + b^1 = a + b\), যা \((a + b)\) দ্বারা বিভাজ্য।<br>
-              মনে করো, \(k = m\)-এ সত্য: \(a^{2m - 1} + b^{2m - 1} = r(a + b) \implies a^{2m - 1} = r(a + b) - b^{2m - 1}\)।<br>
-              \(k = m + 1\)-এর ক্ষেত্রে,
-              <div class="math-scroll">
-              $$\begin{align*}
-              a^{2m + 1} + b^{2m + 1} &= a^2[r(a + b) - b^{2m - 1}] + b^2\cdot b^{2m - 1} \\
-              &= a^2 r(a + b) - b^{2m - 1}(a^2 - b^2) = (a + b)[a^2 r - b^{2m - 1}(a - b)]
-              \end{align*}$$
-              </div>
-              সুতরাং \(n\) যেকোনো অযুগ্ম ধনাত্মক পূর্ণসংখ্যা হলে \((a^n + b^n)\) সর্বদা \((a + b)\) দ্বারা বিভাজ্য। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 16 -->
-        <li>
-          <span class="question-text">
-            যদি \(n \in \mathbb{N}\) হয় এবং 
-            \((2\cdot 1 + 1) + \dots + (2\cdot n + 1) = n^2 + 2n + 5\) 
-            বিবৃতি \(n = m\)-এ সত্য হয়, তবে প্রমাণ করো যে, বিবৃতিটি \(n = (m + 1)\)-ও সত্য। \(n \in \mathbb{N}\)-এর সব মানে বিবৃতিটি সত্য বলা যায় কি?
-          </span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              মনে করো, \(n = m\)-এ বিবৃতিটি সত্য: \(S_m = m^2 + 2m + 5\)।<br>
-              এখন \(n = m + 1\)-এর জন্য,
-              <div class="math-scroll">
-              $$S_{m + 1} = (m^2 + 2m + 5) + [2(m + 1) + 1] = m^2 + 4m + 8 = (m + 1)^2 + 2(m + 1) + 5$$
-              </div>
-              সুতরাং \(n = m\)-এ সত্য হলে \(n = m + 1\)-এর জন্যও সত্য হয়। (প্রমাণিত)<br>
-              কিন্তু \(n = 1\)-এর জন্য, \(\text{L.H.S.} = 3 \ne 1^2 + 2(1) + 5 = 8 = \text{R.H.S.}\)।<br>
-              ভিত্তি ধাপ সিদ্ধ না হওয়ায় বিবৃতিটি \(n \in \mathbb{N}\)-এর সকল মানের জন্য সত্য বলা যায় না।
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 17 -->
-        <li>
-          <span class="question-text">\(n\) একটি ধনাত্মক অযুগ্ম পূর্ণসংখ্যা হলে আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(n(n^2 - 1)\) সর্বদা \(24\) দ্বারা বিভাজ্য।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              ধরি \(n = 2k - 1\) (\(k \in \mathbb{N}\)); তাহলে \(f(k) = 4k(k - 1)(2k - 1)\)।<br>
-              \(k = 1\)-এর জন্য, \(f(1) = 0 = 24\times 0\), যা \(24\) দ্বারা বিভাজ্য; সুতরাং সত্য।<br>
-              মনে করো, \(k = m\)-এ সত্য: \(f(m) = 24r\) (\(r \in \mathbb{Z}\))।<br>
-              \(k = m + 1\)-এর ক্ষেত্রে পাই,
-              <div class="math-scroll">
-              $$f(m + 1) - f(m) = 4m(m + 1)(2m + 1) - 4m(m - 1)(2m - 1) = 24m^2$$
-              </div>
-              <div class="math-scroll">
-              $$\implies f(m + 1) = 24r + 24m^2 = 24(r + m^2)$$
-              </div>
-              <div class="condition-note">[যা \(24\) দ্বারা বিভাজ্য]</div>
-              অতএব সকল ধনাত্মক অযুগ্ম পূর্ণসংখ্যার জন্য উক্তিটি সত্য। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 18 -->
-        <li>
-          <span class="question-text">\(2^n > n^2\) অসমতা সত্য হতে হলে \(n\)-এর ধনাত্মক অখণ্ড মান নির্ণয় করো।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              মান পরীক্ষা করে পাই: \(n = 1\) (সত্য), \(n = 2, 3, 4\) (অসত্য), \(n = 5\) (\(32 > 25\), সত্য)।<br>
-              মনে করো, \(n = m\) (\(m \ge 5\))-এ সত্য: \(2^m > m^2\)।<br>
-              \(n = m + 1\)-এর ক্ষেত্রে,
-              <div class="math-scroll">
-              $$2^{m + 1} = 2\cdot 2^m > 2m^2 = m^2 + m^2 > m^2 + 2m + 1 = (m + 1)^2$$
-              </div>
-              <div class="condition-note">[\(\because m \ge 5 \implies m^2 > 2m + 1\)]</div>
-              অতএব নির্ণেয় ধনাত্মক অখণ্ড মানসমূহ হল \(n = 1\) এবং সকল স্বাভাবিক সংখ্যা \(n \ge 5\)।
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 19 -->
-        <li>
-          <span class="question-text">গাণিতিক আরোহ নীতির প্রয়োগে প্রমাণ করো যে, \(n \in \mathbb{N}\) হলে, \(3^{2n}\) কে যখন \(8\) দ্বারা ভাগ করা হয় তখন ভাগশেষ সর্বদা \(1\) হয়।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              \(n = 1\)-এর জন্য, \(3^2 = 9 = 8(1) + 1\), অর্থাৎ ভাগশেষ \(1\) থাকে।<br>
-              মনে করো, \(n = m\)-এ সত্য: \(3^{2m} = 8k + 1\) (\(k \in \mathbb{Z}\))।<br>
-              \(n = m + 1\)-এর ক্ষেত্রে,
-              <div class="math-scroll">
-              $$3^{2(m + 1)} = 9\cdot 3^{2m} = 9(8k + 1) = 72k + 9 = 8(9k + 1) + 1 = 8k' + 1$$
-              </div>
-              যেখানে \(k' = 9k + 1 \in \mathbb{Z}\)। অতএব ভাগশেষ সর্বদা \(1\) থাকে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 20 -->
-        <li>
-          <span class="question-text">আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(5^{n + 1} + 4\cdot 6^n\)-কে \(20\) দ্বারা ভাগ করা হলে ভাগশেষ সর্বদা \(9\) হয়, যখন \(n \in \mathbb{N}\)।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              \(n = 1\)-এর জন্য, \(5^2 + 4(6) = 49 = 20(2) + 9\), অর্থাৎ ভাগশেষ \(9\) থাকে।<br>
-              মনে করো, \(n = m\)-এ সত্য: \(5^{m + 1} + 4\cdot 6^m = 20k + 9 \implies 5^{m + 1} = 20k + 9 - 4\cdot 6^m\) (\(k \in \mathbb{Z}\))।<br>
-              \(n = m + 1\)-এর ক্ষেত্রে দ্বিপদ উপপাদ্য ব্যবহার করে পাই,
-              <div class="math-scroll">
-              $$\begin{align*}
-              5^{m + 2} + 4\cdot 6^{m + 1} &= 5(20k + 9 - 4\cdot 6^m) + 24\cdot 6^m = 100k + 45 + 4(1 + 5)^m \\
-              &= 20M + 45 + 4 = 20(M + 2) + 9 = 20k' + 9
-              \end{align*}$$
-              </div>
-              যেখানে \(k' \in \mathbb{Z}\)। অতএব ভাগশেষ সর্বদা \(9\) থাকে। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 21 -->
-        <li>
-          <span class="question-text">\(n \in \mathbb{N}\) হলে আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(8\cdot 7^n + 4^{n + 2}\) সর্বদা \(24\) দ্বারা বিভাজ্য কিন্তু \(48\) দ্বারা বিভাজ্য নয়।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              <strong>প্রথম অংশ:</strong><br>
-              \(n = 1\)-এর জন্য মান \(8(7) + 4^3 = 120 = 24\times 5\), যা \(24\) দ্বারা বিভাজ্য।<br>
-              মনে করো, \(n = m\)-এ রাশিটি \(24\) দ্বারা বিভাজ্য: \(f(m) = 24k\) (\(k \in \mathbb{Z}\))।<br>
-              \(n = m + 1\)-এর ক্ষেত্রে পাই,
-              <div class="math-scroll">
-              $$f(m + 1) - 4f(m) = 8\cdot 7^{m + 1} - 32\cdot 7^m = 24\cdot 7^m \implies f(m + 1) = 24(4k + 7^m)$$
-              </div>
-              যা সর্বদা \(24\) দ্বারা বিভাজ্য।<br>
-              <strong>দ্বিতীয় অংশ:</strong><br>
-              \(n = 1\)-এর জন্য মান \(120\), যা \(48\) দ্বারা বিভাজ্য নয় (\(\frac{120}{48} = 2.5 \notin \mathbb{Z}\))।<br>
-              যেহেতু ভিত্তি ধাপে রাশিটি \(48\) দ্বারা বিভাজ্য নয়, তাই এটি সর্বদা \(48\) দ্বারা বিভাজ্য হতে পারে না। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-
-        <!-- Question 22 -->
-        <li>
-          <span class="question-text">গাণিতিক আরোহ নীতির সাহায্যে প্রমাণ করো যে, \(n\)-এর সকল ধনাত্মক পূর্ণমানের জন্য, \(|\sin nx| \le n|\sin x|\)।</span>
-          <details class="solution-box">
-            <summary class="sol-btn"><span class="icon">▶</span> সমাধান দেখুন</summary>
-            <div class="solution-content">
-              \(n = 1\)-এর জন্য, \(|\sin(1\cdot x)| = |\sin x| \le 1\cdot|\sin x|\), যা সমতাযুক্ত হওয়ায় সত্য।<br>
-              মনে করো, \(n = m\)-এ সত্য: \(|\sin mx| \le m|\sin x|\)।<br>
-              ত্রিভুজীয় অসমতা ও \(|\cos\theta| \le 1\) প্রয়োগ করে \(n = m + 1\)-এর জন্য পাই,
-              <div class="math-scroll">
-              $$\begin{align*}
-              |\sin(m + 1)x| &= |\sin mx \cos x + \cos mx \sin x| \le |\sin mx||\cos x| + |\cos mx||\sin x| \\
-              &= |\sin mx|\cdot 1 + 1\cdot |\sin x| \le m|\sin x| + |\sin x| = (m + 1)|\sin x|
-              \end{align*}$$
-              </div>
-              সুতরাং আরোহ নীতি অনুযায়ী সকল \(n \in \mathbb{N}\)-এর জন্য উক্তিটি সত্য। (প্রমাণিত)
-            </div>
-          </details>
-        </li>
-      </ol>
-    </main>
+    <!-- ==================== TAB 8: CONTACT ==================== -->
+    <div id="tab-contact" class="tab-content">
+      <div class="card">
+        <h2><span>যোগাযোগ (Contact Prime Math)</span></h2>
+        <p style="margin-bottom: 16px; color: var(--text-muted);">For offline batches, study notes, or academic inquiries, connect directly:</p>
+        
+        <div class="grid-2">
+          <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <h4 style="color: var(--primary); margin-bottom: 6px;">Call / WhatsApp Inquiries</h4>
+            <p style="font-size: 15px; font-weight: 700; color: var(--navy);">+91 98765 43210</p>
+            <small style="color: var(--text-muted);">Available 10:00 AM – 7:00 PM (IST)</small>
+          </div>
+          <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <h4 style="color: var(--primary); margin-bottom: 6px;">Official Email</h4>
+            <p style="font-size: 15px; font-weight: 700; color: var(--navy);">contact@primemath.edu</p>
+            <small style="color: var(--text-muted);">Response within 24 hours</small>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 
+  <!-- Footer -->
+  <footer>
+    <p><strong>&pi; PRIME MATH</strong> — Learn Mathematics. Build Concepts. Achieve More.</p>
+    <p>&copy; 2026 Prime Math. Mentored by Dr. Shantanu Guria. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Tab Switcher
+    function switchTab(tabId) {
+      // Hide all tabs
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(el => el.classList.remove('active'));
+
+      // Remove active from buttons
+      const buttons = document.querySelectorAll('#nav-tabs button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      // Show targeted tab
+      const target = document.getElementById('tab-' + tabId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // Highlight active button
+      const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabId));
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Dynamic Filter for Study Materials
+    function filterChapters() {
+      const query = document.getElementById('study-search').value.toLowerCase();
+      const rows = document.querySelectorAll('.chapter-row');
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) ? 'flex' : 'none';
+      });
+    }
+  </script>
 </body>
 </html>
