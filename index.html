@@ -879,7 +879,7 @@
     </div>
   </div>
 
-  <!-- Device Identification & Authentication Gate Overlay -->
+   <!-- Device Identification & Authentication Gate Overlay -->
   <div id="auth-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(4px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px;">
     <div style="background: #ffffff; width: 100%; max-width: 360px; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
       <h2 style="color: #082B4C; font-family: 'Outfit', sans-serif; font-size: 22px; margin-bottom: 6px;">Prime Math Login</h2>
@@ -901,17 +901,17 @@
         <label for="remember-me" style="font-size: 13px; color: #475569; cursor: pointer; user-select: none;">Remember credentials</label>
       </div>
 
-      <button id="login-submit-btn" type="button" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
+      <button id="login-submit-btn" onclick="executeStudentLogin()" type="button" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
       <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 12px; display: none;"></div>
     </div>
   </div>
 
-  <!-- Firebase Modular SDK Script with Auto-Fill & Device Binding -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- Firebase Compat Scripts (Globally available, no module loading errors) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBly5Sm1BnphwuvcS-ASo8sdCdP_HiqWS0",
       authDomain: "prime-math-portal.firebaseapp.com",
@@ -921,9 +921,12 @@
       appId: "1:206498031790:web:123210a8f722c5b57c653f"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
     const overlay = document.getElementById("auth-overlay");
     const errorMsg = document.getElementById("login-error-msg");
@@ -932,71 +935,68 @@
     const passwordInput = document.getElementById("auth-password");
     const rememberCheckbox = document.getElementById("remember-me");
 
-    // Auto-fill credentials if saved previously
-    const savedEmail = localStorage.getItem("pm_saved_email");
-    const savedPassword = localStorage.getItem("pm_saved_password");
-    if (savedEmail && emailInput) {
-      emailInput.value = savedEmail;
-      if (savedPassword && passwordInput) {
-        passwordInput.value = savedPassword;
+    // Auto-fill saved credentials on page load
+    try {
+      const savedEmail = localStorage.getItem("pm_saved_email");
+      const savedPassword = localStorage.getItem("pm_saved_password");
+      if (savedEmail && emailInput) {
+        emailInput.value = savedEmail;
+        if (savedPassword && passwordInput) {
+          passwordInput.value = savedPassword;
+        }
+        if (rememberCheckbox) {
+          rememberCheckbox.checked = true;
+        }
       }
-      if (rememberCheckbox) {
-        rememberCheckbox.checked = true;
-      }
-    }
+    } catch(e) {}
 
+    // Get Device ID from URL parameter or session storage
     const urlParams = new URLSearchParams(window.location.search);
     const currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
-
     if (currentDeviceId) {
       sessionStorage.setItem('cached_device_id', currentDeviceId);
     }
 
-    onAuthStateChanged(auth, async (user) => {
+    // Monitor Auth State
+    auth.onAuthStateChanged(function(user) {
       if (user) {
         if (!currentDeviceId) {
-          await signOut(auth);
+          auth.signOut();
           showLoginError("Device identification failed. Launch via the official app.");
           return;
         }
 
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userSnap = await getDoc(userDocRef);
-
-          if (userSnap.exists()) {
-            const registeredDevice = userSnap.data().deviceId;
+        const userDocRef = db.collection("users").doc(user.uid);
+        userDocRef.get().then(function(docSnap) {
+          if (docSnap.exists) {
+            const registeredDevice = docSnap.data().deviceId;
             if (registeredDevice && registeredDevice !== currentDeviceId) {
-              await signOut(auth);
+              auth.signOut();
               showLoginError("Account already registered on another phone. Sharing credentials is prohibited.");
               return;
             }
             if (!registeredDevice) {
-              await setDoc(userDocRef, { deviceId: currentDeviceId, email: user.email }, { merge: true });
+              userDocRef.set({ deviceId: currentDeviceId, email: user.email }, { merge: true });
             }
           } else {
-            await setDoc(userDocRef, {
+            userDocRef.set({
               deviceId: currentDeviceId,
               email: user.email,
               registeredAt: new Date().toISOString()
             });
           }
 
-          if (overlay) {
-            overlay.style.display = "none";
-          }
-        } catch (err) {
-          showLoginError("Authorization verification failed. Please retry.");
-        }
+          if (overlay) overlay.style.display = "none";
+        }).catch(function(err) {
+          showLoginError("Firestore error: " + err.message);
+        });
       } else {
-        if (overlay) {
-          overlay.style.display = "flex";
-        }
+        if (overlay) overlay.style.display = "flex";
       }
     });
 
-    // Direct event listener binding so click is guaranteed to fire
-    submitBtn.addEventListener("click", () => {
+    // Global click handler function
+    window.executeStudentLogin = function() {
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
@@ -1009,25 +1009,26 @@
       submitBtn.textContent = "Verifying...";
       errorMsg.style.display = "none";
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          if (rememberCheckbox && rememberCheckbox.checked) {
-            localStorage.setItem("pm_saved_email", email);
-            localStorage.setItem("pm_saved_password", password);
-          } else {
-            localStorage.removeItem("pm_saved_email");
-            localStorage.removeItem("pm_saved_password");
-          }
+      auth.signInWithEmailAndPassword(email, password)
+        .then(function() {
+          try {
+            if (rememberCheckbox && rememberCheckbox.checked) {
+              localStorage.setItem("pm_saved_email", email);
+              localStorage.setItem("pm_saved_password", password);
+            } else {
+              localStorage.removeItem("pm_saved_email");
+              localStorage.removeItem("pm_saved_password");
+            }
+          } catch(e) {}
         })
-        .catch((error) => {
-          console.error(error);
+        .catch(function(error) {
           showLoginError("Error (" + error.code + "): " + error.message);
         })
-        .finally(() => {
+        .finally(function() {
           submitBtn.disabled = false;
           submitBtn.textContent = "Sign In";
         });
-    });
+    };
 
     function showLoginError(msg) {
       if (errorMsg) {
@@ -1039,7 +1040,6 @@
       }
     }
   </script>
-
   <!-- Firebase Modular SDK Script with Device Binding -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
