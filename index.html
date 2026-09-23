@@ -863,15 +863,144 @@
         <input type="email" id="auth-email" placeholder="student@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
       </div>
 
-      <div style="text-align: left; margin-bottom: 16px;">
+      <div style="text-align: left; margin-bottom: 12px;">
         <label style="font-size: 12px; font-weight: 600; color: #1e293b;">Password</label>
         <input type="password" id="auth-password" placeholder="••••••••" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
+      </div>
+
+      <!-- Remember Credentials Checkbox -->
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; text-align: left;">
+        <input type="checkbox" id="remember-me" style="width: 16px; height: 16px; cursor: pointer;" checked />
+        <label for="remember-me" style="font-size: 13px; color: #475569; cursor: pointer; user-select: none;">Remember credentials</label>
       </div>
 
       <button id="login-submit-btn" onclick="signInStudent()" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
       <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 12px; display: none;"></div>
     </div>
   </div>
+
+  <!-- Firebase Modular SDK Script with Auto-Fill & Device Binding -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBly5Sm1BnphwuvcS-ASo8sdCdP_HiqWS0",
+      authDomain: "prime-math-portal.firebaseapp.com",
+      projectId: "prime-math-portal",
+      storageBucket: "prime-math-portal.firebasestorage.app",
+      messagingSenderId: "206498031790",
+      appId: "1:206498031790:web:123210a8f722c5b57c653f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const overlay = document.getElementById("auth-overlay");
+    const errorMsg = document.getElementById("login-error-msg");
+    const submitBtn = document.getElementById("login-submit-btn");
+    const emailInput = document.getElementById("auth-email");
+    const passwordInput = document.getElementById("auth-password");
+    const rememberCheckbox = document.getElementById("remember-me");
+
+    // Auto-fill credentials if saved previously
+    const savedEmail = localStorage.getItem("pm_saved_email");
+    const savedPassword = localStorage.getItem("pm_saved_password");
+    if (savedEmail) {
+      emailInput.value = savedEmail;
+      if (savedPassword) {
+        passwordInput.value = savedPassword;
+      }
+      rememberCheckbox.checked = true;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
+
+    if (currentDeviceId) {
+      sessionStorage.setItem('cached_device_id', currentDeviceId);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        if (!currentDeviceId) {
+          await signOut(auth);
+          showLoginError("Device identification failed. Launch via the official app.");
+          return;
+        }
+
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userDocRef);
+
+          if (userSnap.exists()) {
+            const registeredDevice = userSnap.data().deviceId;
+            if (registeredDevice && registeredDevice !== currentDeviceId) {
+              await signOut(auth);
+              showLoginError("Account already registered on another phone. Sharing credentials is prohibited.");
+              return;
+            }
+            if (!registeredDevice) {
+              await setDoc(userDocRef, { deviceId: currentDeviceId, email: user.email }, { merge: true });
+            }
+          } else {
+            await setDoc(userDocRef, {
+              deviceId: currentDeviceId,
+              email: user.email,
+              registeredAt: new Date().toISOString()
+            });
+          }
+
+          overlay.style.display = "none";
+        } catch (err) {
+          showLoginError("Authorization verification failed. Please retry.");
+        }
+      } else {
+        overlay.style.display = "flex";
+      }
+    });
+
+    window.signInStudent = function() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showLoginError("Enter both email and password.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Verifying...";
+      errorMsg.style.display = "none";
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          if (rememberCheckbox.checked) {
+            localStorage.setItem("pm_saved_email", email);
+            localStorage.setItem("pm_saved_password", password);
+          } else {
+            localStorage.removeItem("pm_saved_email");
+            localStorage.removeItem("pm_saved_password");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          showLoginError("Error (" + error.code + "): " + error.message);
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Sign In";
+        });
+    };
+
+    function showLoginError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = "block";
+      overlay.style.display = "flex";
+    }
+  </script>
 
   <!-- Firebase Modular SDK Script with Device Binding -->
   <script type="module">
