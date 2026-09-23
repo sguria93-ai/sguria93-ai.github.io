@@ -55,7 +55,6 @@
       overflow-x: hidden;
     }
 
-    /* Clean White 2-Tier Header */
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border);
@@ -197,7 +196,6 @@
 </head>
 <body>
 
-  <!-- Clean White 2-Tier Header -->
   <header>
     <div class="header-top">
       <div class="logo-container">
@@ -235,15 +233,14 @@
     Prime Math &bull; Secure Mobile Learning Portal &bull; Dr. Guria
   </footer>
 
-  <!-- App-Only Access Gate Overlay (Restricts desktop browser inspection) -->
   <div id="desktop-restricted-overlay" style="display: none; position: fixed; inset: 0; background: #0f172a; z-index: 99998; align-items: center; justify-content: center; padding: 20px; text-align: center; color: #ffffff;">
     <div style="max-width: 400px; background: #1e293b; padding: 32px; border-radius: 12px; border: 1px solid #334155;">
       <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 12px;">App Access Only</h2>
-      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Prime Math portal is restricted to the official mobile application. Please open this course using your dedicated Android app.</p>
+      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Prime Math portal is restricted to the official mobile application.</p>
     </div>
   </div>
 
-  <!-- Device Identification & Authentication Gate Overlay -->
+  <!-- Authentication Overlay -->
   <div id="auth-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(4px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px;">
     <div style="background: #ffffff; width: 100%; max-width: 360px; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
       <h2 style="color: #082B4C; font-family: 'Outfit', sans-serif; font-size: 22px; margin-bottom: 6px;">Prime Math Login</h2>
@@ -260,7 +257,6 @@
           <input type="password" id="auth-password" required placeholder="••••••••" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
         </div>
 
-        <!-- Remember Credentials Checkbox -->
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; text-align: left;">
           <input type="checkbox" id="remember-me" style="width: 16px; height: 16px; cursor: pointer;" checked />
           <label for="remember-me" style="font-size: 13px; color: #475569; cursor: pointer; user-select: none;">Remember credentials</label>
@@ -273,13 +269,11 @@
     </div>
   </div>
 
-  <!-- Firebase Modular Compat SDK Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // Tab switcher
     function switchTab(tabId) {
       const pills = document.querySelectorAll('.nav-pill');
       pills.forEach(p => p.classList.remove('active'));
@@ -288,49 +282,37 @@
       }
     }
 
-    // Autofill saved credentials from localStorage
-    function fillSavedCredentials() {
-      try {
-        var emailField = document.getElementById("auth-email");
-        var passField = document.getElementById("auth-password");
-        var remCheck = document.getElementById("remember-me");
-
-        var savedEmail = localStorage.getItem("pm_saved_email");
-        var savedPass = localStorage.getItem("pm_saved_password");
-
-        if (savedEmail && emailField) {
-          emailField.value = savedEmail;
-        }
-        if (savedPass && passField) {
-          passField.value = savedPass;
-        }
-        if (savedEmail && remCheck) {
-          remCheck.checked = true;
-        }
-      } catch (e) {}
-    }
-
-    // Trigger autofill immediately and on DOM readiness
-    fillSavedCredentials();
-    document.addEventListener("DOMContentLoaded", fillSavedCredentials);
-    window.addEventListener("load", fillSavedCredentials);
-
-    // App URL parameter extraction
     var urlParams = new URLSearchParams(window.location.search);
     var isApp = urlParams.get('source') === 'app';
     var currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
+    var urlEmail = urlParams.get('saved_email');
+    var urlPass = urlParams.get('saved_pass');
 
     if (currentDeviceId) {
       sessionStorage.setItem('cached_device_id', currentDeviceId);
     }
 
-    // App environment enforcement
     if (!isApp && !window.location.hostname.includes('localhost') && !urlParams.has('source')) {
       document.getElementById("desktop-restricted-overlay").style.display = "flex";
       document.getElementById("auth-overlay").style.display = "none";
     }
 
-    // Firebase configuration
+    // Dual-source Autofill: Prioritizes URL from App Inventor TinyDB, then falls back to localStorage
+    function applyAutofill() {
+      var emailField = document.getElementById("auth-email");
+      var passField = document.getElementById("auth-password");
+
+      var resolvedEmail = urlEmail || localStorage.getItem("pm_saved_email");
+      var resolvedPass = urlPass || localStorage.getItem("pm_saved_password");
+
+      if (resolvedEmail && emailField) emailField.value = decodeURIComponent(resolvedEmail);
+      if (resolvedPass && passField) passField.value = decodeURIComponent(resolvedPass);
+    }
+
+    applyAutofill();
+    document.addEventListener("DOMContentLoaded", applyAutofill);
+    window.addEventListener("load", applyAutofill);
+
     var firebaseConfig = {
       apiKey: "AIzaSyBly5SmlBnphwuvcS-ASo8sdCdP_HiqWS0",
       authDomain: "prime-math-portal.firebaseapp.com",
@@ -347,14 +329,13 @@
     var auth = (typeof firebase !== "undefined") ? firebase.auth() : null;
     var db = (typeof firebase !== "undefined") ? firebase.firestore() : null;
 
-    // Single-device binding and authentication gatekeeper
     if (auth) {
       auth.onAuthStateChanged(function(user) {
         if (user) {
           if (!currentDeviceId) {
             auth.signOut();
             showMsg("Device identifier missing. Open via Prime Math app.", true);
-            fillSavedCredentials();
+            applyAutofill();
             return;
           }
 
@@ -365,7 +346,7 @@
               if (reg && reg !== currentDeviceId) {
                 auth.signOut();
                 showMsg("Account bound to another device. Sharing prohibited.", true);
-                fillSavedCredentials();
+                applyAutofill();
                 return;
               }
               if (!reg) {
@@ -380,12 +361,12 @@
             }
             document.getElementById("auth-overlay").style.display = "none";
           }).catch(function(err) {
-            showMsg("Database verification error: " + err.message, true);
-            fillSavedCredentials();
+            showMsg("Verification error: " + err.message, true);
+            applyAutofill();
           });
         } else {
           document.getElementById("auth-overlay").style.display = "flex";
-          fillSavedCredentials();
+          applyAutofill();
         }
       });
     }
@@ -398,30 +379,34 @@
       }
     }
 
-    // Submit handler
     window.handleFormSubmit = function(e) {
       e.preventDefault();
-      var emailField = document.getElementById("auth-email");
-      var passField = document.getElementById("auth-password");
-      var remCheck = document.getElementById("remember-me");
+      var email = document.getElementById("auth-email").value.trim();
+      var pass = document.getElementById("auth-password").value;
+      var rem = document.getElementById("remember-me").checked;
       var btn = document.getElementById("login-submit-btn");
-
-      var email = emailField.value.trim();
-      var pass = passField.value;
 
       if (!auth) {
         showMsg("Firebase failed to load. Check internet connection.", true);
         return false;
       }
 
-      // Save credentials immediately upon clicking Sign In
+      // Save to localStorage
       try {
-        if (remCheck && remCheck.checked) {
+        if (rem) {
           localStorage.setItem("pm_saved_email", email);
           localStorage.setItem("pm_saved_password", pass);
+          
+          // Send to App Inventor TinyDB via WebViewString
+          if (window.AppInventor) {
+            window.AppInventor.setWebViewString("SAVE_CREDS:," + encodeURIComponent(email) + "," + encodeURIComponent(pass));
+          }
         } else {
           localStorage.removeItem("pm_saved_email");
           localStorage.removeItem("pm_saved_password");
+          if (window.AppInventor) {
+            window.AppInventor.setWebViewString("SAVE_CREDS:,,");
+          }
         }
       } catch (e) {}
 
@@ -430,12 +415,9 @@
       showMsg("Connecting to server...", false);
 
       auth.signInWithEmailAndPassword(email, pass)
-        .then(function() {
-          // Success: Handled by auth.onAuthStateChanged
-        })
         .catch(function(err) {
           showMsg("Login failed (" + err.code + "): " + err.message, true);
-          fillSavedCredentials();
+          applyAutofill();
         })
         .finally(function() {
           btn.disabled = false;
