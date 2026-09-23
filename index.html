@@ -26,6 +26,31 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 
+ <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+
+  <!-- App-Only Access Verification -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const fromApp = params.get('source') === 'app' || sessionStorage.getItem('prime_app_session') === 'true';
+
+      if (!fromApp) {
+        document.body.innerHTML = `
+          <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:24px; font-family:'Outfit', sans-serif; background:#f8fafc;">
+            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:32px 24px; max-width:400px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+              <h2 style="color:#082B4C; font-size:22px; margin-bottom:10px;">Access Restricted</h2>
+              <p style="color:#64748b; font-size:14px; line-height:1.6;">This learning portal is accessible only via the official <strong>Prime Math Android Application</strong>.</p>
+            </div>
+          </div>
+        `;
+      } else {
+        sessionStorage.setItem('prime_app_session', 'true');
+      }
+    });
+  </script>
+
+  <style>
+  
   <style>
     :root {
       --primary: #0369a1;
