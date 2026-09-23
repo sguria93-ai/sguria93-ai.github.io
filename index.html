@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prime Math</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="color-scheme" content="light only" />
+  <title>Prime Math | Mathematics Learning Portal</title>
+  <meta name="description" content="Advanced Mathematics Portal by Dr. Shantanu Guria for Class XI, XII, WBJEE, JEE Main & Advanced." />
 
-  <!-- Google Fonts -->
+  <!-- Google Web Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- MathJax Configuration -->
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
       },
-      svg: {
-        fontCache: 'global'
+      chtml: {
+        scale: 0.90
       }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+
+  <!-- App-Only Access Verification -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const fromApp = params.get('source') === 'app' || sessionStorage.getItem('prime_app_session') === 'true';
+
+      if (!fromApp) {
+        document.body.innerHTML = `
+          <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:24px; font-family:'Outfit', sans-serif; background:#f8fafc;">
+            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:32px 24px; max-width:400px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+              <h2 style="color:#082B4C; font-size:22px; margin-bottom:10px;">Access Restricted</h2>
+              <p style="color:#64748b; font-size:14px; line-height:1.6;">This learning portal is accessible only via the official <strong>Prime Math Android Application</strong>.</p>
+            </div>
+          </div>
+        `;
+      } else {
+        sessionStorage.setItem('prime_app_session', 'true');
+      }
+    });
+  </script>
 
   <style>
     :root {
@@ -55,6 +79,7 @@
       overflow-x: hidden;
     }
 
+    /* Clean White 2-Tier Header */
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border);
@@ -64,133 +89,354 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
-    .header-top {
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .logo-container {
-      display: flex;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 16px 8px 16px;
       gap: 10px;
     }
 
-    .logo-badge {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #0369a1, #0d9488);
-      color: #ffffff;
-      border-radius: 10px;
-      display: flex;
+    .logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      box-shadow: 0 2px 6px rgba(3, 105, 161, 0.25);
+      gap: 10px;
+      letter-spacing: -0.3px;
     }
 
-    .site-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      color: var(--navy);
-      letter-spacing: -0.5px;
-      line-height: 1.2;
-    }
-
-    .site-tagline {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .header-sub {
+    nav {
+      display: flex;
+      gap: 6px;
+      width: 100%;
       overflow-x: auto;
       white-space: nowrap;
-      display: flex;
-      gap: 8px;
-      padding: 8px 16px;
-      background: #ffffff;
-      -ms-overflow-style: none;
+      padding-bottom: 4px;
       scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    .header-sub::-webkit-scrollbar {
+    nav::-webkit-scrollbar {
       display: none;
     }
 
-    .nav-pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 14px;
-      font-size: 13px;
+    nav button {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 13.5px;
       font-weight: 600;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: #f8fafc;
-      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 6px;
       cursor: pointer;
-      text-decoration: none;
       transition: all 0.2s ease;
     }
 
-    .nav-pill.active {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
+    nav button:hover {
+      color: var(--primary);
+      background: #f1f5f9;
     }
 
+    nav button.active {
+      background: var(--primary);
+      color: #ffffff !important;
+    }
+
+    /* Main Container */
     .container {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 16px;
     }
 
-    .content-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    /* Tab Switcher Logic */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
     }
 
-    .chapter-header {
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 65%, #0369a1 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 40px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: var(--accent-light);
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .hero-tag {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #ffffff;
+    }
+    .btn-accent:hover {
+      background: #0f766e;
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      color: var(--navy);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
       margin-bottom: 16px;
-      padding-bottom: 12px;
+    }
+
+    /* Chapter Resource Lists */
+    .chapter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .chapter-row:last-child {
+      border-bottom: none;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sm {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+    }
+
+    .btn-sm:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Notice Board */
+    .notice-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .chapter-badge {
-      display: inline-block;
+    .notice-date {
+      background: #e0f2fe;
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--primary);
-      background: #e0f2fe;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-bottom: 6px;
+      min-width: 85px;
+      text-align: center;
     }
 
-    .chapter-title {
-      font-size: 18px;
-      font-weight: 700;
+    .notice-title {
+      font-weight: 600;
       color: var(--navy);
     }
 
+    /* Mentor Profile Box */
+    .mentor-profile {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .mentor-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Search Bar */
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+    }
+
+    /* Footer */
     footer {
+      background: var(--navy);
+      color: #94a3b8;
+      padding: 24px 16px;
       text-align: center;
-      padding: 32px 16px 80px;
-      color: var(--text-muted);
       font-size: 12px;
-      border-top: 1px solid var(--border);
-      background: #ffffff;
+      margin-top: 40px;
+      border-top: 1px solid var(--navy-light);
+    }
+
+    footer p {
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 24px 16px;
+      }
+      .hero h1 {
+        font-size: 22px;
+      }
+      .chapter-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .mentor-profile {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -198,106 +444,442 @@
 
   <!-- Clean White 2-Tier Header -->
   <header>
-    <div class="header-top">
-      <div class="logo-container">
-        <div class="logo-badge">M</div>
-        <div>
-          <div class="site-title">Prime Math</div>
-          <div class="site-tagline">Comprehensive Class 9 Mathematics Notes</div>
-        </div>
-      </div>
-    </div>
-    <div class="header-sub">
-      <div class="nav-pill active" onclick="switchTab('ch1')">বাস্তব সংখ্যা</div>
-      <div class="nav-pill" onclick="switchTab('ch2')">সূচকের নিয়মাবলী</div>
-      <div class="nav-pill" onclick="switchTab('ch3')">লেখচিত্র</div>
-      <div class="nav-pill" onclick="switchTab('ch4')">স্থানাঙ্ক জ্যামিতি</div>
-      <div class="nav-pill" onclick="switchTab('ch5')">রৈখিক সহসমীকরণ</div>
+    <div class="nav-container">
+      <a href="#" class="logo" onclick="switchTab('home')">
+        <img src="https://uploads.onecompiler.io/453vp5b2t/453zadsky/Logo_v2.png" alt="Prime Math Logo" width="44" height="44" style="width: 44px; height: 44px; object-fit: contain; vertical-align: middle;">
+        <span style="color: #FF8000; font-weight: 800;">PRIME</span>
+        <span style="color: #082B4C; font-weight: 800;">MATH</span>
+      </a>
+      <nav id="nav-tabs">
+        <button class="active" onclick="switchTab('home')">Home</button>
+        <button onclick="switchTab('study_xi')">Study Materials Class XI</button>
+        <button onclick="switchTab('study_xii')">Study Materials Class XII</button>
+        <button onclick="switchTab('notices_xi')">Notice Class XI</button>
+        <button onclick="switchTab('notices_xii')">Notice Class XII</button>
+        <button onclick="switchTab('about')">Mentorship</button>
+        <button onclick="switchTab('contact')">Contact</button>
+      </nav>
     </div>
   </header>
 
   <div class="container">
-    <div class="content-card">
-      <div class="chapter-header">
-        <span class="chapter-badge">অধ্যায় ১</span>
-        <h1 class="chapter-title">বাস্তব সংখ্যা (Real Numbers)</h1>
+
+    <!-- ==================== TAB 1: HOME ==================== -->
+    <div id="tab-home" class="tab-content active">
+      <section class="hero">
+        <div class="hero-badge">Mathematics Learning Portal</div>
+        <h1>Prime Math</h1>
+        <p>Learn Mathematics. Build Concepts. Achieve More.</p>
+        <div class="hero-tags">
+          <span class="hero-tag">Class XI</span>
+          <span class="hero-tag">Class XII</span>
+          <span class="hero-tag">WBJEE</span>
+          <span class="hero-tag">JEE Main</span>
+          <span class="hero-tag">JEE Advanced</span>
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-accent" onclick="switchTab('study_xi')">Study Materials Class XI</button>
+          <button class="btn btn-primary" onclick="switchTab('study_xii')">Study Materials Class XII</button>
+          <button class="btn btn-outline" onclick="switchTab('notices_xi')">Latest Notices XI</button>
+          <button class="btn btn-outline" onclick="switchTab('notices_xii')">Latest Notices XII</button>
+        </div>
+      </section>
+
+      <!-- Class XI Section -->
+      <div class="grid-2">
+        <div class="card">
+          <h2><span>Chapter of the Week (Class-XI)</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
+          <h3 style="color: var(--primary); font-size: 17px; margin-bottom: 8px;">Integration (সমাকলন)</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Complete notes, 50 Practice Problems, JEE Main archive &amp; worked solutions are now live.
+          </p>
+          <div class="btn-group">
+            <a href="#" class="btn-sm" onclick="switchTab('study_xi')">View Complete Notes</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><span>Latest Notices for Class-XI</span> <button class="btn-sm" onclick="switchTab('notices_xi')">View All</button></h2>
+          <div class="notice-item">
+            <div class="notice-date">22 Sep 2026</div>
+            <div>
+              <div class="notice-title">Class XI Test on Integration</div>
+              <small style="color: var(--text-muted);">Syllabus: Indefinite & Definite Integrals</small>
+            </div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-date">20 Sep 2026</div>
+            <div>
+              <div class="notice-title">New notes uploaded: Differential Equations</div>
+              <small style="color: var(--text-muted);">Standard methods for first order & degree</small>
+            </div>
+          </div>
+        </div>
       </div>
-      <div style="font-size: 14px; line-height: 1.8;">
-        <p><strong>স্বাভাবিক সংখ্যা ($\mathbb{N}$):</strong> যে সমস্ত সংখ্যা গণনার কাজে ব্যবহার করা হয়। যেমন: $1, 2, 3, 4, \dots$</p>
-        <p><strong>অখন্ড সংখ্যা ($\mathbb{W}$):</strong> স্বাভাবিক সংখ্যাসমূহের সাথে $0$ যুক্ত করলে অখণ্ড সংখ্যা পাওয়া যায়। যেমন: $0, 1, 2, 3, \dots$</p>
-        <p><strong>মূলদ সংখ্যা ($\mathbb{Q}$):</strong> যে সংখ্যাকে $\frac{p}{q}$ আকারে প্রকাশ করা যায়, যেখানে $p$ এবং $q$ পূর্ণসংখ্যা এবং $q \neq 0$।</p>
+
+      <!-- Class XII Section -->
+      <div class="grid-2">
+        <div class="card">
+          <h2><span>Chapter of the Week (Class-XII)</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
+          <h3 style="color: var(--primary); font-size: 17px; margin-bottom: 8px;">Integration (সমাকলন)</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Complete notes, 50 Practice Problems, JEE Main archive &amp; worked solutions are now live.
+          </p>
+          <div class="btn-group">
+            <a href="#" class="btn-sm" onclick="switchTab('study_xii')">View Complete Notes</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><span>Latest Notices for Class-XII</span> <button class="btn-sm" onclick="switchTab('notices_xii')">View All</button></h2>
+          <div class="notice-item">
+            <div class="notice-date">22 Sep 2026</div>
+            <div>
+              <div class="notice-title">Class XII Test on Integration</div>
+              <small style="color: var(--text-muted);">Syllabus: Indefinite & Definite Integrals</small>
+            </div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-date">20 Sep 2026</div>
+            <div>
+              <div class="notice-title">New notes uploaded: Differential Equations</div>
+              <small style="color: var(--text-muted);">Standard methods for first order & degree</small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- ==================== TAB 2: STUDY MATERIALS XI ==================== -->
+    <div id="tab-study_xi" class="tab-content">
+      <div class="card">
+        <h2><span>Study Materials Library (Class XI)</span></h2>
+        
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices)..." onkeyup="filterChapters('tab-study_xi', this.value)">
+        </div>
+
+        <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Semester-I Mathematics (WBCHSE)</h3>
+        <div>
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Semester-II Mathematics (WBCHSE)</h3>
+        <div>
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: STUDY MATERIALS XII ==================== -->
+    <div id="tab-study_xii" class="tab-content">
+      <div class="card">
+        <h2><span>Study Materials Library (Class XII)</span></h2>
+        
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices)..." onkeyup="filterChapters('tab-study_xii', this.value)">
+        </div>
+
+        <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Semester-III Mathematics (WBCHSE)</h3>
+        <div>
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Semester-IV Mathematics (WBCHSE)</h3>
+        <div>
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: NOTICES XI ==================== -->
+    <div id="tab-notices_xi" class="tab-content">
+      <div class="card">
+        <h2><span>Class Notices &amp; Announcements for Class-XI</span></h2>
+        <div class="notice-item">
+          <div class="notice-date">22 Sep 2026</div>
+          <div>
+            <div class="notice-title">Class XI Mathematics Test on Integration</div>
+            <p style="font-size: 13px; color: var(--text-muted);">All students must carry their graph sheet and formula booklets. Total marks: 50.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">20 Sep 2026</div>
+          <div>
+            <div class="notice-title">New Study Materials Uploaded</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Differential Equations practice modules with solved answers are now downloadable in the study portal.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">18 Sep 2026</div>
+          <div>
+            <div class="notice-title">WBJEE Mathematics Practice Set 05 Released</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Includes Category-1, Category-2, and Category-3 questions strictly following the latest test pattern.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 5: NOTICES XII ==================== -->
+    <div id="tab-notices_xii" class="tab-content">
+      <div class="card">
+        <h2><span>Class Notices &amp; Announcements for Class-XII</span></h2>
+        <div class="notice-item">
+          <div class="notice-date">22 Sep 2026</div>
+          <div>
+            <div class="notice-title">Class XII Mathematics Test on Integration</div>
+            <p style="font-size: 13px; color: var(--text-muted);">All students must carry their graph sheet and formula booklets. Total marks: 50.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">20 Sep 2026</div>
+          <div>
+            <div class="notice-title">New Study Materials Uploaded</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Differential Equations practice modules with solved answers are now downloadable in the study portal.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">18 Sep 2026</div>
+          <div>
+            <div class="notice-title">WBJEE Mathematics Practice Set 05 Released</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Includes Category-1, Category-2, and Category-3 questions strictly following the latest test pattern.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 6: ABOUT MENTOR ==================== -->
+    <div id="tab-about" class="tab-content">
+      <div class="card">
+        <h2><span>About the Mentor</span></h2>
+        <div class="mentor-profile">
+          <div class="mentor-avatar">SG</div>
+          <div>
+            <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 2px;">Dr. Shantanu Guria</h3>
+            <p style="color: var(--accent); font-weight: 600; font-size: 13px; margin-bottom: 8px;">Mentor, Prime Math</p>
+            <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+              Advanced mathematics guidance for Class XI &amp; XII board examinations, WBJEE, JEE Main, and JEE Advanced. Dedicated to concept-based learning and problem-solving pedagogy.
+            </p>
+          </div>
+        </div>
+
+        <h3 style="color: var(--primary); margin: 24px 0 12px 0; font-size: 15px;">শিক্ষণ দর্শন (Teaching Approach)</h3>
+        <div class="grid-2">
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--primary);">
+            <strong>Concept-Based Learning:</strong> মুখস্থ নয়, গাণিতিক সূত্রের উৎস এবং প্রয়োগ স্পষ্ট করে আত্মবিশ্বাস গঠন।
+          </div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent);">
+            <strong>Personal Attention:</strong> প্রতিটি শিক্ষার্থীর শক্তি এবং দুর্বলতা চিহ্নিত করে ব্যক্তিগত স্তরে গাইডেন্স।
+          </div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--primary);">
+            <strong>Regular Practice &amp; Evaluation:</strong> পর্যাপ্ত হোমওয়ার্ক, ক্লাস টেস্ট এবং নিয়মিত মক টেস্ট সেশন।
+          </div>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent);">
+            <strong>Bilingual Instruction:</strong> বাংলা ও ইংরেজি উভয় মাধ্যমেই সহজ ও সাবলীল উপস্থাপনা।
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 7: CONTACT ==================== -->
+    <div id="tab-contact" class="tab-content">
+      <div class="card">
+        <h2><span>যোগাযোগ (Contact Prime Math)</span></h2>
+        <p style="margin-bottom: 16px; color: var(--text-muted);">For offline batches, study notes, or academic inquiries, connect directly:</p>
+        
+        <div class="grid-2">
+          <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <h4 style="color: var(--primary); margin-bottom: 6px;">Call / WhatsApp Inquiries</h4>
+            <p style="font-size: 15px; font-weight: 700; color: var(--navy);">+91 9093517701</p>
+            <small style="color: var(--text-muted);">Available 10:00 AM – 8:00 PM (IST)</small>
+          </div>
+          <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <h4 style="color: var(--primary); margin-bottom: 6px;">Email</h4>
+            <p style="font-size: 15px; font-weight: 700; color: var(--navy);">sguria93@gmail.com</p>
+            <small style="color: var(--text-muted);">Response within 24 hours</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
+  <!-- Footer -->
   <footer>
-    Prime Math &bull; Secure Mobile Learning Portal &bull; Dr. Guria
+    <p><strong>&pi; PRIME MATH</strong> — Learn Mathematics. Build Concepts. Achieve More.</p>
+    <p>&copy; 2026 Prime Math. Mentored by Dr. Shantanu Guria. All Rights Reserved.</p>
   </footer>
-
-  <!-- App-Only Access Gate Overlay -->
-  <div id="desktop-restricted-overlay" style="display: none; position: fixed; inset: 0; background: #0f172a; z-index: 99998; align-items: center; justify-content: center; padding: 20px; text-align: center; color: #ffffff;">
-    <div style="max-width: 400px; background: #1e293b; padding: 32px; border-radius: 12px; border: 1px solid #334155;">
-      <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 12px;">App Access Only</h2>
-      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Prime Math portal is restricted to the official mobile application. Please open this course using your dedicated Android app.</p>
-    </div>
-  </div>
-
-  <!-- Authentication Overlay -->
-  <div id="auth-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(6px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px;">
-    <div style="background: #ffffff; width: 100%; max-width: 360px; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
-      <h2 style="color: #082B4C; font-family: 'Outfit', sans-serif; font-size: 22px; margin-bottom: 6px;">Prime Math Login</h2>
-      <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">Enter student credentials to unlock</p>
-      
-      <form id="login-form" onsubmit="return handleFormSubmit(event)">
-        <div style="text-align: left; margin-bottom: 12px;">
-          <label style="font-size: 12px; font-weight: 600; color: #1e293b;">Student Email</label>
-          <input type="email" id="auth-email" required placeholder="student@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
-        </div>
-
-        <div style="text-align: left; margin-bottom: 16px;">
-          <label style="font-size: 12px; font-weight: 600; color: #1e293b;">Password</label>
-          <input type="password" id="auth-password" required placeholder="••••••••" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
-        </div>
-
-        <button id="login-submit-btn" type="submit" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
-      </form>
-      
-      <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 14px; font-weight: 600; word-break: break-word;"></div>
-    </div>
-  </div>
-
-  <!-- Firebase Compat Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
     function switchTab(tabId) {
-      const pills = document.querySelectorAll('.nav-pill');
-      pills.forEach(p => p.classList.remove('active'));
-      if (window.event && window.event.currentTarget) {
-        window.event.currentTarget.classList.add('active');
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(el => el.classList.remove('active'));
+
+      const buttons = document.querySelectorAll('#nav-tabs button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
+      if (target) {
+        target.classList.add('active');
       }
+
+      const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes("'" + tabId + "'"));
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    var urlParams = new URLSearchParams(window.location.search);
-    var isApp = urlParams.get('source') === 'app';
-    var currentDeviceId = urlParams.get('device_id');
+    function filterChapters(tabId, query) {
+      const tabElement = document.getElementById(tabId);
+      if (!tabElement) return;
+      const rows = tabElement.querySelectorAll('.chapter-row');
+      const lowerQuery = query.toLowerCase();
 
-    // Cache device ID so it persists across reloads or offline toggles
-    if (currentDeviceId) {
-      localStorage.setItem('cached_device_id', currentDeviceId);
-    } else {
-      currentDeviceId = localStorage.getItem('cached_device_id');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(lowerQuery) ? 'flex' : 'none';
+      });
     }
+  </script>
 
-    // Only show desktop block when opened outside the app
-    if (!isApp && !currentDeviceId && !window.location.hostname.includes('localhost')) {
-      document.getElementById("desktop-restricted-overlay").style.display = "flex";
-      document.getElementById("auth-overlay").style.display = "none";
-    }
+<!-- Device Identification & Authentication Gate Overlay -->
+  <div id="auth-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(4px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #ffffff; width: 100%; max-width: 360px; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+      <h2 style="color: #082B4C; font-family: 'Outfit', sans-serif; font-size: 22px; margin-bottom: 6px;">Prime Math Login</h2>
+      <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">Enter student credentials to unlock</p>
+      
+      <div style="text-align: left; margin-bottom: 12px;">
+        <label style="font-size: 12px; font-weight: 600; color: #1e293b;">Student Email</label>
+        <input type="email" id="auth-email" placeholder="student@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
+      </div>
 
-    var firebaseConfig = {
+      <div style="text-align: left; margin-bottom: 16px;">
+        <label style="font-size: 12px; font-weight: 600; color: #1e293b;">Password</label>
+        <input type="password" id="auth-password" placeholder="••••••••" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
+      </div>
+
+      <button id="login-submit-btn" onclick="signInStudent()" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
+      <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 12px; display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Firebase Modular SDK Script with Device Binding -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
       apiKey: "AIzaSyBly5SmlBnphwuvcS-ASo8sdCdP_HiqWS0",
       authDomain: "prime-math-portal.firebaseapp.com",
       projectId: "prime-math-portal",
@@ -306,101 +888,89 @@
       appId: "1:206498031790:web:123210a8f722c5b57c653f"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const overlay = document.getElementById("auth-overlay");
+    const errorMsg = document.getElementById("login-error-msg");
+    const submitBtn = document.getElementById("login-submit-btn");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
+
+    if (currentDeviceId) {
+      sessionStorage.setItem('cached_device_id', currentDeviceId);
     }
 
-    var auth = firebase.auth();
-    var db = firebase.firestore();
-
-    // Enable permanent local session persistence
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e) {
-      console.warn("Persistence note:", e);
-    });
-
-    // Populate last typed email
-    var lastEmail = localStorage.getItem("pm_last_email");
-    if (lastEmail) {
-      document.getElementById("auth-email").value = lastEmail;
-    }
-
-    // Monitor Firebase Authentication State
-    auth.onAuthStateChanged(function(user) {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        var devId = currentDeviceId || localStorage.getItem('cached_device_id');
-        if (!devId) {
-          auth.signOut();
-          showMsg("Device identifier missing. Launch via Prime Math app.", true);
-          document.getElementById("auth-overlay").style.display = "flex";
+        if (!currentDeviceId) {
+          await signOut(auth);
+          showLoginError("Device identification failed. Launch via the official app.");
           return;
         }
 
-        var userDocRef = db.collection("users").doc(user.uid);
-        userDocRef.get().then(function(docSnap) {
-          if (docSnap.exists) {
-            var regDev = docSnap.data().deviceId;
-            if (regDev && regDev !== devId) {
-              auth.signOut();
-              showMsg("Account is bound to another device. Access denied.", true);
-              document.getElementById("auth-overlay").style.display = "flex";
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userDocRef);
+
+          if (userSnap.exists()) {
+            const registeredDevice = userSnap.data().deviceId;
+            if (registeredDevice && registeredDevice !== currentDeviceId) {
+              await signOut(auth);
+              showLoginError("Account already registered on another phone. Sharing credentials is prohibited.");
               return;
             }
-            if (!regDev) {
-              userDocRef.set({ deviceId: devId, email: user.email }, { merge: true });
+            if (!registeredDevice) {
+              await setDoc(userDocRef, { deviceId: currentDeviceId, email: user.email }, { merge: true });
             }
           } else {
-            userDocRef.set({
-              deviceId: devId,
+            await setDoc(userDocRef, {
+              deviceId: currentDeviceId,
               email: user.email,
               registeredAt: new Date().toISOString()
             });
           }
-          // Authenticated & device verified: Hide overlay permanently
-          document.getElementById("auth-overlay").style.display = "none";
-        }).catch(function(err) {
-          if (!navigator.onLine) {
-            document.getElementById("auth-overlay").style.display = "none";
-          } else {
-            showMsg("Verification error: " + err.message, true);
-          }
-        });
+
+          overlay.style.display = "none";
+        } catch (err) {
+          showLoginError("Authorization verification failed. Please retry.");
+        }
       } else {
-        document.getElementById("auth-overlay").style.display = "flex";
+        overlay.style.display = "flex";
       }
     });
 
-    function showMsg(text, isErr) {
-      var box = document.getElementById("login-error-msg");
-      if (box) {
-        box.style.color = isErr ? "#dc2626" : "#0369a1";
-        box.textContent = text;
+    window.signInStudent = function() {
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
+
+      if (!email || !password) {
+        showLoginError("Enter both email and password.");
+        return;
       }
-    }
 
-    window.handleFormSubmit = function(e) {
-      e.preventDefault();
-      var email = document.getElementById("auth-email").value.trim();
-      var pass = document.getElementById("auth-password").value;
-      var btn = document.getElementById("login-submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Verifying...";
+      errorMsg.style.display = "none";
 
-      btn.disabled = true;
-      btn.textContent = "Verifying...";
-      showMsg("Connecting to server...", false);
-
-      auth.signInWithEmailAndPassword(email, pass)
-        .then(function() {
-          localStorage.setItem("pm_last_email", email);
+      signInWithEmailAndPassword(auth, email, password)
+        .catch((error) => {
+          console.error(error);
+          showLoginError("Error (" + error.code + "): " + error.message);
         })
-        .catch(function(err) {
-          showMsg("Login failed (" + err.code + "): Invalid email or password.", true);
-        })
-        .finally(function() {
-          btn.disabled = false;
-          btn.textContent = "Sign In";
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Sign In";
         });
-
-      return false;
     };
+
+    function showLoginError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = "block";
+      overlay.style.display = "flex";
+    }
   </script>
 </body>
 </html>
