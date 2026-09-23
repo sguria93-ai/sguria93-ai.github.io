@@ -86,11 +86,6 @@
       gap: 8px;
     }
 
-    .logo span {
-      color: var(--accent-light);
-      font-size: 24px;
-    }
-
     nav {
       display: flex;
       gap: 6px;
@@ -274,85 +269,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 16px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    /* Problem of the Day Section */
-    .potd-card {
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-
-    .potd-badge {
-      display: inline-block;
-      background: #ccfbf1;
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .potd-question {
-      font-weight: 600;
-      color: var(--navy);
-      font-size: 15px;
-      margin-bottom: 12px;
-    }
-
-    details.solution-accordion {
-      margin-top: 10px;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    summary.solution-summary {
-      background: #f8fafc;
-      padding: 8px 12px;
-      font-weight: 700;
-      color: var(--accent);
-      cursor: pointer;
-      user-select: none;
-      font-size: 13px;
-    }
-
-    .solution-body {
-      padding: 12px;
-      background: #fff;
-      color: #334155;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    /* Search Bar */
-    .search-container {
-      margin-bottom: 20px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      font-family: inherit;
-    }
-
-    .search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+      margin-bottom: 16px;
     }
 
     /* Chapter Resource Lists */
@@ -382,6 +299,7 @@
       background: #f1f5f9;
       color: #475569;
       border: 1px solid #cbd5e1;
+      cursor: pointer;
     }
 
     .btn-sm:hover {
@@ -415,25 +333,6 @@
       color: var(--navy);
     }
 
-    /* Table Styles */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 13px;
-    }
-
-    th, td {
-      border: 1px solid var(--border);
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f8fafc;
-      font-weight: 600;
-    }
-
     /* Mentor Profile Box */
     .mentor-profile {
       display: flex;
@@ -456,6 +355,26 @@
       flex-shrink: 0;
     }
 
+    /* Search Bar */
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+    }
+
     /* Footer */
     footer {
       background: var(--navy);
@@ -471,7 +390,6 @@
       margin-bottom: 6px;
     }
 
-    /* Mobile Adaptability */
     @media (max-width: 640px) {
       .hero {
         padding: 24px 16px;
@@ -492,8 +410,6 @@
   </style>
 </head>
 <body>
-
-
 
 <a href="#" class="logo" onclick="switchTab('home')">
   <img src="https://uploads.onecompiler.io/453vp5b2t/453zadsky/Logo_v2.png" alt="Prime Math Logo" width="48" height="48" style="width: 48px !important; height: 48px !important; min-width: 48px !important; min-height: 48px !important; max-height: none !important; object-fit: contain; display: inline-block; vertical-align: middle;">
@@ -520,13 +436,13 @@
     </div>
   </header>
 
+
   <div class="container">
 
     <!-- ==================== TAB 1: HOME ==================== -->
     <div id="tab-home" class="tab-content active">
       <section class="hero">
         <div class="hero-badge">Mathematics Learning Portal</div>
-        
         <h1>Prime Math</h1>
         <p>Learn Mathematics. Build Concepts. Achieve More.</p>
         <div class="hero-tags">
@@ -544,30 +460,7 @@
         </div>
       </section>
 
-
-
-
-      <!-- Problem of the Day 
-      <section class="potd-card">
-        <span class="potd-badge">Problem of the Day</span>
-        <div class="potd-question">
-          If \(x + \frac{1}{x} = 3\), find the value of \(x^2 + \frac{1}{x^2}\).
-        </div>
-        <details class="solution-accordion">
-          <summary class="solution-summary">সমাধান দেখুন (Show Solution)</summary>
-          <div class="solution-body">
-            প্রদত্ত আছে, \(x + \frac{1}{x} = 3\)।<br>
-            উভয়পক্ষে বর্গ করে পাই:
-            $$\left(x + \frac{1}{x}\right)^2 = 3^2$$
-            $$\implies x^2 + 2\cdot x\cdot\frac{1}{x} + \frac{1}{x^2} = 9$$
-            $$\implies x^2 + 2 + \frac{1}{x^2} = 9$$
-            $$\implies x^2 + \frac{1}{x^2} = 9 - 2 = 7$$
-            <strong>উত্তর: 7</strong>
-          </div>
-        </details>
-      </section>   --> 
-
-      <!-- Chapter of the Week & Latest Notice -->
+      <!-- Class XI Section -->
       <div class="grid-2">
         <div class="card">
           <h2><span>Chapter of the Week (Class-XI)</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
@@ -577,18 +470,15 @@
           </p>
           <div class="btn-group">
             <a href="#" class="btn-sm" onclick="switchTab('study_xi')">View Complete Notes</a>
-            <!--
-            <a href="#" class="btn-sm" onclick="switchTab('qbank')">Practise 50 Problems</a>
-            -->
           </div>
         </div>
 
         <div class="card">
-          <h2><span>Latest Notices for Class-XI</span> <button class="btn-sm" onclick="switchTab('notices')">View All</button></h2>
+          <h2><span>Latest Notices for Class-XI</span> <button class="btn-sm" onclick="switchTab('notices_xi')">View All</button></h2>
           <div class="notice-item">
             <div class="notice-date">22 Sep 2026</div>
             <div>
-              <div class="notice-title">Class XII Test on Integration</div>
+              <div class="notice-title">Class XI Test on Integration</div>
               <small style="color: var(--text-muted);">Syllabus: Indefinite & Definite Integrals</small>
             </div>
           </div>
@@ -601,10 +491,9 @@
           </div>
         </div>
       </div>
-    </div>
 
-
-  <div class="grid-2">
+      <!-- Class XII Section (Now safely enclosed inside Home Tab) -->
+      <div class="grid-2">
         <div class="card">
           <h2><span>Chapter of the Week (Class-XII)</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
           <h3 style="color: var(--primary); font-size: 17px; margin-bottom: 8px;">Integration (সমাকলন)</h3>
@@ -613,9 +502,6 @@
           </p>
           <div class="btn-group">
             <a href="#" class="btn-sm" onclick="switchTab('study_xii')">View Complete Notes</a>
-             <!--
-            <a href="#" class="btn-sm" onclick="switchTab('qbank')">Practise 50 Problems</a>
-            -->
           </div>
         </div>
 
@@ -639,17 +525,17 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 2: STUDY MATERIALS ==================== -->
+    <!-- ==================== TAB 2: STUDY MATERIALS XI ==================== -->
     <div id="tab-study_xi" class="tab-content">
       <div class="card">
-        <h2><span>Study Materials Library</span></h2>
+        <h2><span>Study Materials Library (Class XI)</span></h2>
         
         <div class="search-container">
-          <input type="text" id="study_xi-search" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices, Integration)..." onkeyup="filterChapters()">
+          <input type="text" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices)..." onkeyup="filterChapters('tab-study_xi', this.value)">
         </div>
 
         <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Semester-I Mathematics (WBCHSE)</h3>
-        <div id="class11-list">
+        <div>
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
             <div class="btn-group">
@@ -659,7 +545,7 @@
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
-           <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
@@ -681,10 +567,10 @@
         </div>
 
         <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Semester-II Mathematics (WBCHSE)</h3>
-        <div id="class12-list">
+        <div>
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
-             <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
@@ -698,14 +584,14 @@
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
-             <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
-             <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
@@ -714,17 +600,17 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 3: QUESTION BANK ==================== -->
-   <div id="tab-study_xii" class="tab-content">
+    <!-- ==================== TAB 3: STUDY MATERIALS XII ==================== -->
+    <div id="tab-study_xii" class="tab-content">
       <div class="card">
-        <h2><span>Study Materials Library</span></h2>
+        <h2><span>Study Materials Library (Class XII)</span></h2>
         
         <div class="search-container">
-          <input type="text" id="study_xii-search" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices, Integration)..." onkeyup="filterChapters()">
+          <input type="text" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices)..." onkeyup="filterChapters('tab-study_xii', this.value)">
         </div>
 
         <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Semester-III Mathematics (WBCHSE)</h3>
-        <div id="class11-list">
+        <div>
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
             <div class="btn-group">
@@ -734,7 +620,7 @@
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
-           <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
@@ -756,10 +642,10 @@
         </div>
 
         <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Semester-IV Mathematics (WBCHSE)</h3>
-        <div id="class12-list">
+        <div>
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
-             <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
@@ -773,14 +659,14 @@
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
-             <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
-             <div class="btn-group">
+            <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
               <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
@@ -789,16 +675,14 @@
       </div>
     </div>
 
-   
-
-    <!-- ==================== TAB 5: NOTICES ==================== -->
+    <!-- ==================== TAB 4: NOTICES XI ==================== -->
     <div id="tab-notices_xi" class="tab-content">
       <div class="card">
         <h2><span>Class Notices &amp; Announcements for Class-XI</span></h2>
         <div class="notice-item">
           <div class="notice-date">22 Sep 2026</div>
           <div>
-            <div class="notice-title">Class XII Mathematics Test on Integration</div>
+            <div class="notice-title">Class XI Mathematics Test on Integration</div>
             <p style="font-size: 13px; color: var(--text-muted);">All students must carry their graph sheet and formula booklets. Total marks: 50.</p>
           </div>
         </div>
@@ -819,7 +703,7 @@
       </div>
     </div>
 
-     <!-- ==================== TAB 4: ONLINE TESTS ==================== -->
+    <!-- ==================== TAB 5: NOTICES XII ==================== -->
     <div id="tab-notices_xii" class="tab-content">
       <div class="card">
         <h2><span>Class Notices &amp; Announcements for Class-XII</span></h2>
@@ -847,53 +731,7 @@
       </div>
     </div>
 
-
-    <!-- ==================== TAB 6: COURSES ==================== -->
-    <div id="tab-courses" class="tab-content">
-      <div class="card">
-        <h2><span>গাইডেন্স প্রোগ্রাম ও কোর্সসমূহ (Courses Offered)</span></h2>
-        <div class="grid-2">
-          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
-            <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;">Class XI Foundation Mathematics</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Board: WBCHSE / CBSE</p>
-            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
-              <li>Deep focus on core algebra, trigonometry, and coordinate geometry.</li>
-              <li>Dual preparation: Board syllabus + Entrance foundation.</li>
-              <li>Weekly doubt-clearing sessions and mock assessments.</li>
-            </ul>
-          </div>
-          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
-            <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;">Class XII Advanced &amp; Board Mastery</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Board: WBCHSE / CBSE</p>
-            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
-              <li>Comprehensive coverage of Calculus, Vectors, 3D Geometry &amp; Probability.</li>
-              <li>Extensive practice with test papers, past 10-year board questions.</li>
-              <li>Targeted test series to ensure 95%+ board performance.</li>
-            </ul>
-          </div>
-          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
-            <h3 style="color: var(--accent); font-size: 16px; margin-bottom: 6px;">WBJEE Target Batch</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Entrance Exclusive</p>
-            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
-              <li>Speed techniques, shortcut methods, and time management.</li>
-              <li>Focus on high-weightage topics: Calculus, Coordinate Geometry, Matrices.</li>
-              <li>Full-length mock tests under real examination conditions.</li>
-            </ul>
-          </div>
-          <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
-            <h3 style="color: var(--accent); font-size: 16px; margin-bottom: 6px;">JEE Main &amp; Advanced Mentorship</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">National Level Guidance</p>
-            <ul style="padding-left: 18px; font-size: 13px; color: var(--text-main);">
-              <li>Multi-concept problem solving and analytical thinking.</li>
-              <li>Thorough practice of archive papers and advanced graded problem sets.</li>
-              <li>Individual mentorship and periodic progress evaluation.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== TAB 7: ABOUT MENTOR ==================== -->
+    <!-- ==================== TAB 6: ABOUT MENTOR ==================== -->
     <div id="tab-about" class="tab-content">
       <div class="card">
         <h2><span>About the Mentor</span></h2>
@@ -911,22 +749,22 @@
         <h3 style="color: var(--primary); margin: 24px 0 12px 0; font-size: 15px;">শিক্ষণ দর্শন (Teaching Approach)</h3>
         <div class="grid-2">
           <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--primary);">
-            <strong>Concept-Based Learning:</strong> মুখস্থ নয়, গাণিতিক সূত্রের উৎস এবং প্রয়োগ স্পষ্ট করে আত্মবিশ্বাস গঠন।
+            <strong>Concept-Based Learning:</strong> মুখস্থ নয়, গাণিতিক সূত্রের উৎস এবং প্রয়োগ স্পষ্ট করে আত্মবিশ্বাস গঠন।
           </div>
           <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent);">
             <strong>Personal Attention:</strong> প্রতিটি শিক্ষার্থীর শক্তি এবং দুর্বলতা চিহ্নিত করে ব্যক্তিগত স্তরে গাইডেন্স।
           </div>
           <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--primary);">
-            <strong>Regular Practice &amp; Evaluation:</strong> পর্যাপ্ত হোমওয়ার্ক, ক্লাস টেস্ট এবং নিয়মিত মক টেস্ট সেশন।
+            <strong>Regular Practice &amp; Evaluation:</strong> পর্যাপ্ত হোমওয়ার্ক, ক্লাস টেস্ট এবং নিয়মিত মক টেস্ট সেশন।
           </div>
           <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent);">
-            <strong>Bilingual Instruction:</strong> বাংলা ও ইংরেজি উভয় মাধ্যমেই সহজ ও সাবলীল উপস্থাপনা।
+            <strong>Bilingual Instruction:</strong> বাংলা ও ইংরেজি উভয় মাধ্যমেই সহজ ও সাবলীল উপস্থাপনা।
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ==================== TAB 8: CONTACT ==================== -->
+    <!-- ==================== TAB 7: CONTACT ==================== -->
     <div id="tab-contact" class="tab-content">
       <div class="card">
         <h2><span>যোগাযোগ (Contact Prime Math)</span></h2>
@@ -956,24 +794,19 @@
   </footer>
 
   <script>
-    // Tab Switcher
     function switchTab(tabId) {
-      // Hide all tabs
       const contents = document.querySelectorAll('.tab-content');
       contents.forEach(el => el.classList.remove('active'));
 
-      // Remove active from buttons
       const buttons = document.querySelectorAll('#nav-tabs button');
       buttons.forEach(btn => btn.classList.remove('active'));
 
-      // Show targeted tab
       const target = document.getElementById('tab-' + tabId);
       if (target) {
         target.classList.add('active');
       }
 
-      // Highlight active button
-      const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabId));
+      const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes("'" + tabId + "'"));
       if (activeBtn) {
         activeBtn.classList.add('active');
       }
@@ -981,14 +814,15 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Dynamic Filter for Study Materials
-    function filterChapters() {
-      const query = document.getElementById('study-search').value.toLowerCase();
-      const rows = document.querySelectorAll('.chapter-row');
+    function filterChapters(tabId, query) {
+      const tabElement = document.getElementById(tabId);
+      if (!tabElement) return;
+      const rows = tabElement.querySelectorAll('.chapter-row');
+      const lowerQuery = query.toLowerCase();
 
       rows.forEach(row => {
         const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(query) ? 'flex' : 'none';
+        row.style.display = text.includes(lowerQuery) ? 'flex' : 'none';
       });
     }
   </script>
