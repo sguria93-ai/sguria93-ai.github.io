@@ -196,6 +196,7 @@
 </head>
 <body>
 
+  <!-- Clean White 2-Tier Header -->
   <header>
     <div class="header-top">
       <div class="logo-container">
@@ -233,16 +234,17 @@
     Prime Math &bull; Secure Mobile Learning Portal &bull; Dr. Guria
   </footer>
 
+  <!-- App-Only Access Gate Overlay -->
   <div id="desktop-restricted-overlay" style="display: none; position: fixed; inset: 0; background: #0f172a; z-index: 99998; align-items: center; justify-content: center; padding: 20px; text-align: center; color: #ffffff;">
     <div style="max-width: 400px; background: #1e293b; padding: 32px; border-radius: 12px; border: 1px solid #334155;">
       <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 12px;">App Access Only</h2>
-      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Prime Math portal is restricted to the official mobile application.</p>
+      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Prime Math portal is restricted to the official mobile application. Please open this course using your dedicated Android app.</p>
     </div>
   </div>
 
   <!-- Authentication Overlay -->
-  <div id="auth-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(4px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px;">
-    <div style="background: #ffffff; width: 100%; max-width: 360px; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+  <div id="auth-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(6px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #ffffff; width: 100%; max-width: 360px; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
       <h2 style="color: #082B4C; font-family: 'Outfit', sans-serif; font-size: 22px; margin-bottom: 6px;">Prime Math Login</h2>
       <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">Enter student credentials to unlock</p>
       
@@ -252,23 +254,19 @@
           <input type="email" id="auth-email" required placeholder="student@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
         </div>
 
-        <div style="text-align: left; margin-bottom: 12px;">
+        <div style="text-align: left; margin-bottom: 16px;">
           <label style="font-size: 12px; font-weight: 600; color: #1e293b;">Password</label>
           <input type="password" id="auth-password" required placeholder="••••••••" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
         </div>
 
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; text-align: left;">
-          <input type="checkbox" id="remember-me" style="width: 16px; height: 16px; cursor: pointer;" checked />
-          <label for="remember-me" style="font-size: 13px; color: #475569; cursor: pointer; user-select: none;">Remember credentials</label>
-        </div>
-
-        <button id="login-submit-btn" type="submit" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
+        <button id="login-submit-btn" type="submit" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
       </form>
       
-      <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 12px; font-weight: 600; word-break: break-word;"></div>
+      <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 14px; font-weight: 600; word-break: break-word;"></div>
     </div>
   </div>
 
+  <!-- Firebase Compat Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -284,53 +282,20 @@
 
     var urlParams = new URLSearchParams(window.location.search);
     var isApp = urlParams.get('source') === 'app';
-    var currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
+    var currentDeviceId = urlParams.get('device_id');
 
+    // Cache device ID so it persists across reloads or offline toggles
     if (currentDeviceId) {
-      sessionStorage.setItem('cached_device_id', currentDeviceId);
+      localStorage.setItem('cached_device_id', currentDeviceId);
+    } else {
+      currentDeviceId = localStorage.getItem('cached_device_id');
     }
 
-    if (!isApp && !window.location.hostname.includes('localhost') && !urlParams.has('source')) {
+    // Only show desktop block when opened outside the app
+    if (!isApp && !currentDeviceId && !window.location.hostname.includes('localhost')) {
       document.getElementById("desktop-restricted-overlay").style.display = "flex";
       document.getElementById("auth-overlay").style.display = "none";
     }
-
-    // Direct Autofill: Executes immediately on parsing and on DOM events
-    function applyAutofill() {
-      var params = new URLSearchParams(window.location.search);
-      var qEmail = params.get('saved_email');
-      var qPass = params.get('saved_pass');
-
-      var finalEmail = qEmail || localStorage.getItem("pm_saved_email") || "";
-      var finalPass = qPass || localStorage.getItem("pm_saved_password") || "";
-
-      var eBox = document.getElementById("auth-email");
-      var pBox = document.getElementById("auth-password");
-      var rBox = document.getElementById("remember-me");
-
-      if (finalEmail && eBox) {
-        var cleanEmail = decodeURIComponent(finalEmail).trim();
-        eBox.value = cleanEmail;
-        eBox.setAttribute("value", cleanEmail);
-      }
-
-      if (finalPass && pBox) {
-        var cleanPass = decodeURIComponent(finalPass);
-        pBox.value = cleanPass;
-        pBox.setAttribute("value", cleanPass);
-      }
-
-      if (finalEmail && rBox) {
-        rBox.checked = true;
-      }
-    }
-
-    // Call continuously during early render cycles to ensure Android WebView catches it
-    applyAutofill();
-    document.addEventListener("DOMContentLoaded", applyAutofill);
-    window.addEventListener("load", applyAutofill);
-    setTimeout(applyAutofill, 100);
-    setTimeout(applyAutofill, 500);
 
     var firebaseConfig = {
       apiKey: "AIzaSyBly5SmlBnphwuvcS-ASo8sdCdP_HiqWS0",
@@ -341,54 +306,68 @@
       appId: "1:206498031790:web:123210a8f722c5b57c653f"
     };
 
-    if (typeof firebase !== "undefined" && !firebase.apps.length) {
+    if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
 
-    var auth = (typeof firebase !== "undefined") ? firebase.auth() : null;
-    var db = (typeof firebase !== "undefined") ? firebase.firestore() : null;
+    var auth = firebase.auth();
+    var db = firebase.firestore();
 
-    if (auth) {
-      auth.onAuthStateChanged(function(user) {
-        if (user) {
-          if (!currentDeviceId) {
-            auth.signOut();
-            showMsg("Device identifier missing. Open via Prime Math app.", true);
-            applyAutofill();
-            return;
-          }
+    // Enable permanent local session persistence
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e) {
+      console.warn("Persistence note:", e);
+    });
 
-          var userDocRef = db.collection("users").doc(user.uid);
-          userDocRef.get().then(function(docSnap) {
-            if (docSnap.exists) {
-              var reg = docSnap.data().deviceId;
-              if (reg && reg !== currentDeviceId) {
-                auth.signOut();
-                showMsg("Account bound to another device. Sharing prohibited.", true);
-                applyAutofill();
-                return;
-              }
-              if (!reg) {
-                userDocRef.set({ deviceId: currentDeviceId, email: user.email }, { merge: true });
-              }
-            } else {
-              userDocRef.set({
-                deviceId: currentDeviceId,
-                email: user.email,
-                registeredAt: new Date().toISOString()
-              });
-            }
-            document.getElementById("auth-overlay").style.display = "none";
-          }).catch(function(err) {
-            showMsg("Verification error: " + err.message, true);
-            applyAutofill();
-          });
-        } else {
-          document.getElementById("auth-overlay").style.display = "flex";
-          applyAutofill();
-        }
-      });
+    // Populate last typed email
+    var lastEmail = localStorage.getItem("pm_last_email");
+    if (lastEmail) {
+      document.getElementById("auth-email").value = lastEmail;
     }
+
+    // Monitor Firebase Authentication State
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        var devId = currentDeviceId || localStorage.getItem('cached_device_id');
+        if (!devId) {
+          auth.signOut();
+          showMsg("Device identifier missing. Launch via Prime Math app.", true);
+          document.getElementById("auth-overlay").style.display = "flex";
+          return;
+        }
+
+        var userDocRef = db.collection("users").doc(user.uid);
+        userDocRef.get().then(function(docSnap) {
+          if (docSnap.exists) {
+            var regDev = docSnap.data().deviceId;
+            if (regDev && regDev !== devId) {
+              auth.signOut();
+              showMsg("Account is bound to another device. Access denied.", true);
+              document.getElementById("auth-overlay").style.display = "flex";
+              return;
+            }
+            if (!regDev) {
+              userDocRef.set({ deviceId: devId, email: user.email }, { merge: true });
+            }
+          } else {
+            userDocRef.set({
+              deviceId: devId,
+              email: user.email,
+              registeredAt: new Date().toISOString()
+            });
+          }
+          // Authenticated & device verified: Hide overlay permanently
+          document.getElementById("auth-overlay").style.display = "none";
+        }).catch(function(err) {
+          if (!navigator.onLine) {
+            document.getElementById("auth-overlay").style.display = "none";
+          } else {
+            showMsg("Verification error: " + err.message, true);
+          }
+        });
+      } else {
+        document.getElementById("auth-overlay").style.display = "flex";
+      }
+    });
 
     function showMsg(text, isErr) {
       var box = document.getElementById("login-error-msg");
@@ -402,40 +381,18 @@
       e.preventDefault();
       var email = document.getElementById("auth-email").value.trim();
       var pass = document.getElementById("auth-password").value;
-      var rem = document.getElementById("remember-me").checked;
       var btn = document.getElementById("login-submit-btn");
-
-      if (!auth) {
-        showMsg("Firebase failed to load. Check internet connection.", true);
-        return false;
-      }
-
-      // Send to TinyDB and localStorage synchronously right at click time
-      try {
-        if (rem) {
-          localStorage.setItem("pm_saved_email", email);
-          localStorage.setItem("pm_saved_password", pass);
-
-          if (window.AppInventor && window.AppInventor.setWebViewString) {
-            window.AppInventor.setWebViewString("SAVE_CREDS:," + encodeURIComponent(email) + "," + encodeURIComponent(pass));
-          }
-        } else {
-          localStorage.removeItem("pm_saved_email");
-          localStorage.removeItem("pm_saved_password");
-          if (window.AppInventor && window.AppInventor.setWebViewString) {
-            window.AppInventor.setWebViewString("SAVE_CREDS:,,");
-          }
-        }
-      } catch (err) {}
 
       btn.disabled = true;
       btn.textContent = "Verifying...";
       showMsg("Connecting to server...", false);
 
       auth.signInWithEmailAndPassword(email, pass)
+        .then(function() {
+          localStorage.setItem("pm_last_email", email);
+        })
         .catch(function(err) {
-          showMsg("Login failed (" + err.code + "): " + err.message, true);
-          applyAutofill();
+          showMsg("Login failed (" + err.code + "): Invalid email or password.", true);
         })
         .finally(function() {
           btn.disabled = false;
