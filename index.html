@@ -957,7 +957,8 @@
 
       signInWithEmailAndPassword(auth, email, password)
         .catch((error) => {
-          showLoginError("Invalid credentials. Please check with Dr. Guria.");
+          console.error(error);
+          showLoginError("Error (" + error.code + "): " + error.message);
         })
         .finally(() => {
           submitBtn.disabled = false;
