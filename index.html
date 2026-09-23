@@ -502,12 +502,13 @@
     </a>
       <nav id="nav-tabs">
         <button class="active" onclick="switchTab('home')">Home</button>
-        <button onclick="switchTab('study')">Study Materials Class XI</button>
-        <button onclick="switchTab('qbank')">Study Materials Class XII</button>
+        <button onclick="switchTab('study_xi')">Study Materials Class XI</button>
+        <button onclick="switchTab('study_xii')">Study Materials Class XII</button>
         <!-- Temporarily blocked:
         <button onclick="switchTab('tests')">Online Tests</button>
         -->
-        <button onclick="switchTab('notices')">Notice Board</button>
+        <button onclick="switchTab('notices_xi')">Notice Class XI</button>
+        <button onclick="switchTab('notices_xii')">Notice Class XII</button>
 
         <!-- Temporarily blocked:
         <button onclick="switchTab('courses')">Courses</button>
@@ -536,13 +537,17 @@
           <span class="hero-tag">JEE Advanced</span>
         </div>
         <div class="hero-actions">
-          <button class="btn btn-accent" onclick="switchTab('study')">Study Materials Class XI</button>
-          <button class="btn btn-primary" onclick="switchTab('qbank')">Study Materials Class XII</button>
-          <button class="btn btn-outline" onclick="switchTab('notices')">Latest Notices</button>
+          <button class="btn btn-accent" onclick="switchTab('study_xi')">Study Materials Class XI</button>
+          <button class="btn btn-primary" onclick="switchTab('study_xii')">Study Materials Class XII</button>
+          <button class="btn btn-outline" onclick="switchTab('notices_xi')">Latest Notices XI</button>
+          <button class="btn btn-outline" onclick="switchTab('notices_xii')">Latest Notices XII</button>
         </div>
       </section>
 
-      <!-- Problem of the Day -->
+
+
+
+      <!-- Problem of the Day 
       <section class="potd-card">
         <span class="potd-badge">Problem of the Day</span>
         <div class="potd-question">
@@ -560,24 +565,62 @@
             <strong>উত্তর: 7</strong>
           </div>
         </details>
-      </section>
+      </section>   --> 
 
       <!-- Chapter of the Week & Latest Notice -->
       <div class="grid-2">
         <div class="card">
-          <h2><span>Chapter of the Week</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
+          <h2><span>Chapter of the Week (Class-XI)</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
           <h3 style="color: var(--primary); font-size: 17px; margin-bottom: 8px;">Integration (সমাকলন)</h3>
           <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
             Complete notes, 50 Practice Problems, JEE Main archive &amp; worked solutions are now live.
           </p>
           <div class="btn-group">
-            <a href="#" class="btn-sm" onclick="switchTab('study')">View Complete Notes</a>
+            <a href="#" class="btn-sm" onclick="switchTab('study_xi')">View Complete Notes</a>
+            <!--
             <a href="#" class="btn-sm" onclick="switchTab('qbank')">Practise 50 Problems</a>
+            -->
           </div>
         </div>
 
         <div class="card">
-          <h2><span>সাম্প্রতিক নোটিশ (Latest Notices)</span> <button class="btn-sm" onclick="switchTab('notices')">সব দেখুন</button></h2>
+          <h2><span>Latest Notices for Class-XI</span> <button class="btn-sm" onclick="switchTab('notices')">View All</button></h2>
+          <div class="notice-item">
+            <div class="notice-date">22 Sep 2026</div>
+            <div>
+              <div class="notice-title">Class XII Test on Integration</div>
+              <small style="color: var(--text-muted);">Syllabus: Indefinite & Definite Integrals</small>
+            </div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-date">20 Sep 2026</div>
+            <div>
+              <div class="notice-title">New notes uploaded: Differential Equations</div>
+              <small style="color: var(--text-muted);">Standard methods for first order & degree</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <div class="grid-2">
+        <div class="card">
+          <h2><span>Chapter of the Week (Class-XII)</span> <span style="font-size: 12px; color: var(--accent);">Featured</span></h2>
+          <h3 style="color: var(--primary); font-size: 17px; margin-bottom: 8px;">Integration (সমাকলন)</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Complete notes, 50 Practice Problems, JEE Main archive &amp; worked solutions are now live.
+          </p>
+          <div class="btn-group">
+            <a href="#" class="btn-sm" onclick="switchTab('study_xii')">View Complete Notes</a>
+             <!--
+            <a href="#" class="btn-sm" onclick="switchTab('qbank')">Practise 50 Problems</a>
+            -->
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><span>Latest Notices for Class-XII</span> <button class="btn-sm" onclick="switchTab('notices_xii')">View All</button></h2>
           <div class="notice-item">
             <div class="notice-date">22 Sep 2026</div>
             <div>
@@ -597,82 +640,74 @@
     </div>
 
     <!-- ==================== TAB 2: STUDY MATERIALS ==================== -->
-    <div id="tab-study" class="tab-content">
+    <div id="tab-study_xi" class="tab-content">
       <div class="card">
-        <h2><span>স্টাডি মেটেরিয়ালস (Study Materials Library)</span></h2>
+        <h2><span>Study Materials Library</span></h2>
         
         <div class="search-container">
-          <input type="text" id="study-search" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices, Integration)..." onkeyup="filterChapters()">
+          <input type="text" id="study_xi-search" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices, Integration)..." onkeyup="filterChapters()">
         </div>
 
-        <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Class XI Mathematics (WBCHSE / CBSE)</h3>
+        <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Semester-I Mathematics (WBCHSE)</h3>
         <div id="class11-list">
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
-            <div class="btn-group">
+           <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
         </div>
 
-        <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Class XII Mathematics</h3>
+        <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Semester-II Mathematics (WBCHSE)</h3>
         <div id="class12-list">
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
-            <div class="btn-group">
+             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
-            <div class="btn-group">
+             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
-            <div class="btn-group">
+             <div class="btn-group">
               <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions</a>
-              <a href="#" class="btn-sm">Solutions</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
             </div>
           </div>
         </div>
@@ -680,112 +715,86 @@
     </div>
 
     <!-- ==================== TAB 3: QUESTION BANK ==================== -->
-    <div id="tab-qbank" class="tab-content">
+   <div id="tab-study_xii" class="tab-content">
       <div class="card">
-        <h2><span>কোশ্চেন ব্যাংক (Question Bank)</span></h2>
-        <p style="color: var(--text-muted); margin-bottom: 16px;">
-          Select target examination, standard, and topic to access customized problem sets.
-        </p>
-
-        <div class="grid-3" style="margin-bottom: 20px;">
-          <div>
-            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted);">পরীক্ষা (Exam)</label>
-            <select class="search-input" style="padding: 8px;">
-              <option>WBJEE</option>
-              <option>JEE Main</option>
-              <option>JEE Advanced</option>
-              <option>WBCHSE Board</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted);">শ্রেণি (Class)</label>
-            <select class="search-input" style="padding: 8px;">
-              <option>Class XII</option>
-              <option>Class XI</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted);">ক্যাটাগরি (Type)</label>
-            <select class="search-input" style="padding: 8px;">
-              <option>MCQs (Single Correct)</option>
-              <option>Assertion &amp; Reason</option>
-              <option>Previous Year Questions (PYQ)</option>
-              <option>Comprehensive Test Series</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="chapter-row">
-          <div>
-            <strong>JEE Main: Indefinite Integration — Practice Set 01</strong>
-            <div style="font-size: 12px; color: var(--text-muted);">30 Questions | Level: Moderate to Advanced</div>
-          </div>
-          <a href="#" class="btn-sm">Download Paper (PDF)</a>
-        </div>
-        <div class="chapter-row">
-          <div>
-            <strong>WBJEE: Vectors &amp; 3D Geometry — Speed Test</strong>
-            <div style="font-size: 12px; color: var(--text-muted);">40 MCQs | 1-Minute Target Drills</div>
-          </div>
-          <a href="#" class="btn-sm">Download Paper (PDF)</a>
-        </div>
-        <div class="chapter-row">
-          <div>
-            <strong>Class XI: Quadratic Equations &amp; Complex Numbers</strong>
-            <div style="font-size: 12px; color: var(--text-muted);">Subjective &amp; Board Standard Model Paper</div>
-          </div>
-          <a href="#" class="btn-sm">Download Paper (PDF)</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== TAB 4: ONLINE TESTS ==================== -->
-    <div id="tab-tests" class="tab-content">
-      <div class="card">
-        <h2><span>মক টেস্ট সূচি (Mock Test Series)</span></h2>
-        <p style="color: var(--text-muted); margin-bottom: 12px;">Regular assessment tests for board preparations and entrance examinations.</p>
+        <h2><span>Study Materials Library</span></h2>
         
-        <table>
-          <thead>
-            <tr>
-              <th>Test ID</th>
-              <th>Topic</th>
-              <th>Questions</th>
-              <th>Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Test 01</strong></td>
-              <td>Matrices &amp; Determinants</td>
-              <td>20 MCQs</td>
-              <td>30 Mins</td>
-              <td><a href="#" class="btn-sm">Start Test</a></td>
-            </tr>
-            <tr>
-              <td><strong>Test 02</strong></td>
-              <td>Differential Calculus</td>
-              <td>25 MCQs</td>
-              <td>40 Mins</td>
-              <td><a href="#" class="btn-sm">Start Test</a></td>
-            </tr>
-            <tr>
-              <td><strong>Test 03</strong></td>
-              <td>Integral Calculus &amp; Differential Eq.</td>
-              <td>30 MCQs</td>
-              <td>45 Mins</td>
-              <td><span style="color: var(--text-muted); font-size: 12px;">Upcoming</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="search-container">
+          <input type="text" id="study_xii-search" class="search-input" placeholder="অধ্যায় বা টপিক খুঁজুন (Search e.g. Sets, Matrices, Integration)..." onkeyup="filterChapters()">
+        </div>
+
+        <h3 style="color: var(--primary); margin: 16px 0 8px 0; font-size: 15px;">Semester-III Mathematics (WBCHSE)</h3>
+        <div id="class11-list">
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
+           <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="color: var(--primary); margin: 24px 0 8px 0; font-size: 15px;">Semester-IV Mathematics (WBCHSE)</h3>
+        <div id="class12-list">
+          <div class="chapter-row">
+            <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
+             <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
+            <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
+             <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+          <div class="chapter-row">
+            <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
+             <div class="btn-group">
+              <a href="#" class="btn-sm">Notes</a>
+              <a href="#" class="btn-sm">Questions & Solutions</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+   
 
     <!-- ==================== TAB 5: NOTICES ==================== -->
-    <div id="tab-notices" class="tab-content">
+    <div id="tab-notices_xi" class="tab-content">
       <div class="card">
-        <h2><span>Class Notices &amp; Announcements</span></h2>
+        <h2><span>Class Notices &amp; Announcements for Class-XI</span></h2>
         <div class="notice-item">
           <div class="notice-date">22 Sep 2026</div>
           <div>
@@ -809,6 +818,35 @@
         </div>
       </div>
     </div>
+
+     <!-- ==================== TAB 4: ONLINE TESTS ==================== -->
+    <div id="tab-notices_xii" class="tab-content">
+      <div class="card">
+        <h2><span>Class Notices &amp; Announcements for Class-XII</span></h2>
+        <div class="notice-item">
+          <div class="notice-date">22 Sep 2026</div>
+          <div>
+            <div class="notice-title">Class XII Mathematics Test on Integration</div>
+            <p style="font-size: 13px; color: var(--text-muted);">All students must carry their graph sheet and formula booklets. Total marks: 50.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">20 Sep 2026</div>
+          <div>
+            <div class="notice-title">New Study Materials Uploaded</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Differential Equations practice modules with solved answers are now downloadable in the study portal.</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-date">18 Sep 2026</div>
+          <div>
+            <div class="notice-title">WBJEE Mathematics Practice Set 05 Released</div>
+            <p style="font-size: 13px; color: var(--text-muted);">Includes Category-1, Category-2, and Category-3 questions strictly following the latest test pattern.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <!-- ==================== TAB 6: COURSES ==================== -->
     <div id="tab-courses" class="tab-content">
