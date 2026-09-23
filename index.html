@@ -895,150 +895,142 @@
         <input type="password" id="auth-password" placeholder="••••••••" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-top: 4px; box-sizing: border-box;" />
       </div>
 
-      <!-- Remember Credentials Checkbox -->
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; text-align: left;">
         <input type="checkbox" id="remember-me" style="width: 16px; height: 16px; cursor: pointer;" checked />
         <label for="remember-me" style="font-size: 13px; color: #475569; cursor: pointer; user-select: none;">Remember credentials</label>
       </div>
 
-      <button id="login-submit-btn" onclick="executeStudentLogin()" type="button" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
-      <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 12px; display: none;"></div>
+      <button id="login-submit-btn" type="button" style="width: 100%; background: #0369a1; color: #ffffff; border: none; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer;">Sign In</button>
+      <div id="login-error-msg" style="color: #dc2626; font-size: 12px; margin-top: 12px; font-weight: 600; word-break: break-word;"></div>
     </div>
   </div>
 
-  <!-- Firebase Compat Scripts (Globally available, no module loading errors) -->
+  <!-- Firebase Compat Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBly5Sm1BnphwuvcS-ASo8sdCdP_HiqWS0",
-      authDomain: "prime-math-portal.firebaseapp.com",
-      projectId: "prime-math-portal",
-      storageBucket: "prime-math-portal.firebasestorage.app",
-      messagingSenderId: "206498031790",
-      appId: "1:206498031790:web:123210a8f722c5b57c653f"
-    };
+    (function() {
+      const btn = document.getElementById("login-submit-btn");
+      const errBox = document.getElementById("login-error-msg");
+      const emailInput = document.getElementById("auth-email");
+      const passInput = document.getElementById("auth-password");
+      const remCheck = document.getElementById("remember-me");
+      const overlay = document.getElementById("auth-overlay");
 
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    const overlay = document.getElementById("auth-overlay");
-    const errorMsg = document.getElementById("login-error-msg");
-    const submitBtn = document.getElementById("login-submit-btn");
-    const emailInput = document.getElementById("auth-email");
-    const passwordInput = document.getElementById("auth-password");
-    const rememberCheckbox = document.getElementById("remember-me");
-
-    // Auto-fill saved credentials on page load
-    try {
-      const savedEmail = localStorage.getItem("pm_saved_email");
-      const savedPassword = localStorage.getItem("pm_saved_password");
-      if (savedEmail && emailInput) {
-        emailInput.value = savedEmail;
-        if (savedPassword && passwordInput) {
-          passwordInput.value = savedPassword;
-        }
-        if (rememberCheckbox) {
-          rememberCheckbox.checked = true;
-        }
+      function printStatus(text, isError) {
+        if (!errBox) return;
+        errBox.style.color = isError ? "#dc2626" : "#0369a1";
+        errBox.textContent = text;
       }
-    } catch(e) {}
 
-    // Get Device ID from URL parameter or session storage
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
-    if (currentDeviceId) {
-      sessionStorage.setItem('cached_device_id', currentDeviceId);
-    }
-
-    // Monitor Auth State
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
-        if (!currentDeviceId) {
-          auth.signOut();
-          showLoginError("Device identification failed. Launch via the official app.");
-          return;
-        }
-
-        const userDocRef = db.collection("users").doc(user.uid);
-        userDocRef.get().then(function(docSnap) {
-          if (docSnap.exists) {
-            const registeredDevice = docSnap.data().deviceId;
-            if (registeredDevice && registeredDevice !== currentDeviceId) {
-              auth.signOut();
-              showLoginError("Account already registered on another phone. Sharing credentials is prohibited.");
-              return;
-            }
-            if (!registeredDevice) {
-              userDocRef.set({ deviceId: currentDeviceId, email: user.email }, { merge: true });
-            }
-          } else {
-            userDocRef.set({
-              deviceId: currentDeviceId,
-              email: user.email,
-              registeredAt: new Date().toISOString()
-            });
-          }
-
-          if (overlay) overlay.style.display = "none";
-        }).catch(function(err) {
-          showLoginError("Firestore error: " + err.message);
-        });
-      } else {
-        if (overlay) overlay.style.display = "flex";
-      }
-    });
-
-    // Global click handler function
-    window.executeStudentLogin = function() {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-
-      if (!email || !password) {
-        showLoginError("Enter both email and password.");
+      // Check if Firebase loaded
+      if (typeof firebase === "undefined") {
+        printStatus("Firebase library failed to download. Check network connection.", true);
         return;
       }
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Verifying...";
-      errorMsg.style.display = "none";
+      const firebaseConfig = {
+        apiKey: "AIzaSyBly5Sm1BnphwuvcS-ASo8sdCdP_HiqWS0",
+        authDomain: "prime-math-portal.firebaseapp.com",
+        projectId: "prime-math-portal",
+        storageBucket: "prime-math-portal.firebasestorage.app",
+        messagingSenderId: "206498031790",
+        appId: "1:206498031790:web:123210a8f722c5b57c653f"
+      };
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then(function() {
-          try {
-            if (rememberCheckbox && rememberCheckbox.checked) {
-              localStorage.setItem("pm_saved_email", email);
-              localStorage.setItem("pm_saved_password", password);
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      // Auto-fill
+      try {
+        const savedEmail = localStorage.getItem("pm_saved_email");
+        const savedPass = localStorage.getItem("pm_saved_password");
+        if (savedEmail && emailInput) emailInput.value = savedEmail;
+        if (savedPass && passInput) passInput.value = savedPass;
+      } catch (e) {}
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
+      if (currentDeviceId) sessionStorage.setItem('cached_device_id', currentDeviceId);
+
+      // Auth Listener
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          if (!currentDeviceId) {
+            auth.signOut();
+            printStatus("Device identification failed. Launch via official app.", true);
+            return;
+          }
+
+          const userDocRef = db.collection("users").doc(user.uid);
+          userDocRef.get().then(function(docSnap) {
+            if (docSnap.exists) {
+              const regDev = docSnap.data().deviceId;
+              if (regDev && regDev !== currentDeviceId) {
+                auth.signOut();
+                printStatus("Account registered on another phone. Sharing prohibited.", true);
+                return;
+              }
+              if (!regDev) {
+                userDocRef.set({ deviceId: currentDeviceId, email: user.email }, { merge: true });
+              }
             } else {
-              localStorage.removeItem("pm_saved_email");
-              localStorage.removeItem("pm_saved_password");
+              userDocRef.set({
+                deviceId: currentDeviceId,
+                email: user.email,
+                registeredAt: new Date().toISOString()
+              });
             }
-          } catch(e) {}
-        })
-        .catch(function(error) {
-          showLoginError("Error (" + error.code + "): " + error.message);
-        })
-        .finally(function() {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Sign In";
-        });
-    };
+            if (overlay) overlay.style.display = "none";
+          }).catch(function(err) {
+            printStatus("Firestore error: " + err.message, true);
+          });
+        } else {
+          if (overlay) overlay.style.display = "flex";
+        }
+      });
 
-    function showLoginError(msg) {
-      if (errorMsg) {
-        errorMsg.textContent = msg;
-        errorMsg.style.display = "block";
-      }
-      if (overlay) {
-        overlay.style.display = "flex";
-      }
-    }
+      // Direct Event Listener
+      btn.addEventListener("click", function() {
+        const email = emailInput.value.trim();
+        const password = passInput.value;
+
+        if (!email || !password) {
+          printStatus("Please enter both email and password.", true);
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Verifying...";
+        printStatus("Connecting to Firebase...", false);
+
+        auth.signInWithEmailAndPassword(email, password)
+          .then(function() {
+            try {
+              if (remCheck && remCheck.checked) {
+                localStorage.setItem("pm_saved_email", email);
+                localStorage.setItem("pm_saved_password", password);
+              } else {
+                localStorage.removeItem("pm_saved_email");
+                localStorage.removeItem("pm_saved_password");
+              }
+            } catch (e) {}
+          })
+          .catch(function(err) {
+            printStatus("Login failed (" + err.code + "): " + err.message, true);
+          })
+          .finally(function() {
+            btn.disabled = false;
+            btn.textContent = "Sign In";
+          });
+      });
+    })();
   </script>
   <!-- Firebase Modular SDK Script with Device Binding -->
   <script type="module">
