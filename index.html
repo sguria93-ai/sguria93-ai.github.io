@@ -79,64 +79,72 @@
       overflow-x: hidden;
     }
 
-    /* Header & Navigation */
+    /* Clean White 2-Tier Header */
     header {
-      background: var(--navy);
-      color: #fff;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .nav-container {
       max-width: 1100px;
       margin: 0 auto;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 16px 8px 16px;
+      gap: 10px;
     }
 
     .logo {
       font-family: 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
-      color: #ffffff;
       text-decoration: none;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      letter-spacing: -0.3px;
     }
 
     nav {
       display: flex;
       gap: 6px;
+      width: 100%;
       overflow-x: auto;
       white-space: nowrap;
-      padding-bottom: 2px;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
     }
 
     nav button {
       background: transparent;
       border: none;
-      color: #94a3b8;
-      font-size: 13px;
+      color: #64748b;
+      font-size: 13.5px;
       font-weight: 600;
-      padding: 8px 12px;
+      padding: 6px 14px;
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
 
-    nav button:hover, nav button.active {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.1);
+    nav button:hover {
+      color: var(--primary);
+      background: #f1f5f9;
     }
 
     nav button.active {
       background: var(--primary);
-      color: #fff;
+      color: #ffffff !important;
     }
 
     /* Main Container */
@@ -434,13 +442,13 @@
 </head>
 <body>
 
-  <!-- Restored Opening Header & Nav Container -->
+  <!-- Clean White 2-Tier Header -->
   <header>
     <div class="nav-container">
       <a href="#" class="logo" onclick="switchTab('home')">
-        <img src="https://uploads.onecompiler.io/453vp5b2t/453zadsky/Logo_v2.png" alt="Prime Math Logo" width="48" height="48" style="width: 48px !important; height: 48px !important; min-width: 48px !important; min-height: 48px !important; max-height: none !important; object-fit: contain; display: inline-block; vertical-align: middle;">
-        <span style="color: #FF8000 !important;">PRIME</span>
-        <span style="color: #082B4C !important;">MATH</span>
+        <img src="https://uploads.onecompiler.io/453vp5b2t/453zadsky/Logo_v2.png" alt="Prime Math Logo" width="44" height="44" style="width: 44px; height: 44px; object-fit: contain; vertical-align: middle;">
+        <span style="color: #FF8000; font-weight: 800;">PRIME</span>
+        <span style="color: #082B4C; font-weight: 800;">MATH</span>
       </a>
       <nav id="nav-tabs">
         <button class="active" onclick="switchTab('home')">Home</button>
