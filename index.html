@@ -285,8 +285,6 @@
     var urlParams = new URLSearchParams(window.location.search);
     var isApp = urlParams.get('source') === 'app';
     var currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
-    var urlEmail = urlParams.get('saved_email');
-    var urlPass = urlParams.get('saved_pass');
 
     if (currentDeviceId) {
       sessionStorage.setItem('cached_device_id', currentDeviceId);
@@ -297,24 +295,45 @@
       document.getElementById("auth-overlay").style.display = "none";
     }
 
-    // Dual-source Autofill: Prioritizes URL from App Inventor TinyDB, then falls back to localStorage
+    // Direct Autofill: Executes immediately on parsing and on DOM events
     function applyAutofill() {
-      var emailField = document.getElementById("auth-email");
-      var passField = document.getElementById("auth-password");
+      var params = new URLSearchParams(window.location.search);
+      var qEmail = params.get('saved_email');
+      var qPass = params.get('saved_pass');
 
-      var resolvedEmail = urlEmail || localStorage.getItem("pm_saved_email");
-      var resolvedPass = urlPass || localStorage.getItem("pm_saved_password");
+      var finalEmail = qEmail || localStorage.getItem("pm_saved_email") || "";
+      var finalPass = qPass || localStorage.getItem("pm_saved_password") || "";
 
-      if (resolvedEmail && emailField) emailField.value = decodeURIComponent(resolvedEmail);
-      if (resolvedPass && passField) passField.value = decodeURIComponent(resolvedPass);
+      var eBox = document.getElementById("auth-email");
+      var pBox = document.getElementById("auth-password");
+      var rBox = document.getElementById("remember-me");
+
+      if (finalEmail && eBox) {
+        var cleanEmail = decodeURIComponent(finalEmail).trim();
+        eBox.value = cleanEmail;
+        eBox.setAttribute("value", cleanEmail);
+      }
+
+      if (finalPass && pBox) {
+        var cleanPass = decodeURIComponent(finalPass);
+        pBox.value = cleanPass;
+        pBox.setAttribute("value", cleanPass);
+      }
+
+      if (finalEmail && rBox) {
+        rBox.checked = true;
+      }
     }
 
+    // Call continuously during early render cycles to ensure Android WebView catches it
     applyAutofill();
     document.addEventListener("DOMContentLoaded", applyAutofill);
     window.addEventListener("load", applyAutofill);
+    setTimeout(applyAutofill, 100);
+    setTimeout(applyAutofill, 500);
 
     var firebaseConfig = {
-      apiKey: "AIzaSyBly5SmlBnphwuvcS-ASo8sdCdP_HiqWS0",
+      apiKey: "AIzaSyBly5Sm1BnphwuvcS-ASo8sdCdP_HiqWS0",
       authDomain: "prime-math-portal.firebaseapp.com",
       projectId: "prime-math-portal",
       storageBucket: "prime-math-portal.firebasestorage.app",
@@ -391,24 +410,23 @@
         return false;
       }
 
-      // Save to localStorage
+      // Send to TinyDB and localStorage synchronously right at click time
       try {
         if (rem) {
           localStorage.setItem("pm_saved_email", email);
           localStorage.setItem("pm_saved_password", pass);
-          
-          // Send to App Inventor TinyDB via WebViewString
-          if (window.AppInventor) {
+
+          if (window.AppInventor && window.AppInventor.setWebViewString) {
             window.AppInventor.setWebViewString("SAVE_CREDS:," + encodeURIComponent(email) + "," + encodeURIComponent(pass));
           }
         } else {
           localStorage.removeItem("pm_saved_email");
           localStorage.removeItem("pm_saved_password");
-          if (window.AppInventor) {
+          if (window.AppInventor && window.AppInventor.setWebViewString) {
             window.AppInventor.setWebViewString("SAVE_CREDS:,,");
           }
         }
-      } catch (e) {}
+      } catch (err) {}
 
       btn.disabled = true;
       btn.textContent = "Verifying...";
