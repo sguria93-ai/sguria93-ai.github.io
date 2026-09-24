@@ -27,11 +27,15 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 
-  <!-- App-Only Access Verification -->
+  <!-- App-Only Access Verification
+       NOTE: This is only a UI gate. Real note protection is provided by
+       Firestore Security Rules below/in Firebase Console. -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const params = new URLSearchParams(window.location.search);
-      const fromApp = params.get('source') === 'app' || sessionStorage.getItem('prime_app_session') === 'true';
+      const fromApp =
+        params.get('source') === 'app' ||
+        sessionStorage.getItem('prime_app_session') === 'true';
 
       if (!fromApp) {
         document.body.innerHTML = `
@@ -564,29 +568,29 @@
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch1')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch1_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch2')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch2_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch3')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch3_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch4')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_ch4_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
         </div>
@@ -596,29 +600,29 @@
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch1')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch1_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch2')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch2_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch3')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch3_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch4')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class11_s2_ch4_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
         </div>
@@ -639,29 +643,29 @@
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> সেট তত্ত্ব (Set Theory)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch1')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch1_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> সম্বন্ধ ও অপেক্ষক (Relations &amp; Functions)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch2')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch2_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> ত্রিকোণমিতিক অপেক্ষক (Trigonometric Functions)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch3')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch3_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> গাণিতিক আরোহ তত্ত্ব (Mathematical Induction)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch4')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_ch4_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
         </div>
@@ -671,29 +675,29 @@
           <div class="chapter-row">
             <div><strong>Chapter 1:</strong> ম্যাট্রিক্স (Matrices)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch1')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch1_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 2:</strong> নির্ণায়ক (Determinants)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch2')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch2_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 3:</strong> সমাকলন (Integrals)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch3')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch3_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
           <div class="chapter-row">
             <div><strong>Chapter 4:</strong> অবকল সমীকরণ (Differential Equations)</div>
             <div class="btn-group">
-              <a href="#" class="btn-sm">Notes</a>
-              <a href="#" class="btn-sm">Questions & Solutions</a>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch4')">Notes</button>
+              <button class="btn-sm" onclick="openProtectedNote('class12_s2_ch4_questions')">Questions &amp; Solutions</button>
             </div>
           </div>
         </div>
@@ -873,11 +877,21 @@
     </div>
   </div>
 
-  <!-- Firebase Modular SDK Script with Device Binding -->
+  <!-- Firebase Modular SDK: Authentication + Firestore protected notes -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBly5SmlBnphwuvcS-ASo8sdCdP_HiqWS0",
@@ -896,49 +910,77 @@
     const errorMsg = document.getElementById("login-error-msg");
     const submitBtn = document.getElementById("login-submit-btn");
 
+    const noteModal = document.getElementById("note-modal");
+    const noteTitle = document.getElementById("note-modal-title");
+    const noteLoading = document.getElementById("note-loading");
+    const noteContent = document.getElementById("note-content");
+    const noteError = document.getElementById("note-error");
+
+    let currentUser = null;
+    let currentDeviceId = null;
+    let authorizationReady = false;
+
     const urlParams = new URLSearchParams(window.location.search);
-    const currentDeviceId = urlParams.get('device_id') || sessionStorage.getItem('cached_device_id');
+    currentDeviceId =
+      urlParams.get('device_id') ||
+      sessionStorage.getItem('cached_device_id');
 
     if (currentDeviceId) {
       sessionStorage.setItem('cached_device_id', currentDeviceId);
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        if (!currentDeviceId) {
-          await signOut(auth);
-          showLoginError("Device identification failed. Launch via the official app.");
-          return;
-        }
+      currentUser = null;
+      authorizationReady = false;
 
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userSnap = await getDoc(userDocRef);
+      if (!user) {
+        overlay.style.display = "flex";
+        return;
+      }
 
-          if (userSnap.exists()) {
-            const registeredDevice = userSnap.data().deviceId;
-            if (registeredDevice && registeredDevice !== currentDeviceId) {
-              await signOut(auth);
-              showLoginError("Account already registered on another phone. Sharing credentials is prohibited.");
-              return;
-            }
-            if (!registeredDevice) {
-              await setDoc(userDocRef, { deviceId: currentDeviceId, email: user.email }, { merge: true });
-            }
-          } else {
-            await setDoc(userDocRef, {
-              deviceId: currentDeviceId,
-              email: user.email,
-              registeredAt: new Date().toISOString()
-            });
+      if (!currentDeviceId) {
+        await signOut(auth);
+        showLoginError("Device identification failed. Launch via the official app.");
+        return;
+      }
+
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          const registeredDevice = data.deviceId;
+
+          if (registeredDevice && registeredDevice !== currentDeviceId) {
+            await signOut(auth);
+            showLoginError("Account already registered on another phone. Sharing credentials is prohibited.");
+            return;
           }
 
-          overlay.style.display = "none";
-        } catch (err) {
-          showLoginError("Authorization verification failed. Please retry.");
+          if (!registeredDevice) {
+            await setDoc(
+              userDocRef,
+              { deviceId: currentDeviceId, email: user.email },
+              { merge: true }
+            );
+          }
+        } else {
+          await setDoc(userDocRef, {
+            deviceId: currentDeviceId,
+            email: user.email,
+            registeredAt: new Date().toISOString(),
+            active: true
+          });
         }
-      } else {
-        overlay.style.display = "flex";
+
+        currentUser = user;
+        authorizationReady = true;
+        overlay.style.display = "none";
+      } catch (err) {
+        console.error(err);
+        await signOut(auth);
+        showLoginError("Authorization verification failed. Please retry.");
       }
     });
 
@@ -958,7 +1000,7 @@
       signInWithEmailAndPassword(auth, email, password)
         .catch((error) => {
           console.error(error);
-          showLoginError("Error (" + error.code + "): " + error.message);
+          showLoginError("Login failed. Please check your email and password.");
         })
         .finally(() => {
           submitBtn.disabled = false;
@@ -971,6 +1013,78 @@
       errorMsg.style.display = "block";
       overlay.style.display = "flex";
     }
+
+    // ------------------------------------------------------------
+    // Protected HTML Notes
+    // Firestore collection: notes
+    // Document ID: the noteId passed to this function.
+    // Example: notes/class11_ch1
+    // ------------------------------------------------------------
+    window.openProtectedNote = async function(noteId) {
+      if (!authorizationReady || !currentUser) {
+        showLoginError("Please sign in first.");
+        return;
+      }
+
+      noteModal.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+      noteTitle.textContent = "Mathematics Note";
+      noteLoading.style.display = "block";
+      noteContent.style.display = "none";
+      noteError.style.display = "none";
+      noteContent.innerHTML = "";
+
+      try {
+        const noteRef = doc(db, "notes", noteId);
+        const noteSnap = await getDoc(noteRef);
+
+        if (!noteSnap.exists()) {
+          throw new Error("Note not found.");
+        }
+
+        const data = noteSnap.data();
+
+        // Firestore Rules must enforce access. This client-side check is
+        // only an additional application-level check.
+        if (data.active === false) {
+          throw new Error("This note is currently unavailable.");
+        }
+
+        noteTitle.textContent = data.title || "Mathematics Note";
+
+        // The note author controls the HTML stored in Firestore.
+        noteContent.innerHTML = data.content || "<p>No content available.</p>";
+
+        noteLoading.style.display = "none";
+        noteContent.style.display = "block";
+
+        if (window.MathJax && MathJax.typesetPromise) {
+          await MathJax.typesetPromise([noteContent]);
+        }
+      } catch (err) {
+        console.error(err);
+        noteLoading.style.display = "none";
+        noteError.textContent =
+          err.message === "Note not found."
+            ? "This note is not available."
+            : "Unable to load this note. Please try again.";
+        noteError.style.display = "block";
+      }
+    };
+
+    window.closeNote = function() {
+      noteModal.style.display = "none";
+      document.body.style.overflow = "";
+      noteContent.innerHTML = "";
+    };
+
+    // Optional ESC key support.
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        window.closeNote();
+      }
+    });
   </script>
 </body>
 </html>
